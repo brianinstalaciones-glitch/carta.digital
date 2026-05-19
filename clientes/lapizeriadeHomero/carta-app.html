@@ -888,11 +888,10 @@ function AppProvider({ children }) {
   const [homeStyle, setHomeStyle] = useState('A');
   const [toast, setToast] = useState(null);
   const [bumpCart, setBumpCart] = useState(0);
-  const [menuKey, setMenuKey] = useState(0);
 
   useEffect(() => {
     let _t = null;
-    window.__refreshLPH = () => { clearTimeout(_t); _t = setTimeout(() => setMenuKey(k => k + 1), 150); };
+    window.__refreshLPH = () => { clearTimeout(_t); _t = setTimeout(() => window.dispatchEvent(new Event('lph-menu-refresh')), 150); };
     return () => { clearTimeout(_t); delete window.__refreshLPH; };
   }, []);
 
@@ -991,7 +990,7 @@ function AppProvider({ children }) {
   const back = () => nav('home');
 
   return (
-    <AppCtx.Provider value={{ route,nav,back, cart,addToCart,updateQty,clearCart,cartTotal,cartCount,bumpCart, mesa,points,pointsHistory,earnPoints,redeemPoints, clienteNombre,registerCliente, theme,setTheme,homeStyle,setHomeStyle, toast, menuKey }}>
+    <AppCtx.Provider value={{ route,nav,back, cart,addToCart,updateQty,clearCart,cartTotal,cartCount,bumpCart, mesa,points,pointsHistory,earnPoints,redeemPoints, clienteNombre,registerCliente, theme,setTheme,homeStyle,setHomeStyle, toast }}>
       {children}
     </AppCtx.Provider>
   );
@@ -1154,6 +1153,12 @@ function HomeC() {
 // ── MÁS PEDIDAS STRIP ───────────────────────────────────────────
 function MasPedidasStrip() {
   const { nav } = useApp();
+  const [, _stripTick] = useState(0);
+  useEffect(() => {
+    const h = () => _stripTick(k => k + 1);
+    window.addEventListener('lph-menu-refresh', h);
+    return () => window.removeEventListener('lph-menu-refresh', h);
+  }, []);
   const top = window.MENU_PRODUCTS.filter(p => p.top).slice(0,6);
   return (
     <section className="strip-section">
@@ -1179,6 +1184,12 @@ function Carta() {
   const { nav, back } = useApp();
   const [activeCat, setActiveCat] = useState(() => window.MENU_CATEGORIES[0]?.id || 'promos');
   const [search, setSearch] = useState('');
+  const [, _cartaTick] = useState(0);
+  useEffect(() => {
+    const h = () => _cartaTick(k => k + 1);
+    window.addEventListener('lph-menu-refresh', h);
+    return () => window.removeEventListener('lph-menu-refresh', h);
+  }, []);
   const cats = window.MENU_CATEGORIES;
   const products = window.MENU_PRODUCTS;
   const filtered = useMemo(() => {
@@ -1647,6 +1658,12 @@ function Cart() {
 // ── PROMOS ───────────────────────────────────────────────────────
 function Promos() {
   const { back } = useApp();
+  const [, _promoTick] = useState(0);
+  useEffect(() => {
+    const h = () => _promoTick(k => k + 1);
+    window.addEventListener('lph-menu-refresh', h);
+    return () => window.removeEventListener('lph-menu-refresh', h);
+  }, []);
   const promos = window.MENU_PRODUCTS.filter(p=>p.cat==='promos');
   return (
     <div className="screen-promos">
