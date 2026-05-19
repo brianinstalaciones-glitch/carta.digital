@@ -559,6 +559,10 @@ window.MENU_EXTRAS = {
   ],
 };
 window.MENU_NOTES = ['sin cebolla','sin aceitunas','sin tomate','mas queso','menos sal','bien cocida','jugosa','sin picante','aparte la salsa'];
+(function() {
+  const saved = localStorage.getItem('lph_menu_extras');
+  if (saved) { try { const d = JSON.parse(saved); Object.keys(d).forEach(k => { window.MENU_EXTRAS[k] = d[k]; }); } catch(e) {} }
+})();
 window.PIZZA_INGREDIENTS = [
   { id:'i-muzza',    name:'Muzzarella',      price:0,    base:true },
   { id:'i-tomate',   name:'Salsa de tomate', price:0,    base:true },
@@ -748,6 +752,10 @@ loadMenuFromStorage();
     if (d.pizzaBuilder) {
       localStorage.setItem('lph_pizza_builder', JSON.stringify(d.pizzaBuilder));
       applyPizzaBuilder(d.pizzaBuilder);
+    }
+    if (d.menuExtras) {
+      localStorage.setItem('lph_menu_extras', JSON.stringify(d.menuExtras));
+      Object.keys(d.menuExtras).forEach(k => { window.MENU_EXTRAS[k] = d.menuExtras[k]; });
     }
     loadMenuFromStorage();
     if (window.__refreshLPH) window.__refreshLPH();

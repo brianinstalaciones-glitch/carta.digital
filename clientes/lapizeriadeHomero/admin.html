@@ -1826,6 +1826,30 @@
           </div>
         </div>
 
+        <!-- Extras del menú -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">🧩 Extras del menú</div>
+              <div class="card-subtitle">Adicionales que se muestran al confirmar un producto</div>
+            </div>
+            <button class="btn btn-primary" onclick="saveMenuExtras()">
+              <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" width="15" height="15"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+              Guardar
+            </button>
+          </div>
+          <div style="padding:16px 24px">
+            <div style="display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap">
+              <button class="btn btn-sm" id="ex-tab-pizzas"       onclick="extrasShowCat('pizzas')"       style="background:var(--amber);color:#0E1419;font-weight:700">Pizzas</button>
+              <button class="btn btn-sm" id="ex-tab-hamburguesas" onclick="extrasShowCat('hamburguesas')">Hamburguesas</button>
+              <button class="btn btn-sm" id="ex-tab-lomitos"      onclick="extrasShowCat('lomitos')">Lomitos</button>
+              <button class="btn btn-sm" id="ex-tab-default"      onclick="extrasShowCat('default')">Otros</button>
+            </div>
+            <div id="extras-list" style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px"></div>
+            <button class="btn btn-secondary btn-sm" onclick="extrasAddItem()" style="width:100%">+ Agregar extra</button>
+          </div>
+        </div>
+
         <!-- Save -->
         <div>
           <button class="btn btn-primary" onclick="saveConfig()" style="padding:13px 32px;font-size:15px">
@@ -2077,6 +2101,7 @@ function sincronizarMenuFirebase() {
     rewards:       JSON.parse(localStorage.getItem('lph_rewards')       || '[]'),
     promos:        JSON.parse(localStorage.getItem('lph_promos')        || '[]'),
     pizzaBuilder:  JSON.parse(localStorage.getItem('lph_pizza_builder') || 'null') || null,
+    menuExtras:    JSON.parse(localStorage.getItem('lph_menu_extras')   || 'null') || null,
   }).then(() => showToast('✅ Carta sincronizada', 'success'))
     .catch(e => { console.warn('Firebase menuData lph error', e); showToast('⚠️ Error al sincronizar', 'error'); });
 }
@@ -3368,6 +3393,7 @@ function loadConfigForm() {
   document.getElementById('cfg-pago-transf-pct').value    = cfg.pagoTransfPct    || '';
   document.getElementById('cfg-alias-cbu').value           = cfg.aliasCBU         || '';
   loadPizzaBuilder();
+  loadMenuExtras();
 }
 
 function saveConfig() {
@@ -4416,6 +4442,112 @@ function savePizzaBuilder() {
   }
   // Recargar vista
   loadPizzaBuilder();
+}
+
+// ── EXTRAS DEL MENÚ ───────────────────────────────────────────
+const EXTRAS_DEFAULTS = {
+  pizzas:       [
+    { id:'ex-queso',     name:'Queso extra',  price:1500 },
+    { id:'ex-jamon',     name:'Jamon extra',  price:1200 },
+    { id:'ex-aceitunas', name:'Aceitunas',    price:800  },
+    { id:'ex-morron',    name:'Morron asado', price:900  },
+    { id:'ex-rucula',    name:'Rucula',       price:700  },
+    { id:'ex-huevo',     name:'Huevo frito',  price:600  },
+  ],
+  hamburguesas: [
+    { id:'ex-papas',    name:'Papas fritas',   price:2800 },
+    { id:'ex-cheddar',  name:'Cheddar extra',  price:900  },
+    { id:'ex-panceta',  name:'Panceta',        price:1300 },
+    { id:'ex-medallon', name:'Medallon extra', price:2400 },
+    { id:'ex-cebolla',  name:'Cebolla crispy', price:700  },
+  ],
+  lomitos: [
+    { id:'ex-papas', name:'Papas fritas', price:2800 },
+    { id:'ex-queso', name:'Queso extra',  price:1500 },
+    { id:'ex-huevo', name:'Huevo frito',  price:600  },
+  ],
+  default: [
+    { id:'ex-papas', name:'Papas fritas',   price:2800 },
+    { id:'ex-coca',  name:'Coca-Cola lata', price:1800 },
+    { id:'ex-salsa', name:'Salsa extra',    price:500  },
+  ],
+};
+let _extrasData = null, _extrasCat = 'pizzas';
+
+function _getExtras() {
+  if (_extrasData) return _extrasData;
+  const saved = localStorage.getItem('lph_menu_extras');
+  if (saved) { try { _extrasData = JSON.parse(saved); return _extrasData; } catch(e) {} }
+  _extrasData = JSON.parse(JSON.stringify(EXTRAS_DEFAULTS));
+  return _extrasData;
+}
+function extrasShowCat(cat) {
+  _extrasCat = cat;
+  ['pizzas','hamburguesas','lomitos','default'].forEach(c => {
+    const btn = document.getElementById('ex-tab-'+c);
+    if (!btn) return;
+    btn.style.background = c===cat ? 'var(--amber)' : '';
+    btn.style.color      = c===cat ? '#0E1419' : '';
+    btn.style.fontWeight = c===cat ? '700' : '';
+  });
+  renderExtrasList();
+}
+function renderExtrasList() {
+  const el = document.getElementById('extras-list');
+  if (!el) return;
+  const items = _getExtras()[_extrasCat] || [];
+  el.innerHTML = items.map((item, idx) => `
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1.5px solid var(--border);border-radius:10px;background:var(--bg)">
+      <div style="flex:1;min-width:0">
+        <input type="text" value="${item.name}" placeholder="Nombre"
+          onchange="extrasItemChange(${idx},'name',this.value)"
+          style="width:100%;padding:5px 8px;border:1.5px solid var(--border);border-radius:7px;font-size:13px;font-family:var(--font);background:var(--surface);color:var(--ink)">
+      </div>
+      <div style="display:flex;align-items:center;gap:4px">
+        <span style="font-size:12px;color:var(--ink3)">$</span>
+        <input type="number" value="${item.price}" min="0" step="100"
+          onchange="extrasItemChange(${idx},'price',Number(this.value))"
+          style="width:70px;padding:5px 8px;border:1.5px solid var(--border);border-radius:7px;font-size:13px;font-weight:700;text-align:right;font-family:var(--font);background:var(--surface);color:var(--ink)">
+      </div>
+      <button onclick="extrasRemoveItem(${idx})" style="background:none;border:none;cursor:pointer;color:var(--ink3);padding:4px 6px;font-size:18px;line-height:1;border-radius:6px">×</button>
+    </div>`).join('');
+}
+function extrasItemChange(idx, field, value) {
+  const data = _getExtras();
+  if (data[_extrasCat] && data[_extrasCat][idx]) data[_extrasCat][idx][field] = value;
+}
+function extrasRemoveItem(idx) {
+  const data = _getExtras();
+  if (!data[_extrasCat]) return;
+  data[_extrasCat].splice(idx, 1);
+  renderExtrasList();
+}
+function extrasAddItem() {
+  const data = _getExtras();
+  if (!data[_extrasCat]) data[_extrasCat] = [];
+  data[_extrasCat].push({ id:'ex-'+Date.now(), name:'', price:0 });
+  renderExtrasList();
+  setTimeout(() => {
+    const el = document.getElementById('extras-list');
+    if (!el) return;
+    const inputs = el.querySelectorAll('input[type="text"]');
+    if (inputs.length) inputs[inputs.length-1].focus();
+  }, 50);
+}
+function loadMenuExtras() {
+  _extrasData = null;
+  extrasShowCat(_extrasCat);
+}
+function saveMenuExtras() {
+  const data = _getExtras();
+  localStorage.setItem('lph_menu_extras', JSON.stringify(data));
+  if (typeof _db !== 'undefined' && _db) {
+    _db.collection('menuData').doc('lph').set({ menuExtras: data }, { merge: true })
+      .then(() => showToast('✅ Extras guardados', 'success'))
+      .catch(() => showToast('✓ Guardado local (Firebase falló)', 'success'));
+  } else {
+    showToast('✅ Extras guardados', 'success');
+  }
 }
 
 // ── MESA DRAWER ───────────────────────────────────────────────
