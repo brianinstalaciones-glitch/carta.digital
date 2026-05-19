@@ -2070,12 +2070,10 @@ function sincronizarMenuFirebase() {
     categories: JSON.parse(localStorage.getItem(LS_CATS) || '[]'),
     config:     cfg,
     platoDia:   pdd || null,
-  }).then(() => showToast('Carta actualizada ✓', 'success'))
+  }, { merge: true }).then(() => showToast('Carta actualizada ✓', 'success'))
     .catch(e => { console.warn('Firebase menuData error', e); showToast('Error al sincronizar', 'error'); });
   prods.forEach(p => {
-    const ref = _db.collection('menuData').doc('pem_img_' + p.id);
-    if (p.img) ref.set({ img: p.img }).catch(() => {});
-    else       ref.delete().catch(() => {});
+    if (p.img) _db.collection('menuData').doc('pem_img_' + p.id).set({ img: p.img }).catch(() => {});
   });
 }
 
