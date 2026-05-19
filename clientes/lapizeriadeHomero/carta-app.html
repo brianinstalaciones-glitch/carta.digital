@@ -884,8 +884,9 @@ function AppProvider({ children }) {
   const [menuKey, setMenuKey] = useState(0);
 
   useEffect(() => {
-    window.__refreshLPH = () => setMenuKey(k => k + 1);
-    return () => { delete window.__refreshLPH; };
+    let _t = null;
+    window.__refreshLPH = () => { clearTimeout(_t); _t = setTimeout(() => setMenuKey(k => k + 1), 150); };
+    return () => { clearTimeout(_t); delete window.__refreshLPH; };
   }, []);
 
   useEffect(() => {
