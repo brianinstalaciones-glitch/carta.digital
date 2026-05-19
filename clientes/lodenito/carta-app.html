@@ -69,6 +69,19 @@
       opacity: 0.18;
     }
 
+    .hero-logo-bg {
+      position: absolute;
+      right: -30px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 210px;
+      height: 210px;
+      border-radius: 50%;
+      object-fit: cover;
+      opacity: 0.18;
+      pointer-events: none;
+    }
+
     .hero-inner {
       position: relative;
       z-index: 2;
@@ -1082,6 +1095,7 @@
       <path d="M70 84 Q76 72 82 84" stroke="#E8760A" stroke-width="1.5" fill="none" stroke-linecap="round"/>
       <path d="M105 84 Q110 76 115 84" stroke="#E8760A" stroke-width="1.5" fill="none" stroke-linecap="round"/>
     </svg>
+    <img src="logo.jpg" alt="" class="hero-logo-bg" onerror="this.style.display='none'" />
     <div class="hero-inner">
       <div class="hero-logo-wrap">
         <img src="logo.jpg" alt="Parrilla Lo de Nito" class="hero-logo" onerror="this.style.display='none'" />
