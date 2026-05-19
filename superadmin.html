@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Super Admin — Carta Digital</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sofia+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --amber:    #E8890A;
+      --amber-dk: #C4720A;
+      --amber-bg: rgba(232,137,10,0.09);
+      --ink:      #111111;
+      --ink2:     #555555;
+      --ink3:     #999999;
+      --surface:  #FFFFFF;
+      --bg:       #F5F5F5;
+      --border:   #E5E5E5;
+      --red:      #E53E3E;
+      --red-bg:   rgba(229,62,62,0.08);
+      --green:    #38A169;
+      --green-bg: rgba(56,161,105,0.1);
+      --blue:     #3B82F6;
+      --blue-bg:  rgba(59,130,246,0.1);
+      --font:     'Sofia Sans', Arial, sans-serif;
+    }
+    body { font-family: var(--font); background: var(--bg); color: var(--ink); -webkit-font-smoothing: antialiased; min-height: 100vh; }
+
+    /* ── LOGIN ─────────────────────────────────────────────── */
+    #screen-login {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(145deg, #0a0600 0%, #1a0e00 60%, #080500 100%);
+      position: relative; overflow: hidden; padding: 24px 16px;
+    }
+    #screen-login::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 65% 50% at 50% 35%, rgba(232,137,10,0.22) 0%, transparent 70%);
+    }
+    .login-card {
+      position: relative; z-index: 1;
+      background: var(--surface); border-radius: 24px;
+      padding: 36px 28px; width: 100%; max-width: 380px;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.5);
+    }
+    .login-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 28px; }
+    .login-brand-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      background: var(--ink); display: flex; align-items: center; justify-content: center;
+      font-size: 22px; flex-shrink: 0;
+    }
+    .login-brand-name { font-size: 17px; font-weight: 800; color: var(--ink); }
+    .login-brand-sub  { font-size: 11px; color: var(--ink3); font-weight: 600; text-transform: uppercase; letter-spacing: .06em; }
+    .login-title { font-size: 26px; font-weight: 800; letter-spacing: -.4px; margin-bottom: 4px; }
+    .login-sub   { font-size: 14px; color: var(--ink3); margin-bottom: 28px; }
+    .fg { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+    .fl { font-size: 11px; font-weight: 700; color: var(--ink2); text-transform: uppercase; letter-spacing: .07em; }
+    .fi {
+      padding: 12px 16px; border-radius: 12px; border: 1.5px solid var(--border);
+      font-family: var(--font); font-size: 15px; color: var(--ink);
+      background: var(--bg); outline: none; transition: border-color 200ms; width: 100%;
+    }
+    .fi:focus { border-color: var(--amber); background: #fff; }
+    .fi::placeholder { color: var(--ink3); }
+    .btn-login {
+      width: 100%; padding: 14px; border-radius: 14px; border: none;
+      background: var(--ink); color: #fff;
+      font-family: var(--font); font-size: 16px; font-weight: 700;
+      cursor: pointer; margin-top: 8px; transition: background 150ms;
+    }
+    .btn-login:hover { background: #2a2a2a; }
+    .login-err {
+      margin-top: 12px; text-align: center; font-size: 13px; font-weight: 600;
+      color: var(--red); display: none;
+    }
+
+    /* ── DASHBOARD ─────────────────────────────────────────── */
+    #screen-dash { display: none; min-height: 100vh; }
+    #screen-dash.active { display: flex; flex-direction: column; }
+
+    /* Topbar */
+    .topbar {
+      background: var(--ink); color: #fff;
+      padding: 14px 28px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 50;
+    }
+    .topbar-brand { display: flex; align-items: center; gap: 10px; }
+    .topbar-brand-icon { width: 32px; height: 32px; border-radius: 8px; background: var(--amber); display: flex; align-items: center; justify-content: center; font-size: 16px; }
+    .topbar-brand-name { font-size: 15px; font-weight: 800; color: #fff; }
+    .topbar-brand-sub  { font-size: 11px; color: rgba(255,255,255,.4); }
+    .topbar-right { display: flex; align-items: center; gap: 10px; }
+    .super-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 999px; background: rgba(232,137,10,0.2); color: var(--amber); }
+    .btn-logout { padding: 7px 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,.15); background: none; color: rgba(255,255,255,.6); font-family: var(--font); font-size: 13px; font-weight: 600; cursor: pointer; }
+    .btn-logout:hover { color: #fff; border-color: rgba(255,255,255,.3); }
+
+    /* Body */
+    .page-body { padding: 28px; display: flex; flex-direction: column; gap: 22px; }
+
+    /* Stats */
+    .stats-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; }
+    .stat-card { background: var(--surface); border-radius: 14px; padding: 18px; border: 1px solid var(--border); display: flex; flex-direction: column; gap: 8px; }
+    .stat-ico  { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+    .stat-val  { font-size: 30px; font-weight: 800; letter-spacing: -.5px; line-height: 1; }
+    .stat-lbl  { font-size: 11px; font-weight: 700; color: var(--ink3); text-transform: uppercase; letter-spacing: .06em; }
+
+    /* Card */
+    .card { background: var(--surface); border-radius: 16px; border: 1px solid var(--border); overflow: hidden; }
+    .card-header { padding: 16px 22px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    .card-title    { font-size: 15px; font-weight: 800; }
+    .card-subtitle { font-size: 12px; color: var(--ink3); margin-top: 2px; }
+
+    /* Table */
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    thead th { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--ink3); padding: 11px 18px; text-align: left; border-bottom: 1px solid var(--border); background: var(--bg); white-space: nowrap; }
+    tbody tr { border-bottom: 1px solid var(--border); transition: background 120ms; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: #fafafa; }
+    td { padding: 13px 18px; font-size: 14px; vertical-align: middle; }
+
+    /* Estado badges */
+    .estado-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
+    .estado-trial    { background: var(--amber-bg); color: var(--amber-dk); }
+    .estado-activo   { background: var(--green-bg); color: var(--green); }
+    .estado-urgente  { background: var(--red-bg); color: var(--red); }
+    .estado-vencido  { background: #f0f0f0; color: var(--ink3); }
+    .estado-suspendido { background: #f0f0f0; color: var(--ink3); }
+
+    /* Cred box */
+    .cred-box { display: flex; flex-direction: column; gap: 2px; }
+    .cred-line { font-size: 12px; color: var(--ink2); font-family: 'Menlo','Monaco',monospace; }
+    .cred-line span { color: var(--ink3); margin-right: 4px; }
+
+    /* Row actions */
+    .row-actions { display: flex; gap: 5px; flex-wrap: wrap; }
+    .icon-btn { width: 30px; height: 30px; border-radius: 8px; border: none; background: var(--bg); cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--ink2); transition: background 150ms; position: relative; }
+    .icon-btn svg { width: 14px; height: 14px; }
+    .icon-btn:hover { background: var(--border); }
+    .icon-btn.green:hover { background: var(--green-bg); color: var(--green); }
+    .icon-btn.red:hover   { background: var(--red-bg);   color: var(--red); }
+    .icon-btn.wa          { background: #25D366; color: #fff; }
+    .icon-btn.wa:hover    { background: #1db954; }
+    .icon-btn.amber       { background: var(--amber); color: #fff; }
+    .icon-btn.amber:hover { background: var(--amber-dk); }
+
+    /* Buttons */
+    .btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; border-radius: 10px; font-family: var(--font); font-size: 14px; font-weight: 700; border: none; cursor: pointer; transition: background 150ms; white-space: nowrap; }
+    .btn svg { width: 15px; height: 15px; }
+    .btn-primary   { background: var(--amber); color: #fff; }
+    .btn-primary:hover { background: var(--amber-dk); }
+    .btn-secondary { background: var(--bg); color: var(--ink2); border: 1.5px solid var(--border); }
+    .btn-secondary:hover { background: var(--border); }
+    .btn-danger    { background: var(--red); color: #fff; }
+    .btn-danger:hover { background: #c53030; }
+    .btn-sm { padding: 6px 12px; font-size: 12px; border-radius: 8px; }
+
+    /* Search */
+    .search-bar { display: flex; align-items: center; gap: 7px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 10px; padding: 7px 12px; transition: border-color 200ms; }
+    .search-bar:focus-within { border-color: var(--amber); }
+    .search-bar svg   { width: 15px; height: 15px; color: var(--ink3); flex-shrink: 0; }
+    .search-bar input { border: none; background: transparent; font-family: var(--font); font-size: 13px; color: var(--ink); outline: none; width: 200px; }
+    .search-bar input::placeholder { color: var(--ink3); }
+
+    /* Modal */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.52); z-index: 200; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+    .modal-overlay.open { display: flex; }
+    .modal { background: var(--surface); border-radius: 20px; width: 100%; max-width: 520px; max-height: 92vh; overflow-y: auto; box-shadow: 0 -8px 48px rgba(0,0,0,.2); animation: fadeUp 260ms cubic-bezier(.22,.68,0,1.2); }
+    @keyframes fadeUp { from{transform:translateY(20px);opacity:0} to{transform:translateY(0);opacity:1} }
+    .modal-header { padding: 20px 22px 14px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); }
+    .modal-title { font-size: 17px; font-weight: 800; }
+    .modal-close { width: 30px; height: 30px; border-radius: 8px; border: none; background: var(--bg); cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; color: var(--ink2); }
+    .modal-body   { padding: 20px 22px; display: flex; flex-direction: column; gap: 14px; }
+    .modal-footer { padding: 14px 22px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 8px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .fgroup { display: flex; flex-direction: column; gap: 6px; }
+    .flabel { font-size: 11px; font-weight: 700; color: var(--ink2); text-transform: uppercase; letter-spacing: .07em; }
+    .finput { padding: 11px 13px; border-radius: 10px; border: 1.5px solid var(--border); font-family: var(--font); font-size: 15px; color: var(--ink); background: var(--bg); outline: none; transition: border-color 200ms; width: 100%; }
+    .finput:focus { border-color: var(--amber); background: #fff; }
+    .finput::placeholder { color: var(--ink3); }
+    textarea.finput { resize: vertical; min-height: 68px; line-height: 1.5; font-size: 14px; }
+    .section-divider { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--ink3); padding-bottom: 4px; border-bottom: 1px solid var(--border); }
+
+    /* Soporte panel */
+    .soporte-panel { background: #1a1a1a; border-radius: 14px; padding: 16px 18px; display: flex; flex-direction: column; gap: 10px; }
+    .soporte-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .soporte-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: rgba(255,255,255,.35); }
+    .soporte-val   { font-size: 14px; font-weight: 600; color: #e5e5e5; font-family: 'Menlo','Monaco',monospace; }
+    .copy-btn { background: rgba(255,255,255,.08); border: none; border-radius: 6px; padding: 4px 10px; font-size: 11px; font-weight: 700; color: var(--amber); cursor: pointer; font-family: var(--font); }
+    .copy-btn:hover { background: rgba(255,255,255,.14); }
+
+    /* Toast */
+    .toast { position: fixed; bottom: 24px; right: 24px; z-index: 400; background: var(--ink); color: #fff; padding: 11px 18px; border-radius: 12px; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; box-shadow: 0 8px 24px rgba(0,0,0,.2); transform: translateY(80px); opacity: 0; transition: transform 280ms, opacity 280ms; }
+    .toast.show    { transform: translateY(0); opacity: 1; }
+    .toast.success { background: var(--green); }
+    .toast.error   { background: var(--red); }
+
+    /* Empty */
+    .empty-state { padding: 48px 24px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+    .empty-ico   { font-size: 40px; }
+    .empty-title { font-size: 16px; font-weight: 800; }
+    .empty-sub   { font-size: 13px; color: var(--ink3); }
+
+    /* Toggle switch */
+    .sa-toggle { position:relative; display:inline-block; width:44px; height:24px; flex-shrink:0; }
+    .sa-toggle input { opacity:0; width:0; height:0; position:absolute; }
+    .sa-slider { position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0; background:#ddd; border-radius:24px; transition:.2s; }
+    .sa-slider::before { position:absolute; content:""; height:18px; width:18px; left:3px; bottom:3px; background:#fff; border-radius:50%; transition:.2s; box-shadow:0 1px 4px rgba(0,0,0,.2); }
+    .sa-toggle input:checked + .sa-slider { background:var(--green); }
+    .sa-toggle input:checked + .sa-slider::before { transform:translateX(20px); }
+
+    /* Feature badges en tabla */
+    .feat-badge { display:inline-flex; align-items:center; gap:3px; font-size:10px; font-weight:700; padding:2px 7px; border-radius:999px; }
+    .feat-on  { background:var(--green-bg); color:var(--green); }
+    .feat-off { background:#f0f0f0; color:#bbb; text-decoration:line-through; }
+
+    @media(max-width:900px) {
+      .stats-row { grid-template-columns: repeat(2,1fr); }
+      .page-body { padding: 16px; }
+      .form-row  { grid-template-columns: 1fr; }
+      .search-bar input { width: 140px; }
+    }
+    @media(max-width:600px) {
+      .stats-row { grid-template-columns: repeat(2,1fr); gap: 10px; }
+      .topbar { padding: 12px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════ LOGIN ══════════ -->
+<div id="screen-login">
+  <div class="login-card">
+    <div class="login-brand">
+      <div class="login-brand-icon">🛡️</div>
+      <div>
+        <div class="login-brand-name">Carta Digital</div>
+        <div class="login-brand-sub">Panel Super Admin</div>
+      </div>
+    </div>
+    <div class="login-title">Acceso restringido</div>
+    <div class="login-sub">Solo para administradores del sistema</div>
+    <div class="fg">
+      <label class="fl">Usuario</label>
+      <input class="fi" type="text" id="l-user" placeholder="superadmin" />
+    </div>
+    <div class="fg">
+      <label class="fl">Contraseña</label>
+      <input class="fi" type="password" id="l-pass" placeholder="••••••••" />
+    </div>
+    <button class="btn-login" onclick="doLogin()">Entrar al panel</button>
+    <div class="login-err" id="login-err">Usuario o contraseña incorrectos</div>
+  </div>
+</div>
+
+<!-- ══════════ DASHBOARD ══════════ -->
+<div id="screen-dash">
+
+  <div class="topbar">
+    <div class="topbar-brand">
+      <div class="topbar-brand-icon">🛡️</div>
+      <div>
+        <div class="topbar-brand-name">Carta Digital — Super Admin</div>
+        <div class="topbar-brand-sub">Panel de gestión y soporte</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="super-badge">⚡ Super Admin</div>
+      <button class="btn-logout" onclick="doLogout()">Salir</button>
+    </div>
+  </div>
+
+  <div class="page-body">
+
+    <!-- STATS -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-ico" style="background:#F5F5F5">👥</div>
+        <div class="stat-val" id="st-total">0</div>
+        <div class="stat-lbl">Clientes totales</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-ico" style="background:var(--amber-bg)">⏳</div>
+        <div class="stat-val" id="st-trial">0</div>
+        <div class="stat-lbl">En prueba</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-ico" style="background:var(--green-bg)">✅</div>
+        <div class="stat-val" id="st-activo">0</div>
+        <div class="stat-lbl">Activos / pagos</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-ico" style="background:var(--red-bg)">⚠️</div>
+        <div class="stat-val" id="st-vencido">0</div>
+        <div class="stat-lbl">Vencidos</div>
+      </div>
+    </div>
+
+    <!-- CONFIG DEL SERVICIO -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">⚙️ Configuración del servicio</div>
+          <div class="card-subtitle">Links y datos que se muestran cuando vence el trial</div>
+        </div>
+      </div>
+      <div style="padding:20px;display:flex;flex-direction:column;gap:14px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div>
+            <div style="font-size:11px;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Link MercadoPago</div>
+            <input class="finput" id="cfg-mp-link" type="url" placeholder="https://mpago.la/..." />
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">WhatsApp de contacto</div>
+            <input class="finput" id="cfg-wa-number" type="text" placeholder="542665253058" />
+          </div>
+        </div>
+        <div>
+          <div style="font-size:11px;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Precio mensual (se muestra en el overlay)</div>
+          <input class="finput" id="cfg-precio" type="text" placeholder="Ej: $5.000/mes" style="max-width:220px" />
+        </div>
+        <button onclick="saveConfig()" style="align-self:flex-start;padding:10px 22px;background:var(--amber);color:#fff;border:none;border-radius:10px;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer">💾 Guardar configuración</button>
+
+        <div style="border-top:1px solid var(--border);padding-top:16px;margin-top:4px">
+          <div style="font-size:13px;font-weight:800;color:var(--ink);margin-bottom:12px">🔑 Acceso superadmin</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;align-items:flex-end">
+            <div>
+              <div style="font-size:11px;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Usuario actual</div>
+              <input class="finput" id="cfg-sa-user" type="text" placeholder="superadmin" />
+            </div>
+            <div>
+              <div style="font-size:11px;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Nueva contraseña</div>
+              <input class="finput" id="cfg-sa-pass" type="password" placeholder="••••••••" />
+            </div>
+            <div>
+              <div style="font-size:11px;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Confirmar contraseña</div>
+              <input class="finput" id="cfg-sa-pass2" type="password" placeholder="••••••••" />
+            </div>
+          </div>
+          <button onclick="saveSACreds()" style="margin-top:12px;align-self:flex-start;padding:10px 22px;background:var(--ink);color:#fff;border:none;border-radius:10px;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer">🔒 Cambiar acceso</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABLA CLIENTES -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Suscriptores</div>
+          <div class="card-subtitle">Gestioná clientes, accedé a sus datos y dales soporte</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <div class="search-bar">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" placeholder="Buscar cliente…" oninput="filterClients(this.value)" />
+          </div>
+          <button class="btn btn-primary" onclick="openModal()">
+            <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Alta cliente
+          </button>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Restaurante</th>
+              <th>Contacto</th>
+              <th>Estado trial</th>
+              <th>⭐ Plan</th>
+              <th>Credenciales admin</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="clients-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════ MODAL CLIENTE ══════════ -->
+<div class="modal-overlay" id="modal-cliente">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-title">Alta de cliente</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+
+      <div class="section-divider">Datos del local</div>
+
+      <div class="fgroup">
+        <label class="flabel">Nombre del restaurante</label>
+        <input class="finput" id="f-restaurante" placeholder="Ej: La Parrilla de Juan" />
+      </div>
+      <div class="form-row">
+        <div class="fgroup">
+          <label class="flabel">Nombre del dueño</label>
+          <input class="finput" id="f-contacto" placeholder="Juan Pérez" />
+        </div>
+        <div class="fgroup">
+          <label class="flabel">Ciudad</label>
+          <input class="finput" id="f-ciudad" placeholder="Merlo, San Luis" />
+        </div>
+      </div>
+      <div class="fgroup">
+        <label class="flabel">WhatsApp</label>
+        <input class="finput" id="f-whatsapp" placeholder="5492664000000" />
+      </div>
+
+      <div class="section-divider" style="margin-top:4px">Identificador del sistema</div>
+
+      <div class="fgroup">
+        <label class="flabel">ID del restaurante (rid)</label>
+        <input class="finput" id="f-rid" placeholder="ej: lph, afl, pizzeriajuan" style="font-family:monospace" />
+        <div style="font-size:11px;color:var(--ink3);margin-top:3px">Letras minúsculas, sin espacios. Ej: <strong>lph</strong> para La Pizzería de Homero.</div>
+      </div>
+
+      <div class="section-divider" style="margin-top:4px">Credenciales panel admin</div>
+
+      <div class="form-row">
+        <div class="fgroup">
+          <label class="flabel">Email</label>
+          <input class="finput" id="f-email" placeholder="admin@local.com" />
+        </div>
+        <div class="fgroup">
+          <label class="flabel">Contraseña</label>
+          <input class="finput" id="f-password" placeholder="••••••••" />
+        </div>
+      </div>
+
+      <div class="section-divider" style="margin-top:4px">Trial y estado</div>
+
+      <div class="form-row">
+        <div class="fgroup">
+          <label class="flabel">Inicio del trial</label>
+          <input class="finput" type="date" id="f-trial-start" />
+        </div>
+        <div class="fgroup">
+          <label class="flabel">Estado</label>
+          <select class="finput" id="f-estado">
+            <option value="trial">En prueba (trial)</option>
+            <option value="activo">Activo / Pago</option>
+            <option value="suspendido">Suspendido</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="fgroup">
+        <label class="flabel">Notas internas de soporte</label>
+        <textarea class="finput" id="f-notas" placeholder="Problemas reportados, llamadas, acuerdos…"></textarea>
+      </div>
+
+      <div class="section-divider" style="margin-top:4px">⭐ Funciones Premium</div>
+
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--bg);border-radius:10px">
+          <div>
+            <div style="font-size:14px;font-weight:700">🍽 Vista Salón</div>
+            <div style="font-size:11px;color:var(--ink3);margin-top:2px">Gestión de mesas, apertura y cierre</div>
+          </div>
+          <label class="sa-toggle"><input type="checkbox" id="f-feat-salon" checked/><span class="sa-slider"></span></label>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--bg);border-radius:10px">
+          <div>
+            <div style="font-size:14px;font-weight:700">🔥 Cocina</div>
+            <div style="font-size:11px;color:var(--ink3);margin-top:2px">Panel en tiempo real para el equipo de cocina</div>
+          </div>
+          <label class="sa-toggle"><input type="checkbox" id="f-feat-cocina" checked/><span class="sa-slider"></span></label>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--bg);border-radius:10px">
+          <div>
+            <div style="font-size:14px;font-weight:700">🪙 Club de puntos</div>
+            <div style="font-size:11px;color:var(--ink3);margin-top:2px">Sistema de fidelización y gestión de clientes</div>
+          </div>
+          <label class="sa-toggle"><input type="checkbox" id="f-feat-club" checked/><span class="sa-slider"></span></label>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--bg);border-radius:10px">
+          <div>
+            <div style="font-size:14px;font-weight:700">💰 Cierre de Caja</div>
+            <div style="font-size:11px;color:var(--ink3);margin-top:2px">Control de ingresos diarios por método de pago</div>
+          </div>
+          <label class="sa-toggle"><input type="checkbox" id="f-feat-caja" checked/><span class="sa-slider"></span></label>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveClient()">
+        <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" width="15" height="15"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        Guardar
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ MODAL SOPORTE ══════════ -->
+<div class="modal-overlay" id="modal-soporte">
+  <div class="modal" style="max-width:460px">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="soporte-title">Soporte</div>
+        <div style="font-size:12px;color:var(--ink3);margin-top:2px" id="soporte-sub"></div>
+      </div>
+      <button class="modal-close" onclick="closeSoporte()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="soporte-panel" id="soporte-panel"></div>
+      <div class="fgroup" id="soporte-notas-wrap">
+        <label class="flabel">Notas internas</label>
+        <textarea class="finput" id="soporte-notas" style="min-height:80px"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeSoporte()">Cerrar</button>
+      <button class="btn btn-primary" onclick="saveNotas()">Guardar notas</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- ══════════ MODAL CONFIRMAR ELIMINAR ══════════ -->
+<div class="modal-overlay" id="modal-delete">
+  <div class="modal" style="max-width:380px">
+    <div class="modal-header">
+      <div class="modal-title" style="color:var(--red)">Eliminar cliente</div>
+      <button class="modal-close" onclick="document.getElementById('modal-delete').classList.remove('open')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:15px;color:var(--ink2);line-height:1.7">¿Eliminar a <strong id="delete-name"></strong>? Esta acción no se puede deshacer.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="document.getElementById('modal-delete').classList.remove('open')">Cancelar</button>
+      <button class="btn btn-danger" onclick="confirmDelete()">Eliminar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── AUTH ─────────────────────────────────────────────────────
+const SA_CREDS_KEY = 'sa_creds';
+function getSACreds() {
+  return JSON.parse(localStorage.getItem(SA_CREDS_KEY) || '{"user":"superadmin","pass":"carta2024"}');
+}
+
+function doLogin() {
+  const u = document.getElementById('l-user').value.trim();
+  const p = document.getElementById('l-pass').value;
+  const creds = getSACreds();
+  if (u === creds.user && p === creds.pass) {
+    document.getElementById('screen-login').style.display = 'none';
+    document.getElementById('screen-dash').classList.add('active');
+    render();
+  } else {
+    document.getElementById('login-err').style.display = 'block';
+  }
+}
+function doLogout() {
+  document.getElementById('screen-dash').classList.remove('active');
+  document.getElementById('screen-login').style.display = 'flex';
+  document.getElementById('l-pass').value = '';
+  document.getElementById('login-err').style.display = 'none';
+}
+document.getElementById('l-pass').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+document.getElementById('l-user').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+// ── DATA ─────────────────────────────────────────────────────
+const LS_KEY = 'sa_clients';
+let clients = [];
+let editingId = null, deleteId = null, soporteId = null;
+let searchQ = '';
+
+function load() {
+  const raw = localStorage.getItem(LS_KEY);
+  if (raw) {
+    clients = JSON.parse(raw);
+    // migración: inferir rid faltante por nombre de restaurante
+    let dirty = false;
+    clients.forEach(c => {
+      if (c.rid) return;
+      const n = (c.restaurante || '').toLowerCase();
+      if      (n.includes('fuego'))                           { c.rid = 'afl'; dirty = true; }
+      else if (n.includes('pizz') || n.includes('homero'))   { c.rid = 'lph'; dirty = true; }
+      else if (n.includes('otro') || n.includes('mundo'))    { c.rid = 'dom'; dirty = true; }
+    });
+    if (dirty) save();
+    // Agregar De Otro Mundo si todavía no está en la lista
+    if (!clients.some(c => c.rid === 'dom' || (c.restaurante||'').toLowerCase().includes('otro mundo'))) {
+      clients.push({
+        id: Date.now(),
+        restaurante: 'De Otro Mundo',
+        rid: 'dom',
+        contacto: 'Propietario',
+        ciudad: 'Merlo, San Luis',
+        whatsapp: '5492664000000',
+        email: 'admin@deotromundo.com',
+        password: 'demo1234',
+        trialStart: new Date().toISOString().slice(0,10),
+        estado: 'trial',
+        features: { salon: true, club: true, caja: true },
+        notas: 'Empanadas & Milanesas'
+      });
+      save();
+    }
+    // Agregar Parripollo El Maxi si todavía no está en la lista
+    if (!clients.some(c => c.rid === 'pem' || (c.restaurante||'').toLowerCase().includes('parripollo'))) {
+      clients.push({
+        id: Date.now() + 1,
+        restaurante: 'Parripollo El Maxi',
+        rid: 'pem',
+        contacto: 'Propietario',
+        ciudad: 'Merlo, San Luis',
+        whatsapp: '549266XXXXXXX',
+        email: 'admin@pem.com',
+        password: 'demo1234',
+        trialStart: new Date().toISOString().slice(0,10),
+        estado: 'trial',
+        features: { salon: true, club: true, caja: true },
+        notas: 'Asado 100% Argentino'
+      });
+      save();
+    }
+    // Agregar Parrilla Lo de Nito si todavía no está en la lista
+    if (!clients.some(c => c.rid === 'lodenito')) {
+      clients.push({
+        id: Date.now() + 2,
+        restaurante: 'Parrilla Lo de Nito',
+        rid: 'lodenito',
+        contacto: 'Propietario',
+        ciudad: 'Ituzaingó, Buenos Aires',
+        whatsapp: '549266XXXXXXX',
+        email: 'admin@lodenito.com',
+        password: 'demo1234',
+        trialStart: new Date().toISOString().slice(0,10),
+        estado: 'trial',
+        features: { salon: true, club: true, caja: true },
+        notas: 'Parrilla al paso'
+      });
+      save();
+    }
+  } else {
+    // Clientes demo precargados
+    clients = [
+      {
+        id: 1,
+        restaurante: 'A Fuego Lento',
+        rid: 'afl',
+        contacto: 'Propietario',
+        ciudad: 'Merlo, San Luis',
+        whatsapp: '542665253058',
+        email: 'admin@afuegolento.com',
+        password: 'demo1234',
+        trialStart: new Date().toISOString().slice(0,10),
+        estado: 'trial',
+        features: { salon: true, club: true, caja: true },
+        notas: ''
+      },
+      {
+        id: 2,
+        restaurante: 'La Pizzería de Homero',
+        rid: 'lph',
+        contacto: 'Propietario',
+        ciudad: 'Merlo, San Luis',
+        whatsapp: '542665000000',
+        email: 'admin@lapizeria.com',
+        password: 'demo1234',
+        trialStart: new Date().toISOString().slice(0,10),
+        estado: 'trial',
+        features: { salon: true, club: true, caja: true },
+        notas: ''
+      },
+      {
+        id: 3,
+        restaurante: 'De Otro Mundo',
+        rid: 'dom',
+        contacto: 'Propietario',
+        ciudad: 'Merlo, San Luis',
+        whatsapp: '5492664000000',
+        email: 'admin@deotromundo.com',
+        password: 'demo1234',
+        trialStart: new Date().toISOString().slice(0,10),
+        estado: 'trial',
+        features: { salon: true, club: true, caja: true },
+        notas: 'Empanadas & Milanesas'
+      },
+      {
+        id: 4,
+        restaurante: 'Parripollo El Maxi',
+        rid: 'pem',
+        contacto: 'Propietario',
+        ciudad: 'Merlo, San Luis',
+        whatsapp: '549266XXXXXXX',
+        email: 'admin@pem.com',
+        password: 'demo1234',
+        trialStart: new Date().toISOString().slice(0,10),
+        estado: 'trial',
+        features: { salon: true, club: true, caja: true },
+        notas: 'Asado 100% Argentino'
+      },
+      {
+        id: 5,
+        restaurante: 'Parrilla Lo de Nito',
+        rid: 'lodenito',
+        contacto: 'Propietario',
+        ciudad: 'Ituzaingó, Buenos Aires',
+        whatsapp: '549266XXXXXXX',
+        email: 'admin@lodenito.com',
+        password: 'demo1234',
+        trialStart: new Date().toISOString().slice(0,10),
+        estado: 'trial',
+        features: { salon: true, club: true, caja: true },
+        notas: 'Parrilla al paso'
+      }
+    ];
+    save();
+  }
+}
+
+function save() {
+  localStorage.setItem(LS_KEY, JSON.stringify(clients));
+  saSyncToFirebase();
+}
+
+// ── TRIAL CALC ───────────────────────────────────────────────
+const TRIAL_DAYS = 15;
+
+function trialInfo(c) {
+  if (c.estado === 'activo')    return { label: '✅ Activo / Pago',   cls: 'estado-activo',    days: null };
+  if (c.estado === 'suspendido') return { label: '🚫 Suspendido',      cls: 'estado-suspendido', days: null };
+  const start = new Date(c.trialStart);
+  const elapsed = Math.floor((Date.now() - start) / 86400000);
+  const rem = Math.max(0, TRIAL_DAYS - elapsed);
+  if (rem === 0) return { label: '⏰ Vencido',             cls: 'estado-vencido',  days: 0 };
+  if (rem <= 3)  return { label: `🔴 ${rem} día${rem!==1?'s':''} restantes`, cls: 'estado-urgente', days: rem };
+  return { label: `⏳ ${rem} día${rem!==1?'s':''} restantes`, cls: 'estado-trial', days: rem };
+}
+
+// ── STATS ────────────────────────────────────────────────────
+function updateStats() {
+  const total   = clients.length;
+  const trials  = clients.filter(c => c.estado === 'trial' && trialInfo(c).days > 0).length;
+  const activos = clients.filter(c => c.estado === 'activo').length;
+  const vencidos = clients.filter(c => {
+    const t = trialInfo(c); return t.days === 0;
+  }).length;
+  document.getElementById('st-total').textContent  = total;
+  document.getElementById('st-trial').textContent  = trials;
+  document.getElementById('st-activo').textContent = activos;
+  document.getElementById('st-vencido').textContent = vencidos;
+}
+
+// ── RENDER TABLE ─────────────────────────────────────────────
+function render() {
+  load();
+  updateStats();
+  const tbody = document.getElementById('clients-tbody');
+  const list  = clients.filter(c =>
+    !searchQ ||
+    c.restaurante.toLowerCase().includes(searchQ) ||
+    (c.contacto||'').toLowerCase().includes(searchQ) ||
+    (c.ciudad||'').toLowerCase().includes(searchQ)
+  );
+
+  if (!list.length) {
+    tbody.innerHTML = `<tr><td colspan="6">
+      <div class="empty-state">
+        <div class="empty-ico">👥</div>
+        <div class="empty-title">${searchQ ? 'Sin resultados' : 'Todavía no hay clientes'}</div>
+        <div class="empty-sub">${searchQ ? 'Probá con otro nombre' : 'Hacé clic en "Alta cliente" para empezar'}</div>
+      </div></td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = list.map(c => {
+    const ti = trialInfo(c);
+    const f  = c.features || {};
+    const wa = c.whatsapp ? `<a class="icon-btn wa" href="https://wa.me/${c.whatsapp}" target="_blank" title="WhatsApp">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.975-1.405A9.96 9.96 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18a7.96 7.96 0 01-4.073-1.117l-.292-.173-3.047.861.86-3.047-.19-.308A7.96 7.96 0 014 12c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8z"/></svg>
+    </a>` : '';
+
+    return `<tr>
+      <td>
+        <div style="font-weight:700;font-size:14px">${c.restaurante}</div>
+        <div style="font-size:12px;color:var(--ink3)">${c.ciudad||''}${c.rid ? ' <code style="font-size:10px;color:var(--ink3);background:var(--bg);padding:1px 5px;border-radius:4px">'+c.rid+'</code>' : ''}</div>
+      </td>
+      <td>
+        <div style="font-weight:600;font-size:13px">${c.contacto||'—'}</div>
+        <div style="font-size:12px;color:var(--ink3)">${c.whatsapp ? '+' + c.whatsapp : ''}</div>
+      </td>
+      <td><span class="estado-badge ${ti.cls}">${ti.label}</span></td>
+      <td>
+        <div style="display:flex;gap:4px;flex-wrap:wrap">
+          <span class="feat-badge ${f.salon !==false?'feat-on':'feat-off'}">🍽 Salón</span>
+          <span class="feat-badge ${f.cocina!==false?'feat-on':'feat-off'}">🔥 Cocina</span>
+          <span class="feat-badge ${f.club  !==false?'feat-on':'feat-off'}">🪙 Club</span>
+          <span class="feat-badge ${f.caja  !==false?'feat-on':'feat-off'}">💰 Caja</span>
+        </div>
+      </td>
+      <td>
+        <div class="cred-box">
+          <div class="cred-line"><span>email:</span>${c.email||'—'}</div>
+          <div class="cred-line"><span>pass:</span>${c.password||'—'}</div>
+        </div>
+      </td>
+      <td>
+        <div class="row-actions">
+          ${wa}
+          <button class="icon-btn" onclick="openSoporte(${c.id})" title="Soporte / Notas">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          </button>
+          <button class="icon-btn green" onclick="extenderTrial(${c.id})" title="Extender trial 15 días">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/></svg>
+          </button>
+          <button class="icon-btn amber" onclick="toggleActivo(${c.id})" title="${c.estado==='activo'?'Volver a trial':'Marcar como activo/pago'}">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </button>
+          <button class="icon-btn" onclick="openEditModal(${c.id})" title="Editar">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </button>
+          <button class="icon-btn red" onclick="openDelete(${c.id})" title="Eliminar">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg>
+          </button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function filterClients(v) { searchQ = v.toLowerCase().trim(); render(); }
+
+// ── MODAL ALTA / EDITAR ───────────────────────────────────────
+function openModal() {
+  editingId = null;
+  document.getElementById('modal-title').textContent = 'Alta de cliente';
+  ['f-restaurante','f-contacto','f-ciudad','f-whatsapp','f-email','f-password','f-notas','f-rid'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('f-trial-start').value = new Date().toISOString().slice(0,10);
+  document.getElementById('f-estado').value = 'trial';
+  document.getElementById('f-feat-salon').checked  = true;
+  document.getElementById('f-feat-cocina').checked = true;
+  document.getElementById('f-feat-club').checked   = true;
+  document.getElementById('f-feat-caja').checked   = true;
+  document.getElementById('modal-cliente').classList.add('open');
+}
+
+function openEditModal(id) {
+  const c = clients.find(x => x.id === id); if (!c) return;
+  editingId = id;
+  document.getElementById('modal-title').textContent = 'Editar cliente';
+  document.getElementById('f-restaurante').value  = c.restaurante || '';
+  document.getElementById('f-contacto').value     = c.contacto || '';
+  document.getElementById('f-ciudad').value       = c.ciudad || '';
+  document.getElementById('f-whatsapp').value     = c.whatsapp || '';
+  document.getElementById('f-email').value        = c.email || '';
+  document.getElementById('f-password').value     = c.password || '';
+  document.getElementById('f-trial-start').value  = c.trialStart || '';
+  document.getElementById('f-estado').value       = c.estado || 'trial';
+  document.getElementById('f-notas').value        = c.notas || '';
+  document.getElementById('f-rid').value          = c.rid || '';
+  const f = c.features || {};
+  document.getElementById('f-feat-salon').checked  = f.salon  !== false;
+  document.getElementById('f-feat-cocina').checked = f.cocina !== false;
+  document.getElementById('f-feat-club').checked   = f.club   !== false;
+  document.getElementById('f-feat-caja').checked   = f.caja   !== false;
+  document.getElementById('modal-cliente').classList.add('open');
+}
+
+function saveClient() {
+  const restaurante = document.getElementById('f-restaurante').value.trim();
+  if (!restaurante) { showToast('Ingresá el nombre del restaurante', 'error'); return; }
+  const rid = document.getElementById('f-rid').value.trim().toLowerCase().replace(/\s+/g,'');
+  const data = {
+    restaurante,
+    rid,
+    contacto:   document.getElementById('f-contacto').value.trim(),
+    ciudad:     document.getElementById('f-ciudad').value.trim(),
+    whatsapp:   document.getElementById('f-whatsapp').value.trim().replace(/\D/g,''),
+    email:      document.getElementById('f-email').value.trim(),
+    password:   document.getElementById('f-password').value.trim(),
+    trialStart: document.getElementById('f-trial-start').value,
+    estado:     document.getElementById('f-estado').value,
+    notas:      document.getElementById('f-notas').value.trim(),
+    features: {
+      salon:  document.getElementById('f-feat-salon').checked,
+      cocina: document.getElementById('f-feat-cocina').checked,
+      club:   document.getElementById('f-feat-club').checked,
+      caja:   document.getElementById('f-feat-caja').checked,
+    },
+  };
+  if (editingId) {
+    const idx = clients.findIndex(x => x.id === editingId);
+    clients[idx] = { ...clients[idx], ...data };
+    showToast('✏️ Cliente actualizado', 'success');
+  } else {
+    clients.push({ id: Date.now(), ...data });
+    showToast('🎉 Cliente dado de alta', 'success');
+  }
+  // Actualiza credenciales del admin del restaurante
+  if (rid && data.email && data.password) {
+    localStorage.setItem(rid + '_admin_creds', JSON.stringify({ email: data.email, password: data.password }));
+  }
+  // Escribe la licencia de módulos — el admin del cliente la lee con DOM_isModuleEnabled()
+  if (rid) {
+    localStorage.setItem(rid + '_license', JSON.stringify({
+      salon:  data.features.salon,
+      cocina: data.features.cocina,
+      puntos: data.features.club,  // "club" en SA = "puntos" en el admin
+      caja:   data.features.caja,
+    }));
+  }
+  save(); closeModal(); render();
+}
+
+function closeModal() { document.getElementById('modal-cliente').classList.remove('open'); }
+
+// ── SOPORTE ───────────────────────────────────────────────────
+function openSoporte(id) {
+  const c = clients.find(x => x.id === id); if (!c) return;
+  soporteId = id;
+  document.getElementById('soporte-title').textContent = c.restaurante;
+  document.getElementById('soporte-sub').textContent   = c.contacto + (c.ciudad ? ' · ' + c.ciudad : '');
+  document.getElementById('soporte-notas').value = c.notas || '';
+
+  const ti = trialInfo(c);
+  document.getElementById('soporte-panel').innerHTML = `
+    <div class="soporte-row">
+      <span class="soporte-label">Estado</span>
+      <span class="soporte-val">${ti.label}</span>
+    </div>
+    <div class="soporte-row">
+      <span class="soporte-label">Email admin</span>
+      <span class="soporte-val">${c.email||'—'}</span>
+      <button class="copy-btn" onclick="copyText('${c.email}')">Copiar</button>
+    </div>
+    <div class="soporte-row">
+      <span class="soporte-label">Contraseña</span>
+      <span class="soporte-val">${c.password||'—'}</span>
+      <button class="copy-btn" onclick="copyText('${c.password}')">Copiar</button>
+    </div>
+    <div class="soporte-row">
+      <span class="soporte-label">WhatsApp</span>
+      <span class="soporte-val">${c.whatsapp ? '+'+c.whatsapp : '—'}</span>
+      ${c.whatsapp ? `<a class="copy-btn" href="https://wa.me/${c.whatsapp}" target="_blank" style="text-decoration:none">Chat</a>` : ''}
+    </div>
+    <div class="soporte-row">
+      <span class="soporte-label">Inicio trial</span>
+      <span class="soporte-val">${c.trialStart||'—'}</span>
+    </div>
+  `;
+  document.getElementById('modal-soporte').classList.add('open');
+}
+
+function closeSoporte() { document.getElementById('modal-soporte').classList.remove('open'); }
+
+function saveNotas() {
+  const c = clients.find(x => x.id === soporteId); if (!c) return;
+  c.notas = document.getElementById('soporte-notas').value.trim();
+  save(); render();
+  showToast('📝 Notas guardadas', 'success');
+}
+
+// ── ACCIONES RÁPIDAS ──────────────────────────────────────────
+function extenderTrial(id) {
+  const c = clients.find(x => x.id === id); if (!c) return;
+  c.trialStart = new Date().toISOString().slice(0,10);
+  c.estado = 'trial';
+  save(); render();
+  showToast('🔄 Trial extendido 15 días desde hoy', 'success');
+}
+
+function toggleActivo(id) {
+  const c = clients.find(x => x.id === id); if (!c) return;
+  c.estado = c.estado === 'activo' ? 'trial' : 'activo';
+  save(); render();
+  showToast(c.estado === 'activo' ? '✅ Marcado como activo / pago' : '⏳ Vuelto a trial', 'success');
+}
+
+function openDelete(id) {
+  deleteId = id;
+  const c = clients.find(x => x.id === id);
+  document.getElementById('delete-name').textContent = c ? `"${c.restaurante}"` : 'este cliente';
+  document.getElementById('modal-delete').classList.add('open');
+}
+
+function confirmDelete() {
+  clients = clients.filter(x => x.id !== deleteId);
+  save(); render();
+  document.getElementById('modal-delete').classList.remove('open');
+  showToast('🗑 Cliente eliminado', '');
+}
+
+// ── UTILS ─────────────────────────────────────────────────────
+function copyText(txt) {
+  navigator.clipboard.writeText(txt).then(() => showToast('📋 Copiado', 'success'));
+}
+
+let toastTimer;
+function showToast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast' + (type ? ' ' + type : '');
+  clearTimeout(toastTimer);
+  requestAnimationFrame(() => t.classList.add('show'));
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+document.querySelectorAll('.modal-overlay').forEach(o => {
+  o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); });
+});
+
+// ── CONFIGURACIÓN DEL SERVICIO ────────────────────────────────
+const CFG_KEY = 'sa_config';
+
+// ── FIREBASE ──────────────────────────────────────────────────
+firebase.initializeApp({
+  apiKey:            "AIzaSyC2b_SBBdMxAbMm8bPjIUTHoZr9S1tLgzI",
+  authDomain:        "cartas-digitaleds-merlo.firebaseapp.com",
+  projectId:         "cartas-digitaleds-merlo",
+  storageBucket:     "cartas-digitaleds-merlo.firebasestorage.app",
+  messagingSenderId: "959472664879",
+  appId:             "1:959472664879:web:0f4f0ede6c56337b0a21da"
+});
+const _saDb = firebase.firestore();
+const SA_DOC = _saDb.collection('superadmin').doc('data');
+
+function saSyncToFirebase() {
+  const cfg   = JSON.parse(localStorage.getItem(CFG_KEY)     || '{}');
+  const creds = JSON.parse(localStorage.getItem(SA_CREDS_KEY)|| '{"user":"superadmin","pass":"carta2024"}');
+  SA_DOC.set({ clients, cfg, creds }, { merge: false }).catch(e => console.warn('SA Firebase error', e));
+}
+
+function saLoadFromFirebase() {
+  SA_DOC.get().then(doc => {
+    if (!doc.exists) { saSyncToFirebase(); return; }
+    const data = doc.data();
+    if (data.clients && data.clients.length) {
+      clients = data.clients;
+      localStorage.setItem(LS_KEY, JSON.stringify(clients));
+    }
+    if (data.cfg) {
+      localStorage.setItem(CFG_KEY, JSON.stringify(data.cfg));
+      loadConfig();
+    }
+    if (data.creds) {
+      localStorage.setItem(SA_CREDS_KEY, JSON.stringify(data.creds));
+      document.getElementById('cfg-sa-user').value = data.creds.user;
+    }
+    render();
+  }).catch(e => console.warn('SA Firebase load error', e));
+}
+
+function loadConfig() {
+  const cfg = JSON.parse(localStorage.getItem(CFG_KEY) || '{}');
+  document.getElementById('cfg-mp-link').value   = cfg.mpLink   || 'https://mpago.la/2t4ZcPF';
+  document.getElementById('cfg-wa-number').value = cfg.waNumber || '542665253058';
+  document.getElementById('cfg-precio').value    = cfg.precio   || '';
+  const creds = getSACreds();
+  document.getElementById('cfg-sa-user').value = creds.user;
+}
+
+function saveSACreds() {
+  const user  = document.getElementById('cfg-sa-user').value.trim();
+  const pass  = document.getElementById('cfg-sa-pass').value;
+  const pass2 = document.getElementById('cfg-sa-pass2').value;
+  if (!user) { showToast('Ingresá un usuario', 'error'); return; }
+  if (!pass)  { showToast('Ingresá una contraseña', 'error'); return; }
+  if (pass !== pass2) { showToast('Las contraseñas no coinciden', 'error'); return; }
+  const newCreds = { user, pass };
+  localStorage.setItem(SA_CREDS_KEY, JSON.stringify(newCreds));
+  document.getElementById('cfg-sa-pass').value  = '';
+  document.getElementById('cfg-sa-pass2').value = '';
+  saSyncToFirebase();
+  showToast('🔒 Acceso actualizado', 'success');
+}
+
+function saveConfig() {
+  const cfg = {
+    mpLink:   document.getElementById('cfg-mp-link').value.trim()   || 'https://mpago.la/2t4ZcPF',
+    waNumber: document.getElementById('cfg-wa-number').value.trim() || '542665253058',
+    precio:   document.getElementById('cfg-precio').value.trim(),
+  };
+  localStorage.setItem(CFG_KEY, JSON.stringify(cfg));
+  saSyncToFirebase();
+  showToast('✅ Configuración guardada');
+}
+
+loadConfig();
+saLoadFromFirebase();
+</script>
+</body>
+</html>

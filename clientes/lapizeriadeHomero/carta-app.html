@@ -1,0 +1,2215 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>La Pizzería de Homero — Carta digital</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Alfa+Slab+One&family=Caveat+Brush&family=Permanent+Marker&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+/* ─────────────────────────────────────────────────────────
+   LA PIZZERÍA DE HOMERO — Design Tokens
+   Cartoon americano vintage / pizarra de barrio
+   ───────────────────────────────────────────────────────── */
+:root {
+  --ink:           #0E1419;
+  --slate:         #182433;
+  --slate-2:       #1F2D3D;
+  --slate-3:       #2A3B4F;
+  --board-bg:      #14202C;
+  --board-frame:   #4A2E1A;
+  --board-frame-2: #6B4528;
+  --yellow:        #FFCA28;
+  --yellow-glow:   #FFD854;
+  --yellow-deep:   #E8AE00;
+  --red:           #E63946;
+  --red-deep:      #B82A36;
+  --cream:         #F4E9C8;
+  --chalk:         #F5F5F0;
+  --chalk-dim:     #C9C9C0;
+  --chalk-blue:    #A8DADC;
+  --chalk-pink:    #FFB6C1;
+  --neon-pink:     #FF5E94;
+  --neon-cyan:     #5EE0FF;
+  --neon-green:    #7CFC8E;
+  --bg:            var(--ink);
+  --surface:       var(--slate);
+  --surface-2:     var(--slate-2);
+  --surface-3:     var(--slate-3);
+  --border:        rgba(244,233,200,0.12);
+  --border-strong: rgba(244,233,200,0.24);
+  --fg:            var(--chalk);
+  --fg-2:          var(--chalk-dim);
+  --fg-3:          rgba(244,233,200,0.55);
+  --fg-on-yellow:  var(--ink);
+  --fg-on-red:     var(--chalk);
+  --font-display:  'Bungee','Impact',sans-serif;
+  --font-slab:     'Alfa Slab One','Georgia',serif;
+  --font-chalk:    'Caveat Brush','Caveat',cursive;
+  --font-marker:   'Permanent Marker',cursive;
+  --font-body:     'Inter',system-ui,sans-serif;
+  --r-sm: 8px; --r-md: 14px; --r-lg: 20px; --r-xl: 28px; --r-2xl: 36px; --r-full: 999px;
+  --shadow-card:   0 8px 24px rgba(0,0,0,0.35);
+  --shadow-pop:    0 12px 40px rgba(0,0,0,0.5);
+  --shadow-yellow: 0 0 0 4px rgba(255,202,40,0.25),0 8px 24px rgba(0,0,0,0.4);
+  --neon-glow-yellow: 0 0 12px rgba(255,202,40,0.6),0 0 32px rgba(255,202,40,0.3);
+  --neon-glow-red:    0 0 12px rgba(230,57,70,0.7),0 0 32px rgba(230,57,70,0.35);
+  --neon-glow-pink:   0 0 12px rgba(255,94,148,0.7),0 0 32px rgba(255,94,148,0.35);
+}
+[data-theme="light"] {
+  --ink:           #1B1B1B;
+  --slate:         #FAF6E8;
+  --slate-2:       #F2EBD3;
+  --slate-3:       #E8DEB8;
+  --board-bg:      #1A2433;
+  --board-frame:   #6B4528;
+  --board-frame-2: #8B5E32;
+  --yellow:        #FFC107;
+  --yellow-glow:   #FFCA28;
+  --yellow-deep:   #C99A00;
+  --red:           #D62C39;
+  --red-deep:      #A71F2A;
+  --bg:            #FAF6E8;
+  --surface:       #FFFFFF;
+  --surface-2:     #F5EEDA;
+  --surface-3:     #ECE3C5;
+  --border:        rgba(27,27,27,0.12);
+  --border-strong: rgba(27,27,27,0.25);
+  --fg:            #1B1B1B;
+  --fg-2:          #4A4A4A;
+  --fg-3:          #7A7A7A;
+}
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+html,body { font-family:var(--font-body); background:var(--bg); color:var(--fg); -webkit-font-smoothing:antialiased; }
+button { font-family:inherit; border:none; background:none; color:inherit; cursor:pointer; }
+input,select,textarea { font-family:inherit; color:inherit; }
+img { max-width:100%; display:block; }
+
+/* ── TEXTURES ── */
+.halftone { background-image:radial-gradient(rgba(0,0,0,0.18) 1px,transparent 1.5px); background-size:6px 6px; }
+.halftone-yellow { background-color:var(--yellow); background-image:radial-gradient(rgba(0,0,0,0.18) 1px,transparent 1.6px); background-size:8px 8px; }
+.chalk-noise { position:relative; }
+.chalk-noise::before { content:''; position:absolute; inset:0; background-image:radial-gradient(circle at 20% 30%,rgba(245,245,240,0.06) 0,transparent 1px),radial-gradient(circle at 60% 70%,rgba(245,245,240,0.04) 0,transparent 1px),radial-gradient(circle at 80% 20%,rgba(245,245,240,0.05) 0,transparent 1px); background-size:4px 4px,7px 7px,11px 11px; pointer-events:none; border-radius:inherit; mix-blend-mode:screen; opacity:0.7; }
+.wood-frame { background:linear-gradient(135deg,var(--board-frame-2) 0%,var(--board-frame) 50%,var(--board-frame-2) 100%); position:relative; }
+.wood-frame::after { content:''; position:absolute; inset:0; background:repeating-linear-gradient(90deg,transparent 0,rgba(0,0,0,0.12) 1px,transparent 3px,transparent 8px,rgba(255,255,255,0.04) 9px,transparent 12px); pointer-events:none; border-radius:inherit; }
+.chalkboard { background:var(--board-bg); background-image:radial-gradient(ellipse at 30% 40%,rgba(255,255,255,0.04) 0%,transparent 60%),radial-gradient(ellipse at 70% 80%,rgba(255,255,255,0.025) 0%,transparent 50%); position:relative; color:var(--chalk); }
+.chalkboard::after { content:''; position:absolute; inset:0; border-radius:inherit; background-image:repeating-linear-gradient(73deg,transparent 0,rgba(245,245,240,0.025) 0.5px,transparent 1px,transparent 5px); pointer-events:none; }
+
+/* ── NEON ── */
+.neon-yellow { color:var(--yellow); text-shadow:var(--neon-glow-yellow); }
+.neon-red { color:var(--red); text-shadow:var(--neon-glow-red); }
+.neon-pink { color:var(--neon-pink); text-shadow:var(--neon-glow-pink); }
+
+/* ── ANIMATIONS ── */
+@keyframes flicker { 0%,18%,22%,25%,53%,57%,100% { text-shadow:var(--neon-glow-yellow); opacity:1; } 20%,24%,55% { text-shadow:none; opacity:0.85; } }
+.flicker { animation:flicker 4s infinite; }
+@keyframes wobble { 0%,100% { transform:rotate(-1deg); } 50% { transform:rotate(1deg); } }
+.wobble { animation:wobble 3s ease-in-out infinite; }
+@keyframes pulse-yellow { 0%,100% { box-shadow:0 0 0 0 rgba(255,202,40,0.5); } 50% { box-shadow:0 0 0 12px rgba(255,202,40,0); } }
+@keyframes slide-up { from { transform:translateY(20px); opacity:0; } to { transform:translateY(0); opacity:1; } }
+.slide-up { animation:slide-up 0.4s ease-out both; }
+@keyframes cart-bump { 0%,100% { transform:scale(1); } 30% { transform:scale(1.18) rotate(-6deg); } 60% { transform:scale(0.96); } }
+.cart-bump { animation:cart-bump 0.5s ease-out; }
+@keyframes bell-ring { 0%,100% { transform:rotate(0); } 15%,45%,75% { transform:rotate(-15deg); } 30%,60% { transform:rotate(15deg); } }
+@keyframes bell-pulse { 0%,100% { box-shadow:0 4px 16px rgba(37,211,102,0.3); } 50% { box-shadow:0 4px 32px rgba(37,211,102,0.6); } }
+
+/* ── SCROLLBARS ── */
+::-webkit-scrollbar { width:8px; height:8px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:var(--border-strong); border-radius:999px; }
+
+/* ═══════════════════════════════════════════
+   APP SHELL
+   ═══════════════════════════════════════════ */
+.app-shell { width:100%; max-width:480px; margin:0 auto; min-height:100vh; background:var(--bg); position:relative; overflow-x:hidden; }
+
+/* ── HEADER ── */
+.app-header { position:sticky; top:0; z-index:50; display:flex; align-items:center; justify-content:space-between; padding:14px 18px; background:color-mix(in srgb,var(--bg) 92%,transparent); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border-bottom:1px solid var(--border); }
+.hdr-left,.hdr-right { display:flex; align-items:center; gap:8px; }
+.hdr-mesa { display:flex; align-items:center; gap:10px; padding:6px 12px 6px 8px; border:1.5px solid var(--border-strong); border-radius:var(--r-md); cursor:pointer; }
+.hdr-mesa-label { font-family:var(--font-display); font-size:9px; letter-spacing:0.1em; color:var(--fg-3); }
+.hdr-mesa-num { font-family:var(--font-slab); font-size:18px; line-height:1; color:var(--yellow); }
+.hdr-icon { width:38px; height:38px; border-radius:var(--r-md); display:grid; place-items:center; border:1.5px solid var(--border); position:relative; }
+.hdr-points { position:absolute; bottom:-4px; right:-4px; font-family:var(--font-slab); font-size:10px; background:var(--yellow); color:var(--ink); padding:1px 6px; border-radius:999px; }
+.hdr-cart { width:44px; height:44px; border-radius:var(--r-md); background:var(--yellow); color:var(--ink); display:grid; place-items:center; position:relative; box-shadow:var(--neon-glow-yellow); }
+.hdr-badge { position:absolute; top:-6px; right:-6px; background:var(--red); color:var(--chalk); font-family:var(--font-slab); font-size:11px; width:20px; height:20px; border-radius:999px; display:grid; place-items:center; border:2px solid var(--bg); }
+
+/* ── HOME A: MARQUEE ── */
+.home-a-bg { position:fixed; inset:0; pointer-events:none; z-index:0; background:radial-gradient(ellipse at 50% 0%,rgba(255,202,40,0.12) 0%,transparent 45%),radial-gradient(ellipse at 50% 100%,rgba(230,57,70,0.08) 0%,transparent 50%),var(--bg); }
+.home-a-content { position:relative; z-index:1; padding:12px 16px 32px; }
+.home-a-marquee { background:var(--board-bg); border-radius:var(--r-xl); padding:18px 16px 22px; margin-top:8px; position:relative; overflow:hidden; border:3px solid var(--board-frame); box-shadow:0 0 0 2px var(--ink),0 14px 32px rgba(0,0,0,0.5); }
+.bulb-row { display:flex; justify-content:space-around; padding:0 4px; }
+.bulb { width:14px; height:14px; border-radius:50%; background:radial-gradient(circle at 35% 35%,#fff8c4,var(--yellow) 60%,var(--yellow-deep)); box-shadow:0 0 8px 2px rgba(255,202,40,0.7),0 0 2px rgba(255,255,255,0.5); display:inline-block; position:relative; }
+.bulb::after { content:''; position:absolute; bottom:-6px; left:50%; transform:translateX(-50%); width:2px; height:6px; background:var(--board-frame); }
+.home-a-logo { text-align:center; padding:10px 0 14px; }
+.home-a-est { font-family:var(--font-chalk); font-size:13px; color:var(--chalk-dim); letter-spacing:0.3em; margin-bottom:2px; }
+.home-a-title { font-family:var(--font-display); font-size:clamp(36px,10vw,48px); color:var(--yellow); line-height:1; letter-spacing:-0.01em; }
+.home-a-of { font-family:var(--font-chalk); font-size:16px; color:var(--chalk-dim); margin:4px 0; }
+.home-a-name { font-family:var(--font-display); font-size:clamp(42px,12vw,56px); color:var(--chalk); line-height:1; }
+.home-a-tag { font-family:var(--font-chalk); font-size:13px; color:var(--chalk-dim); margin-top:6px; }
+.home-a-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:16px; }
+.big-btn { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; border-radius:var(--r-lg); padding:16px 12px; position:relative; overflow:hidden; transition:transform 0.15s; }
+.big-btn:active { transform:scale(0.97); }
+.big-btn:nth-child(3) { grid-column:span 2; }
+.big-btn-emoji { font-size:28px; }
+.big-btn-label { font-family:var(--font-display); font-size:13px; letter-spacing:0.04em; }
+.big-btn-sub { font-size:11px; opacity:0.7; }
+.big-btn-yellow { background:var(--yellow); color:var(--ink); box-shadow:var(--neon-glow-yellow); }
+.big-btn-pink { background:var(--neon-pink); color:white; box-shadow:var(--neon-glow-pink); }
+.big-btn-red { background:var(--red); color:white; box-shadow:var(--neon-glow-red); }
+.big-btn-cyan { background:var(--neon-cyan); color:var(--ink); }
+.big-btn-outline { grid-column:span 2; background:transparent; border:2px dashed var(--border-strong); color:var(--fg); }
+
+/* ── HOME B: STICKER ── */
+.home-b { background:var(--bg); }
+.home-b-hero { padding:24px 18px 28px; position:relative; overflow:hidden; }
+.home-b-tag-row { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px; }
+.sticker { display:inline-block; padding:4px 12px; font-family:var(--font-display); font-size:11px; letter-spacing:0.05em; border-radius:4px; }
+.sticker-red { background:var(--red); color:white; }
+.sticker-blue { background:var(--neon-cyan); color:var(--ink); }
+.home-b-title { font-family:var(--font-display); line-height:1; display:flex; flex-direction:column; gap:2px; }
+.home-b-title-1 { font-size:clamp(28px,8vw,36px); color:var(--ink); }
+.home-b-title-of { font-family:var(--font-chalk); font-size:22px; color:var(--ink); opacity:0.7; }
+.home-b-title-2 { font-size:clamp(48px,14vw,64px); color:var(--red-deep); }
+.home-b-sub { font-size:13px; color:var(--ink); opacity:0.7; margin-top:10px; }
+.home-b-pizzaslice { font-size:60px; position:absolute; right:16px; top:16px; }
+.home-b-cta-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:0 16px 24px; }
+.card-btn { display:flex; align-items:center; gap:12px; background:var(--surface); border:1.5px solid var(--border); border-radius:var(--r-lg); padding:14px 12px; transition:transform 0.15s; }
+.card-btn:active { transform:scale(0.97); }
+.card-btn-primary { background:var(--yellow); color:var(--ink); border-color:transparent; box-shadow:var(--neon-glow-yellow); }
+.card-btn-wide { grid-column:span 2; }
+.card-btn-em { font-size:24px; }
+.card-btn-l { font-family:var(--font-display); font-size:13px; letter-spacing:0.04em; }
+.card-btn-s { font-size:11px; color:var(--fg-3); }
+
+/* ── HOME C: VINTAGE ── */
+.home-c-paper { margin:12px 16px; background:var(--surface); border-radius:var(--r-lg); padding:24px 20px; border:3px solid var(--border-strong); position:relative; }
+.home-c-strap { font-family:var(--font-display); font-size:9px; letter-spacing:0.2em; color:var(--fg-3); text-align:center; margin-bottom:8px; }
+.home-c-ribbon { display:inline-block; background:var(--red); color:white; font-family:var(--font-display); font-size:11px; letter-spacing:0.08em; padding:2px 16px; margin:0 auto 10px; display:block; text-align:center; }
+.home-c-title { font-family:var(--font-slab); font-size:clamp(32px,9vw,44px); color:var(--fg); line-height:1.1; text-align:center; margin-bottom:12px; }
+.home-c-title em { font-style:italic; color:var(--red); }
+.home-c-rule { border:none; border-top:2px solid var(--border-strong); margin:12px 0; }
+.home-c-lead { font-family:var(--font-chalk); font-size:16px; text-align:center; color:var(--fg-2); margin-bottom:12px; }
+.ghost-btn { display:flex; align-items:center; justify-content:space-between; padding:12px 16px; border:2px solid var(--border-strong); border-radius:var(--r-md); font-family:var(--font-display); font-size:12px; letter-spacing:0.05em; transition:background 0.15s; gap:8px; }
+.ghost-btn strong { display:block; font-size:13px; }
+.ghost-btn span:not(.ghost-arrow) { font-size:11px; color:var(--fg-3); font-family:var(--font-body); font-weight:400; letter-spacing:0; }
+.ghost-btn-primary { background:var(--yellow); color:var(--ink); border-color:transparent; }
+.ghost-arrow { font-size:18px; }
+.home-c-actions { display:flex; flex-direction:column; gap:8px; }
+.home-c-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+
+/* ── MÁS PEDIDAS STRIP ── */
+.strip-section { padding:18px 0 24px; border-top:1px solid var(--border); margin-top:12px; }
+.strip-head { display:flex; align-items:baseline; justify-content:space-between; padding:0 16px 12px; }
+.strip-title { font-family:var(--font-display); font-size:14px; letter-spacing:0.04em; }
+.strip-sub { font-size:11px; color:var(--fg-3); margin-top:2px; }
+.strip-link { font-size:12px; color:var(--yellow); font-weight:600; }
+.strip-scroll { display:flex; gap:12px; overflow-x:auto; padding:0 16px; scroll-snap-type:x mandatory; scrollbar-width:none; }
+.strip-scroll::-webkit-scrollbar { display:none; }
+.strip-card { flex-shrink:0; display:flex; flex-direction:column; gap:6px; scroll-snap-align:start; align-items:center; }
+.strip-card-name { font-size:12px; font-weight:600; max-width:96px; text-align:center; }
+.strip-card-price { font-family:var(--font-slab); font-size:13px; color:var(--yellow); }
+
+/* ── SUB-HEADER ── */
+.sub-header { display:flex; align-items:center; gap:12px; padding:14px 16px; border-bottom:1px solid var(--border); position:sticky; top:0; z-index:40; background:color-mix(in srgb,var(--bg) 92%,transparent); backdrop-filter:blur(10px); }
+.sub-header.sticky { top:0; }
+.sh-back { width:36px; height:36px; border-radius:var(--r-md); border:1.5px solid var(--border); display:grid; place-items:center; flex-shrink:0; }
+.sh-title { font-family:var(--font-display); font-size:16px; letter-spacing:0.04em; flex:1; }
+.sh-action { font-family:var(--font-display); font-size:11px; letter-spacing:0.04em; color:var(--yellow); display:flex; align-items:center; gap:4px; }
+.sh-action-text { font-size:13px; font-family:var(--font-body); font-weight:600; }
+
+/* ── SEARCH BAR ── */
+.search-bar { display:flex; align-items:center; gap:10px; padding:10px 14px; margin:12px 16px; background:var(--surface); border:1.5px solid var(--border); border-radius:var(--r-full); }
+.search-bar input { flex:1; background:transparent; border:none; outline:none; font-size:14px; }
+
+/* ── CAT TABS ── */
+.cat-tabs { display:flex; gap:8px; overflow-x:auto; padding:10px 16px; scrollbar-width:none; border-bottom:1px solid var(--border); }
+.cat-tabs::-webkit-scrollbar { display:none; }
+.cat-tab { display:flex; flex-direction:column; align-items:center; gap:2px; padding:8px 12px; border-radius:var(--r-md); border:1.5px solid var(--border); flex-shrink:0; font-size:11px; font-weight:600; transition:all 0.15s; white-space:nowrap; }
+.cat-tab.active { background:var(--yellow); color:var(--ink); border-color:transparent; }
+.cat-emoji { font-size:18px; }
+.cat-label { font-family:var(--font-display); font-size:10px; letter-spacing:0.03em; }
+
+/* ── PRODUCT LIST ── */
+.prod-list { padding:12px 16px; display:flex; flex-direction:column; gap:10px; }
+.featured-card { display:flex; align-items:center; gap:14px; padding:14px; background:linear-gradient(135deg,var(--yellow),var(--yellow-deep)); border-radius:var(--r-lg); color:var(--ink); margin-bottom:4px; width:100%; }
+.featured-emoji { font-size:32px; }
+.featured-l { font-family:var(--font-display); font-size:15px; }
+.featured-s { font-size:12px; opacity:0.7; }
+.featured-arrow { margin-left:auto; font-size:20px; }
+.prod-row { display:flex; gap:12px; padding:12px; background:var(--surface); border:1.5px solid var(--border); border-radius:var(--r-lg); text-align:left; width:100%; align-items:center; transition:transform 0.12s; }
+.prod-row:active { transform:scale(0.98); }
+.prod-row-body { flex:1; min-width:0; }
+.prod-row-head { display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:3px; }
+.prod-row-name { font-weight:700; font-size:14px; }
+.prod-row-badge { background:var(--neon-pink); color:white; font-family:var(--font-display); font-size:9px; letter-spacing:0.06em; padding:2px 8px; border-radius:999px; }
+.prod-row-pop { font-size:11px; color:var(--yellow); }
+.prod-row-desc { font-size:12px; color:var(--fg-2); line-height:1.4; margin-bottom:6px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+.prod-row-foot { display:flex; align-items:center; justify-content:space-between; }
+.prod-row-price { font-family:var(--font-slab); font-size:15px; color:var(--yellow); display:flex; align-items:baseline; gap:6px; }
+.prod-row-old { text-decoration:line-through; font-size:12px; color:var(--fg-3); }
+.prod-row-cta { width:28px; height:28px; background:var(--yellow); color:var(--ink); border-radius:999px; display:grid; place-items:center; flex-shrink:0; }
+.empty { text-align:center; padding:40px; color:var(--fg-3); }
+
+/* ── DETAIL ── */
+.screen-detail { padding-bottom:90px; }
+.detail-hero { background:var(--surface-2); padding:40px 20px 30px; display:flex; flex-direction:column; align-items:center; position:relative; }
+.detail-back { position:absolute; top:16px; left:16px; width:36px; height:36px; border-radius:var(--r-md); background:color-mix(in srgb,var(--bg) 70%,transparent); backdrop-filter:blur(6px); display:grid; place-items:center; border:1.5px solid var(--border); }
+.detail-body { padding:16px 16px 0; }
+.detail-top { display:flex; gap:8px; margin-bottom:8px; }
+.detail-badge { background:var(--neon-pink); color:white; font-family:var(--font-display); font-size:10px; padding:3px 10px; border-radius:999px; }
+.detail-top-badge { background:var(--yellow); color:var(--ink); font-size:11px; font-weight:700; padding:3px 10px; border-radius:999px; }
+.detail-name { font-family:var(--font-display); font-size:28px; line-height:1.1; margin-bottom:8px; }
+.detail-desc { font-size:14px; color:var(--fg-2); line-height:1.5; margin-bottom:12px; }
+.detail-price { font-family:var(--font-slab); font-size:32px; color:var(--yellow); text-shadow:var(--neon-glow-yellow); margin-bottom:16px; }
+.sec { margin-top:16px; border-top:1px dashed var(--border); padding-top:16px; }
+.sec-head { margin-bottom:10px; }
+.sec-title { font-family:var(--font-display); font-size:13px; letter-spacing:0.04em; }
+.sec-sub { font-size:11px; color:var(--fg-3); margin-top:2px; }
+.chip-grid { display:flex; flex-wrap:wrap; gap:6px; }
+.chip { padding:6px 12px; border-radius:999px; border:1.5px solid var(--border); font-size:12px; font-weight:600; display:flex; align-items:center; gap:4px; transition:all 0.12s; }
+.chip-on { background:var(--yellow); color:var(--ink); border-color:transparent; }
+.custom-note { width:100%; margin-top:10px; padding:10px 12px; background:var(--surface); border:1.5px solid var(--border); border-radius:var(--r-md); font-size:13px; outline:none; }
+.extra-list { display:flex; flex-direction:column; gap:6px; }
+.extra-row { display:flex; align-items:center; gap:10px; padding:10px 12px; background:var(--surface); border:1.5px solid var(--border); border-radius:var(--r-md); cursor:pointer; transition:border-color 0.12s; }
+.extra-row.on { border-color:var(--yellow); background:color-mix(in srgb,var(--yellow) 8%,var(--surface)); }
+.extra-name { flex:1; font-size:13px; font-weight:600; }
+.extra-price { font-family:var(--font-slab); font-size:13px; color:var(--yellow); }
+.detail-foot { position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:480px; padding:12px 16px; background:color-mix(in srgb,var(--bg) 92%,transparent); backdrop-filter:blur(10px); border-top:1px solid var(--border); display:flex; align-items:center; gap:10px; z-index:50; }
+.qty-stepper { display:flex; align-items:center; gap:0; border:1.5px solid var(--border); border-radius:var(--r-md); overflow:hidden; }
+.qty-stepper button { width:36px; height:44px; display:grid; place-items:center; background:var(--surface); }
+.qty-stepper span { width:36px; text-align:center; font-family:var(--font-slab); font-size:16px; background:var(--surface); line-height:44px; }
+.btn-cta { display:flex; align-items:center; justify-content:center; gap:10px; flex:1; background:var(--yellow); color:var(--ink); font-family:var(--font-display); font-size:15px; letter-spacing:0.04em; padding:14px 20px; border-radius:var(--r-md); box-shadow:var(--neon-glow-yellow); transition:transform 0.15s; }
+.btn-cta:active { transform:scale(0.97); }
+.btn-cta-price { font-family:var(--font-slab); }
+.btn-cta-block { width:100%; }
+.btn-cta-ghost { background:transparent; border:2px solid var(--border-strong); box-shadow:none; }
+
+/* ── BUILDER ── */
+.screen-builder { padding-bottom:100px; }
+.builder-modes { display:flex; gap:8px; padding:12px 16px; }
+.mode-btn { flex:1; padding:10px; border-radius:var(--r-md); border:1.5px solid var(--border); font-family:var(--font-display); font-size:13px; display:flex; align-items:center; justify-content:center; gap:6px; transition:all 0.15s; }
+.mode-btn.on { background:var(--yellow); color:var(--ink); border-color:transparent; }
+.pizza-preview { display:flex; justify-content:center; padding:12px 0; }
+.size-row { display:flex; gap:8px; padding:0 16px 12px; }
+.size-btn { flex:1; padding:10px 8px; border-radius:var(--r-md); border:1.5px solid var(--border); display:flex; flex-direction:column; align-items:center; gap:2px; font-size:11px; transition:all 0.15s; }
+.size-btn.on { border-color:var(--yellow); background:color-mix(in srgb,var(--yellow) 12%,var(--surface)); }
+.size-btn strong { font-family:var(--font-display); font-size:13px; }
+.size-price { font-family:var(--font-slab); color:var(--yellow); font-size:12px; }
+.builder-side { margin:0 16px 8px; padding:14px; background:var(--surface); border:1.5px solid var(--border); border-radius:var(--r-lg); }
+.builder-side-yellow { border-color:var(--yellow); }
+.builder-side-red { border-color:var(--red); }
+.builder-side-head { display:flex; align-items:baseline; gap:8px; margin-bottom:10px; }
+.builder-side-head strong { font-family:var(--font-display); font-size:13px; letter-spacing:0.04em; }
+.builder-side-head span { font-size:11px; color:var(--fg-3); }
+.ing-grid { display:flex; flex-wrap:wrap; gap:6px; }
+.ing-chip { padding:6px 10px; border-radius:var(--r-md); border:1.5px solid var(--border); display:flex; flex-direction:column; align-items:center; gap:1px; transition:all 0.12s; }
+.ing-chip.on { background:var(--yellow); color:var(--ink); border-color:transparent; }
+.ing-name { font-size:11px; font-weight:600; }
+.ing-price { font-size:10px; opacity:0.7; }
+.builder-name { padding:0 16px 12px; }
+.builder-name label { font-size:12px; color:var(--fg-3); display:block; margin-bottom:6px; }
+.builder-name input { width:100%; padding:10px 12px; background:var(--surface); border:1.5px solid var(--border); border-radius:var(--r-md); font-size:13px; outline:none; }
+.builder-summary { flex:1; }
+.builder-sum-l { font-family:var(--font-display); font-size:14px; }
+.builder-sum-s { font-size:11px; color:var(--fg-3); }
+
+/* ── CART ── */
+.screen-cart { padding-bottom:32px; }
+.cart-items { padding:12px 16px; display:flex; flex-direction:column; gap:10px; }
+.cart-item { display:flex; align-items:center; gap:12px; padding:12px; background:var(--surface); border:1.5px solid var(--border); border-radius:var(--r-lg); }
+.cart-item-body { flex:1; }
+.cart-item-name { font-weight:700; font-size:14px; margin-bottom:2px; }
+.cart-item-meta { font-size:11px; color:var(--fg-3); }
+.cart-item-price { font-family:var(--font-slab); font-size:14px; color:var(--yellow); margin-top:4px; }
+.cart-qty { display:flex; align-items:center; gap:0; border:1.5px solid var(--border); border-radius:var(--r-md); overflow:hidden; }
+.cart-qty button { width:32px; height:36px; display:grid; place-items:center; background:var(--surface); }
+.cart-qty span { width:28px; text-align:center; font-family:var(--font-slab); background:var(--surface); line-height:36px; }
+.seg-row { display:flex; gap:6px; }
+.seg-btn { flex:1; padding:10px 8px; border-radius:var(--r-md); border:1.5px solid var(--border); display:flex; flex-direction:column; align-items:center; gap:1px; font-size:11px; transition:all 0.15s; }
+.seg-btn.on { border-color:var(--yellow); background:color-mix(in srgb,var(--yellow) 12%,var(--surface)); }
+.seg-btn strong { font-family:var(--font-display); font-size:12px; }
+.input { width:100%; padding:10px 12px; background:var(--surface); border:1.5px solid var(--border); border-radius:var(--r-md); font-size:13px; outline:none; margin-top:8px; }
+.input:focus { border-color:var(--yellow); }
+.cart-totals { padding:12px 16px; border-top:1px dashed var(--border); margin-top:8px; }
+.row { display:flex; justify-content:space-between; padding:6px 0; font-size:14px; }
+.total { font-family:var(--font-display); font-size:18px; color:var(--yellow); border-top:2px solid var(--border-strong); padding-top:12px; margin-top:6px; }
+.cart-foot { padding:12px 16px 24px; }
+.btn-wpp { display:flex; align-items:center; justify-content:center; gap:10px; width:100%; background:#25D366; color:white; font-family:var(--font-display); font-size:14px; letter-spacing:0.04em; padding:16px; border-radius:var(--r-md); box-shadow:0 0 16px rgba(37,211,102,0.4); transition:transform 0.15s; }
+.btn-wpp:active { transform:scale(0.97); }
+.empty-state { padding:60px 24px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:12px; }
+.empty-emoji { font-size:56px; }
+.empty-state h3 { font-family:var(--font-display); font-size:22px; }
+.empty-state p { color:var(--fg-3); }
+
+/* ── PROMOS ── */
+.promo-list { padding:12px 16px; display:flex; flex-direction:column; gap:12px; }
+.promo-card { border-radius:var(--r-xl); overflow:hidden; padding:20px; position:relative; }
+.promo-card-frame { position:absolute; inset:0; border-radius:var(--r-xl); z-index:0; opacity:0.15; }
+.promo-card-body { position:relative; z-index:1; }
+.promo-card-top { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+.promo-card-badge { font-family:var(--font-display); font-size:11px; letter-spacing:0.06em; background:var(--neon-pink); color:white; padding:3px 10px; border-radius:999px; }
+.promo-card-off { font-family:var(--font-slab); font-size:14px; color:var(--neon-green); }
+.promo-card-title { font-family:var(--font-display); font-size:20px; line-height:1.1; margin-bottom:4px; }
+.promo-card-desc { font-size:13px; color:var(--chalk-dim); line-height:1.4; margin-bottom:12px; }
+.promo-card-pricing { display:flex; align-items:baseline; gap:10px; margin-bottom:14px; }
+.promo-card-old { text-decoration:line-through; font-size:14px; color:var(--fg-3); }
+.promo-card-new { font-family:var(--font-slab); font-size:32px; }
+.promo-card-foot { display:flex; align-items:center; justify-content:space-between; }
+.countdown { display:flex; align-items:center; gap:6px; font-size:13px; color:var(--chalk-dim); }
+.countdown strong { font-family:var(--font-display); color:var(--chalk); }
+.btn-mini-cta { background:var(--yellow); color:var(--ink); font-family:var(--font-display); font-size:12px; padding:8px 16px; border-radius:999px; }
+
+/* ── LLAMAR MOZO ── */
+.llamar-success { padding:40px 24px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:12px; }
+.bell-wrap { width:80px; height:80px; background:color-mix(in srgb,var(--yellow) 15%,var(--surface)); border-radius:999px; display:grid; place-items:center; border:3px solid var(--yellow); }
+.bell-ring { animation:bell-ring 0.8s ease-in-out 3; color:var(--yellow); }
+.llamar-mesa { padding:24px; text-align:center; }
+.llamar-mesa-num { font-family:var(--font-display); font-size:72px; color:var(--yellow); text-shadow:var(--neon-glow-yellow); line-height:1; }
+.reason-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.reason-btn { padding:14px; background:var(--surface); border:1.5px solid var(--border); border-radius:var(--r-lg); font-size:13px; font-weight:600; text-align:center; transition:all 0.15s; }
+.reason-btn:active { background:var(--yellow); color:var(--ink); }
+.muted { color:var(--fg-3); font-size:13px; }
+
+/* ── DELIVERY LIVE ── */
+.delivery-eta { padding:24px 18px; text-align:center; border-bottom:1px dashed var(--border); }
+.delivery-eta-time { font-family:var(--font-display); font-size:56px; line-height:1; }
+.delivery-track { padding:24px 18px; display:flex; flex-direction:column; gap:22px; position:relative; }
+.track-step { display:flex; gap:16px; position:relative; opacity:0.4; transition:opacity 0.3s; }
+.track-step.active { opacity:1; }
+.track-step.current .track-dot { animation:pulse-yellow 1.5s infinite; }
+.track-dot { width:36px; height:36px; border-radius:999px; border:2px solid var(--border-strong); display:grid; place-items:center; font-family:var(--font-slab); background:var(--surface); color:var(--fg-2); flex-shrink:0; z-index:2; }
+.track-step.active .track-dot { background:var(--yellow); color:var(--ink); border-color:var(--ink); }
+.track-line { position:absolute; top:36px; left:17px; bottom:-22px; width:2px; background:var(--border-strong); }
+.track-l { font-family:var(--font-display); font-size:14px; letter-spacing:0.03em; }
+.track-s { font-size:12px; color:var(--fg-3); }
+.delivery-driver { margin:18px 16px; padding:14px; background:var(--surface); border:1.5px solid var(--border); border-radius:var(--r-md); display:flex; align-items:center; gap:12px; }
+.driver-avatar { width:48px; height:48px; border-radius:999px; background:var(--yellow); display:grid; place-items:center; font-size:26px; }
+.driver-call { margin-left:auto; width:44px; height:44px; background:#25D366; color:white; border-radius:999px; font-size:18px; }
+
+/* ── REVIEWS ── */
+.rev-summary { padding:18px 16px; display:flex; align-items:center; gap:18px; border-bottom:1px dashed var(--border); }
+.rev-big { font-family:var(--font-display); font-size:56px; color:var(--yellow); line-height:1; }
+.rev-stars { font-size:18px; }
+.rev-form { padding:18px 16px; border-bottom:1px dashed var(--border); }
+.rev-form h3 { font-family:var(--font-display); font-size:15px; letter-spacing:0.04em; margin-bottom:12px; }
+.rev-form-stars { display:flex; gap:4px; margin:8px 0 12px; }
+.rev-form-stars button { font-size:26px; color:var(--fg-3); }
+.rev-form-stars button.on { color:var(--yellow); }
+.rev-list { padding:18px 16px 32px; display:flex; flex-direction:column; gap:16px; }
+.rev-item { display:flex; gap:12px; }
+.rev-avatar { width:40px; height:40px; border-radius:999px; background:var(--yellow); color:var(--ink); display:grid; place-items:center; font-family:var(--font-display); font-size:16px; flex-shrink:0; }
+.rev-body { flex:1; }
+.rev-head { display:flex; gap:6px; align-items:baseline; margin-bottom:4px; }
+.rev-body p { font-size:14px; line-height:1.5; margin-top:4px; }
+
+/* ── POINTS ── */
+.pt-card { margin:16px; padding:20px; background:linear-gradient(135deg,var(--ink),var(--slate)); border:2px solid var(--yellow); border-radius:var(--r-xl); box-shadow:var(--neon-glow-yellow); color:var(--cream); }
+.pt-head { display:flex; align-items:center; gap:8px; font-family:var(--font-display); font-size:12px; letter-spacing:0.06em; color:var(--yellow); }
+.pt-balance { display:flex; align-items:baseline; gap:8px; margin:12px 0; }
+.pt-num { font-family:var(--font-display); font-size:56px; color:var(--yellow); text-shadow:var(--neon-glow-yellow); line-height:1; }
+.pt-label { font-family:var(--font-chalk); font-size:22px; }
+.pt-progress { height:8px; background:rgba(255,255,255,0.1); border-radius:999px; overflow:hidden; margin:6px 0; }
+.pt-progress-bar { height:100%; background:var(--yellow); transition:width 0.5s; }
+.rew-list { padding:0 16px; display:flex; flex-direction:column; gap:8px; }
+.rew-item { display:flex; align-items:center; gap:12px; padding:12px; background:var(--surface); border:1.5px solid var(--border); border-radius:var(--r-md); }
+.rew-emoji { font-size:28px; }
+.rew-body { flex:1; }
+.rew-label { font-weight:700; font-size:14px; }
+.rew-locked { opacity:0.6; }
+.rew-btn { background:var(--yellow); color:var(--ink); font-family:var(--font-display); font-size:11px; letter-spacing:0.05em; border:2px solid var(--ink); padding:8px 12px; border-radius:999px; }
+.rew-btn:disabled { background:var(--surface-2); color:var(--fg-3); border-color:var(--border); cursor:not-allowed; }
+.pt-rate { font-size:11px; margin-top:6px; opacity:0.7; }
+.pts-preview { display:flex; align-items:center; gap:6px; margin:4px 0; padding:8px 12px; background:rgba(255,202,40,0.12); border-radius:var(--r-sm); font-size:12px; font-weight:700; color:var(--yellow); }
+.pts-earned { margin:16px; padding:12px 16px; background:rgba(255,202,40,0.15); border:1.5px solid var(--yellow); border-radius:var(--r-md); display:flex; align-items:center; gap:8px; font-family:var(--font-display); font-size:14px; letter-spacing:0.04em; color:var(--yellow); text-align:center; justify-content:center; }
+.pts-history { padding:0 16px; display:flex; flex-direction:column; gap:6px; }
+.pts-hist-row { display:flex; align-items:center; gap:10px; padding:10px 12px; background:var(--surface); border:1.5px solid var(--border); border-radius:var(--r-md); }
+.pts-hist-icon { font-size:20px; flex-shrink:0; }
+.pts-hist-body { flex:1; min-width:0; }
+.pts-hist-label { font-size:13px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.pts-hist-amt { font-family:var(--font-display); font-size:13px; flex-shrink:0; }
+.pts-hist-amt.pts-earn { color:#38A169; }
+.pts-hist-amt.pts-redeem { color:var(--red); }
+
+/* ── MESA ── */
+.mesa-card { margin:24px 16px; padding:32px 16px; border-radius:var(--r-xl); text-align:center; border:4px solid var(--board-frame); }
+.mesa-content { color:var(--cream); }
+.mesa-num { font-family:var(--font-display); font-size:100px; color:var(--yellow); text-shadow:var(--neon-glow-yellow); line-height:1; margin:6px 0; }
+.mesa-tag { font-family:var(--font-chalk); font-size:22px; color:var(--chalk-pink); margin-bottom:18px; }
+.mesa-actions { display:grid; gap:8px; padding:0 14px; }
+
+/* ── WPP ── */
+.wpp-card { padding:32px 24px; text-align:center; }
+.wpp-emoji { font-size:60px; margin-bottom:12px; }
+.wpp-card h2 { font-family:var(--font-display); font-size:24px; margin-bottom:8px; }
+.wpp-card p { margin-bottom:24px; }
+
+/* ── CONFIRMED ── */
+.screen-confirmed { min-height:100vh; display:grid; place-items:center; padding:24px; }
+.confirmed-content { text-align:center; max-width:360px; width:100%; }
+.confirmed-emoji { font-size:80px; margin-bottom:12px; }
+.confirmed-content h1 { font-family:var(--font-display); font-size:32px; margin-bottom:8px; color:var(--yellow); text-shadow:var(--neon-glow-yellow); }
+.confirmed-total { font-family:var(--font-display); font-size:36px; color:var(--yellow); margin:22px 0; }
+.confirmed-actions { display:flex; flex-direction:column; gap:8px; }
+.order-stepper { display:flex; justify-content:center; gap:0; margin:20px 0; width:100%; }
+.step-item { display:flex; flex-direction:column; align-items:center; flex:1; position:relative; }
+.step-item:not(:last-child)::after { content:''; position:absolute; top:14px; left:50%; width:100%; height:2px; background:var(--border); z-index:0; }
+.step-item.done:not(:last-child)::after { background:var(--yellow); }
+.step-dot { width:28px; height:28px; border-radius:50%; border:2px solid var(--border); background:var(--surface); display:flex; align-items:center; justify-content:center; font-size:13px; z-index:1; transition:all 0.3s; }
+.step-item.done .step-dot { border-color:var(--yellow); background:var(--yellow); }
+.step-item.active .step-dot { border-color:var(--yellow); box-shadow:0 0 10px rgba(255,202,40,0.5); animation:pulse-step 1.5s ease-in-out infinite; }
+.step-label { font-size:10px; font-weight:700; margin-top:6px; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; }
+.step-item.done .step-label, .step-item.active .step-label { color:var(--yellow); }
+@keyframes pulse-step { 0%,100%{transform:scale(1)} 50%{transform:scale(1.15)} }
+.estado-label { font-size:18px; font-weight:800; color:var(--fg); margin-bottom:4px; }
+.estado-sub { font-size:14px; color:var(--muted); }
+
+/* ── TOAST ── */
+.toast { position:fixed; bottom:100px; left:50%; transform:translateX(-50%); background:var(--ink); color:var(--cream); padding:10px 18px; border-radius:999px; border:2px solid var(--yellow); font-weight:600; font-size:13px; box-shadow:var(--neon-glow-yellow); z-index:100; animation:slide-up 0.3s ease-out; white-space:nowrap; }
+
+/* ── FAB WPP ── */
+.fab-wpp { position:fixed; bottom:76px; right:calc(50% - 220px); width:56px; height:56px; background:#25D366; color:white; border-radius:999px; display:grid; place-items:center; box-shadow:0 8px 20px rgba(37,211,102,0.4); z-index:80; animation:bell-pulse 3s infinite; }
+@media (max-width:520px) { .fab-wpp { right:18px; } }
+.fab-wpp svg { width:26px; height:26px; }
+
+/* ── BOTTOM NAV ── */
+.bottom-nav { position:sticky; bottom:0; display:flex; background:color-mix(in srgb,var(--bg) 92%,transparent); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border-top:1px solid var(--border); padding:6px 4px calc(6px + env(safe-area-inset-bottom)); z-index:50; }
+.nav-btn { flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; padding:8px 4px; color:var(--fg-3); font-size:10px; font-weight:600; }
+.nav-btn.active { color:var(--yellow); }
+.nav-btn.active svg { color:var(--yellow); }
+input[type="checkbox"] { width:16px; height:16px; }
+</style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
+
+  <script>
+// ── MENU DATA ──────────────────────────────────────────────────
+window.MENU_CATEGORIES = [
+  { id:'promos',       label:'Promos',          icon:'🔥', accent:'pink' },
+  { id:'pizzas',       label:'Pizzas',           icon:'🍕', accent:'red' },
+  { id:'empanadas',    label:'Empanadas',         icon:'🥟', accent:'yellow' },
+  { id:'lomitos',      label:'Lomitos',           icon:'🥖', accent:'red' },
+  { id:'hamburguesas', label:'Hamburguesas',      icon:'🍔', accent:'yellow' },
+  { id:'pastas',       label:'Pastas',            icon:'🍝', accent:'red' },
+  { id:'tacos',        label:'Tacos',             icon:'🌮', accent:'yellow' },
+  { id:'infantiles',   label:'Combo Infantil',    icon:'👶', accent:'pink' },
+  { id:'bebidas',      label:'Bebidas',           icon:'🥤', accent:'cyan' },
+  { id:'postres',      label:'Postres',           icon:'🍰', accent:'pink' },
+];
+window.MENU_PRODUCTS = [
+  { id:'p-promo-1', cat:'promos', name:'1 Muzzarella + 1 Fugazzeta', desc:'Dos pizzas grandes a precio combo. 8 porciones cada una.', price:25000, oldPrice:32000, img:'pizza-combo', badge:'COMBO', countdown:1000*60*60*8, pop:true },
+  { id:'p-promo-2', cat:'promos', name:'2 Hamburguesas Completas + Papas', desc:'Dos burgers completas con cheddar, panceta y papas fritas.', price:23000, oldPrice:28500, img:'burger-combo', badge:'PROMO', countdown:1000*60*60*4 },
+  { id:'p-promo-3', cat:'promos', name:'Lomo + Lomo + Papas', desc:'Dos lomitos completos con papas fritas para compartir.', price:34000, oldPrice:39000, img:'lomo-combo', badge:'HOY', countdown:1000*60*60*6 },
+  { id:'pz-muzza', cat:'pizzas', name:'Muzzarella', desc:'Salsa de tomate, abundante muzzarella, oliva y oregano.', price:8500, img:'pizza-muzza', pop:true, top:true },
+  { id:'pz-fugazzeta', cat:'pizzas', name:'Fugazzeta', desc:'Cebolla en juliana, muzzarella, oliva. Estilo porteno.', price:9800, img:'pizza-fugazzeta' },
+  { id:'pz-napolitana', cat:'pizzas', name:'Napolitana', desc:'Muzzarella, rodajas de tomate fresco, ajo y albahaca.', price:10500, img:'pizza-napo', top:true },
+  { id:'pz-cuatro-quesos', cat:'pizzas', name:'Cuatro Quesos', desc:'Muzzarella, roquefort, parmesano y provolone fundidos.', price:12000, img:'pizza-4quesos' },
+  { id:'pz-especial', cat:'pizzas', name:'Especial Homero', desc:'La pizza de la casa: jamon, morron, cebolla, aceitunas y doble muzza.', price:14500, img:'pizza-especial', pop:true, top:true, badge:'FIRMA' },
+  { id:'em-tucumana', cat:'empanadas', name:'Empanadas Tucumanas (6u)', desc:'Carne cortada a cuchillo, cebolla, huevo, pimiento. Al horno.', price:7200, img:'empa-tucumana', pop:true, top:true },
+  { id:'em-jamon', cat:'empanadas', name:'Empanadas de Jamon y Queso (6u)', desc:'Jamon cocido y queso cremoso. Clasico infaltable.', price:6800, img:'empa-jamon' },
+  { id:'em-espinaca', cat:'empanadas', name:'Empanadas de Espinaca (6u)', desc:'Espinaca saltada con queso y nuez moscada.', price:6500, img:'empa-espinaca' },
+  { id:'lm-completo', cat:'lomitos', name:'Lomito Completo', desc:'Lomo de cerdo, lechuga, tomate, cebolla, jamon, queso, huevo y mayo.', price:12500, img:'lomo-completo', pop:true, top:true },
+  { id:'lm-simple', cat:'lomitos', name:'Lomito Simple', desc:'Lomo de cerdo, lechuga, tomate y mayo. Para los clasicos.', price:9800, img:'lomo-simple' },
+  { id:'hb-completa', cat:'hamburguesas', name:'Burger Completa', desc:'200g res, cheddar, panceta crocante, lechuga, tomate y mayo.', price:11500, img:'burger-completa', pop:true },
+  { id:'hb-doble', cat:'hamburguesas', name:'Burger Doble', desc:'Doble medallón 200g, doble cheddar, panceta y salsa especial.', price:15000, img:'burger-doble', top:true },
+  { id:'ps-fideos', cat:'pastas', name:'Fideos al Fileto', desc:'Fettuccini casero. Salsa fileto, bolognesa o crema.', price:8500, img:'pasta-fideos' },
+  { id:'tc-pollo', cat:'tacos', name:'Tacos de Pollo (3u)', desc:'Pollo grillado, guacamole, pico de gallo y queso fresco.', price:11000, img:'tacos-pollo' },
+  { id:'tc-carne', cat:'tacos', name:'Tacos de Carne (3u)', desc:'Carne picada estilo mexicano, cilantro, cebolla y limon.', price:12500, img:'tacos-carne', pop:true },
+  { id:'in-nuggets', cat:'infantiles', name:'Combo Nuggets', desc:'6 nuggets de pollo, papas fritas y jugo. Incluye sorpresa.', price:9000, img:'kid-nuggets' },
+  { id:'in-mini', cat:'infantiles', name:'Combo Mini Burger', desc:'Mini hamburguesa, papas fritas y jugo. Incluye sorpresa.', price:9000, img:'kid-burger' },
+  { id:'bv-coca', cat:'bebidas', name:'Coca-Cola 1.5L', desc:'Bien fria.', price:3500, img:'drink-coca' },
+  { id:'bv-sprite', cat:'bebidas', name:'Sprite 1.5L', desc:'Bien fria.', price:3500, img:'drink-sprite' },
+  { id:'bv-agua', cat:'bebidas', name:'Agua sin gas', desc:'500ml.', price:1800, img:'drink-agua' },
+  { id:'bv-cerveza', cat:'bebidas', name:'Cerveza Stella Litro', desc:'Bien tirada y fria.', price:4200, img:'drink-cerveza', pop:true },
+  { id:'po-flan', cat:'postres', name:'Flan con Dulce y Crema', desc:'Flan casero con dulce de leche y crema chantilly.', price:4500, img:'dessert-flan', top:true },
+  { id:'po-tiramisu', cat:'postres', name:'Tiramisu', desc:'Receta clasica italiana, capas de cafe y mascarpone.', price:5500, img:'dessert-tiramisu' },
+  { id:'po-helado', cat:'postres', name:'Helado 2 bochas', desc:'A eleccion entre 8 sabores.', price:3800, img:'dessert-helado' },
+];
+window.MENU_EXTRAS = {
+  pizzas: [
+    { id:'ex-queso', name:'Queso extra', price:1500 },
+    { id:'ex-jamon', name:'Jamon extra', price:1200 },
+    { id:'ex-aceitunas', name:'Aceitunas', price:800 },
+    { id:'ex-morron', name:'Morron asado', price:900 },
+    { id:'ex-rucula', name:'Rucula', price:700 },
+    { id:'ex-huevo', name:'Huevo frito', price:600 },
+  ],
+  hamburguesas: [
+    { id:'ex-papas', name:'Papas fritas', price:2800 },
+    { id:'ex-cheddar', name:'Cheddar extra', price:900 },
+    { id:'ex-panceta', name:'Panceta', price:1300 },
+    { id:'ex-medallon', name:'Medallon extra', price:2400 },
+    { id:'ex-cebolla', name:'Cebolla crispy', price:700 },
+  ],
+  lomitos: [
+    { id:'ex-papas', name:'Papas fritas', price:2800 },
+    { id:'ex-queso', name:'Queso extra', price:1500 },
+    { id:'ex-huevo', name:'Huevo frito', price:600 },
+  ],
+  default: [
+    { id:'ex-papas', name:'Papas fritas', price:2800 },
+    { id:'ex-coca', name:'Coca-Cola lata', price:1800 },
+    { id:'ex-salsa', name:'Salsa extra', price:500 },
+  ],
+};
+window.MENU_NOTES = ['sin cebolla','sin aceitunas','sin tomate','mas queso','menos sal','bien cocida','jugosa','sin picante','aparte la salsa'];
+window.PIZZA_INGREDIENTS = [
+  { id:'i-muzza',    name:'Muzzarella',      price:0,    base:true },
+  { id:'i-tomate',   name:'Salsa de tomate', price:0,    base:true },
+  { id:'i-jamon',    name:'Jamon cocido',    price:1200 },
+  { id:'i-morron',   name:'Morron asado',    price:900 },
+  { id:'i-cebolla',  name:'Cebolla',         price:600 },
+  { id:'i-aceitunas',name:'Aceitunas',       price:800 },
+  { id:'i-pepperoni',name:'Pepperoni',       price:1800 },
+  { id:'i-panceta',  name:'Panceta',         price:1500 },
+  { id:'i-rucula',   name:'Rucula',          price:700 },
+  { id:'i-tomatecherry', name:'Tomate cherry', price:1100 },
+  { id:'i-huevo',    name:'Huevo',           price:600 },
+  { id:'i-roquefort',name:'Roquefort',       price:1700 },
+  { id:'i-anchoa',   name:'Anchoas',         price:1400 },
+  { id:'i-choclo',   name:'Choclo',          price:700 },
+  { id:'i-albahaca', name:'Albahaca',        price:500 },
+];
+window.REVIEWS = [
+  { name:'Martina G.', stars:5, text:'Las empanadas tucumanas son INCREIBLES. Mejor que las de mi abuela (perdon abu).', date:'2d', avatar:'M' },
+  { name:'Diego R.', stars:5, text:'La especial Homero tiene un kilo de muzzarella, en serio. Pedila.', date:'3d', avatar:'D' },
+  { name:'Sofia M.', stars:4, text:'Lomito completo zarpado, las papas un toque saladas. Llego en 25min.', date:'5d', avatar:'S' },
+  { name:'Lautaro P.', stars:5, text:'Pedi mitad muzza mitad fugazzeta y es MASA!', date:'1sem', avatar:'L' },
+  { name:'Juli D.', stars:5, text:'El combo infantil viene con sorpresa, mi hijo super feliz.', date:'1sem', avatar:'J' },
+];
+window.fmtARS = (n) => '$' + Math.round(n).toLocaleString('es-AR');
+</script>
+
+<script>
+/* ── CARGA DATOS DESDE ADMIN (localStorage lph_*) ── */
+function loadMenuFromStorage() {
+  function slug(s) {
+    return (s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/\s+/g,'-');
+  }
+  const imgFallback = {
+    pizzas:'pizza-muzza', empanadas:'empa-tucumana', lomitos:'lomo-completo',
+    hamburguesas:'burger-completa', pastas:'pasta-fideos', bebidas:'drink-coca',
+    postres:'dessert-flan', tacos:'tacos-pollo', infantiles:'kid-nuggets',
+    promos:'pizza-combo', sandwiches:'lomo-completo', 'sandwiches':'lomo-completo',
+  };
+  const accentMap = {
+    promos:'pink', pizzas:'red', empanadas:'yellow', lomitos:'red',
+    hamburguesas:'yellow', pastas:'red', tacos:'yellow', infantiles:'pink',
+    bebidas:'cyan', postres:'pink',
+  };
+  try {
+    const rawP = localStorage.getItem('lph_products');
+    const rawC = localStorage.getItem('lph_categories');
+    if (rawP) {
+      window.MENU_PRODUCTS = JSON.parse(rawP)
+        .filter(p => p.disp !== false)
+        .map(p => ({
+          id:      'adm-' + p.id,
+          cat:     slug(p.cat),
+          name:    p.nombre,
+          desc:    p.desc || '',
+          price:   p.precio,
+          oldPrice: p.precioOld || null,
+          img:     imgFallback[slug(p.cat)] || 'pizza-muzza',
+          imgSrc:  p.img || null,
+          pop:     !!p.destacado,
+          top:     !!p.destacado,
+          badge:   p.badge || null,
+        }));
+    }
+    // Cargar promos desde admin
+    const rawPromos = localStorage.getItem('lph_promos');
+    if (rawPromos) {
+      const adminPromos = JSON.parse(rawPromos).filter(p => p.activa);
+      const promoProducts = adminPromos.map(p => ({
+        id:       'promo-' + p.id,
+        cat:      'promos',
+        name:     p.nombre,
+        desc:     p.desc || '',
+        price:    p.precio,
+        oldPrice: p.precioNormal || null,
+        img:      'pizza-combo',
+        imgSrc:   null,
+        pop:      true,
+        badge:    p.badge || 'PROMO',
+        countdown: p.countdown || 0,
+      }));
+      if (promoProducts.length) {
+        window.MENU_PRODUCTS = [...promoProducts, ...window.MENU_PRODUCTS];
+        // Asegurar que la categoría promos exista
+        if (!window.MENU_CATEGORIES.find(c => c.id === 'promos')) {
+          window.MENU_CATEGORIES = [
+            { id:'promos', label:'Promos', icon:'🔥', accent:'pink' },
+            ...window.MENU_CATEGORIES
+          ];
+        }
+      }
+    }
+    if (rawC) {
+      window.MENU_CATEGORIES = JSON.parse(rawC).map(c => ({
+        id:     slug(c.nombre),
+        label:  c.nombre,
+        icon:   c.emoji || '🍽',
+        accent: accentMap[slug(c.nombre)] || 'yellow',
+      }));
+    }
+    // Agregar categorías huérfanas (productos con cat no declarada)
+    if (window.MENU_PRODUCTS && window.MENU_CATEGORIES) {
+      const knownCatIds = new Set(window.MENU_CATEGORIES.map(c => c.id));
+      const orphanCats = [...new Set(window.MENU_PRODUCTS.map(p => p.cat))].filter(id => id && !knownCatIds.has(id));
+      orphanCats.forEach(id => window.MENU_CATEGORIES.push({ id, label: id, icon: '🍽', accent: 'yellow' }));
+    }
+  } catch(e) { console.warn('lph storage load error', e); }
+
+  // Configuración general
+  window.APP_CONFIG = {
+    nombre: 'La Pizzería de Homero',
+    whatsapp: '5491155557777',
+    direccion: '',
+    telefono: '',
+    hLunesViernes: '12:00 - 23:00',
+    hSabado: '12:00 - 00:00',
+    hDomingo: '18:00 - 23:00',
+    hCerrado: '',
+    deliveryTiempo: '25-35 min',
+    deliveryRadio: '3 km',
+    deliveryMinimo: 5000,
+    deliveryCosto: 1500,
+    mesa: 7,
+    puntosActivo: true,
+    puntosPor1000: 10,
+    pagoEfectivoTipo: 'ninguno', pagoEfectivoPct: 0,
+    pagoTarjetaTipo:  'ninguno', pagoTarjetaPct:  0,
+    pagoTransfTipo:   'ninguno', pagoTransfPct:   0,
+    aliasCBU:         '',
+  };
+  try {
+    const rawCfg = localStorage.getItem('lph_config');
+    if (rawCfg) Object.assign(window.APP_CONFIG, JSON.parse(rawCfg));
+  } catch(e) {}
+
+  // Premios del club (editables desde admin)
+  window.MENU_REWARDS = [
+    {id:'r1', cost:500,  label:'Coca 1.5L gratis',        emoji:'🥤'},
+    {id:'r2', cost:800,  label:'Empanada gratis',           emoji:'🥟'},
+    {id:'r3', cost:1500, label:'Pizza muzza gratis',         emoji:'🍕'},
+    {id:'r4', cost:2500, label:'20% off próximo pedido',     emoji:'🎉'},
+    {id:'r5', cost:5000, label:'Pedido completo gratis',     emoji:'👑'},
+  ];
+  try {
+    const rawR = localStorage.getItem('lph_rewards');
+    if (rawR) window.MENU_REWARDS = JSON.parse(rawR);
+  } catch(e) {}
+}
+loadMenuFromStorage();
+</script>
+
+<!-- Firebase para guardar pedidos en tiempo real -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script>
+(function() {
+  try {
+    const app = firebase.initializeApp({
+      apiKey:            "AIzaSyB_7_SHPCR6az9jLDhi5b2VJxvCgV2DPNE",
+      authDomain:        "cartas-digitaleds-merlo.firebaseapp.com",
+      projectId:         "cartas-digitaleds-merlo",
+      storageBucket:     "cartas-digitaleds-merlo.firebasestorage.app",
+      messagingSenderId: "959472664879",
+      appId:             "1:959472664879:web:0f4f0ede6c56337b0a21da"
+    });
+    window._cartaDb = firebase.firestore();
+  } catch(e) {
+    console.warn('Firebase carta init error', e);
+    window._cartaDb = null;
+  }
+})();
+
+// ── SINCRONIZACIÓN MENÚ FIREBASE ─────────────────────────────
+(function() {
+  if (!window._cartaDb) return;
+
+  function applyData(d) {
+    if (d.products)   localStorage.setItem('lph_products',   JSON.stringify(d.products));
+    if (d.categories) localStorage.setItem('lph_categories', JSON.stringify(d.categories));
+    if (d.config)     localStorage.setItem('lph_config',     JSON.stringify(d.config));
+    if (d.rewards)    localStorage.setItem('lph_rewards',    JSON.stringify(d.rewards));
+    if (d.promos)     localStorage.setItem('lph_promos',     JSON.stringify(d.promos));
+    if ('platoDia' in d) {
+      if (d.platoDia) localStorage.setItem('lph_plato_dia', JSON.stringify(d.platoDia));
+      else localStorage.removeItem('lph_plato_dia');
+    }
+    if (d.pizzaBuilder) {
+      localStorage.setItem('lph_pizza_builder', JSON.stringify(d.pizzaBuilder));
+      applyPizzaBuilder(d.pizzaBuilder);
+    }
+    loadMenuFromStorage();
+    if (window.__refreshLPH) window.__refreshLPH();
+  }
+
+  function applyPizzaBuilder(pb) {
+    if (!pb) return;
+    if (pb.ingredients && pb.ingredients.length) {
+      window.PIZZA_INGREDIENTS = pb.ingredients;
+    }
+    if (pb.sizes) {
+      window.PIZZA_SIZE_PRICES = pb.sizes;
+    }
+  }
+
+  // Aplicar desde localStorage al iniciar (antes de Firebase)
+  (function() {
+    const saved = localStorage.getItem('lph_pizza_builder');
+    if (saved) { try { applyPizzaBuilder(JSON.parse(saved)); } catch(e) {} }
+  })();
+
+  // Carga inicial antes de que React renderice
+  window.__menuPreload = window._cartaDb.collection('menuData').doc('lph').get()
+    .then(doc => { if (doc.exists) applyData(doc.data()); })
+    .catch(() => {});
+
+  // Listener en tiempo real para cambios mientras la carta está abierta
+  window._cartaDb.collection('menuData').doc('lph').onSnapshot(snap => {
+    if (!snap.exists) return;
+    applyData(snap.data());
+  }, () => {});
+})();
+</script>
+
+  <script type="text/babel">
+const { useState, useEffect, useRef, useMemo, createContext, useContext, Fragment } = React;
+
+// ── ICONS ──────────────────────────────────────────────────────
+const Icon = ({ d, size=20, fill='none', stroke='currentColor', sw=2 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill={fill} stroke={stroke} strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round">
+    {Array.isArray(d) ? d.map((p,i) => <path key={i} d={p}/>) : <path d={d}/>}
+  </svg>
+);
+const I = {
+  back:    () => <Icon d="M15 18l-6-6 6-6"/>,
+  cart:    () => <Icon d={["M3 6h2l3 11h11l3-8H6","M9 21a1 1 0 100-2 1 1 0 000 2z","M19 21a1 1 0 100-2 1 1 0 000 2z"]}/>,
+  search:  () => <Icon d={["M21 21l-4.35-4.35","M11 19a8 8 0 100-16 8 8 0 000 16z"]}/>,
+  whatsapp:() => <svg width={20} height={20} viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.7-.8-2-.9-.3-.1-.5-.2-.7.2-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.2-.4-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6.1-.1.3-.4.4-.5.1-.2.2-.3.2-.5.1-.2 0-.4 0-.5-.1-.1-.7-1.7-.9-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.7.4-.2.3-1 1-1 2.4 0 1.4 1 2.7 1.2 2.9.1.2 2 3 4.8 4.2.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.7-.7 1.9-1.3.2-.7.2-1.2.2-1.3-.1-.2-.3-.3-.6-.4zM12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.5 1.4 5L2 22l5-1.4c1.5.8 3.2 1.3 5 1.3 5.5 0 10-4.5 10-10S17.5 2 12 2z"/></svg>,
+  bell:    () => <Icon d={["M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9","M13.7 21a2 2 0 01-3.4 0"]}/>,
+  plus:    () => <Icon d={["M12 5v14","M5 12h14"]}/>,
+  minus:   () => <Icon d="M5 12h14"/>,
+  star:    (filled) => <Icon d="M12 2l3.1 6.3 7 1-5 4.9 1.2 6.9L12 17.8l-6.3 3.3 1.2-6.9-5-4.9 7-1L12 2z" fill={filled?'currentColor':'none'}/>,
+  fire:    () => <Icon d={["M8.5 14.5A2.5 2.5 0 0011 17c1.5 0 2.5-1 2.5-2.5 0-1.5-1-2.5-2.5-2.5","M12 2s4.5 5 4.5 9.5a4.5 4.5 0 01-9 0c0-3 2-3.5 2-6"]}/>,
+  clock:   () => <Icon d={["M12 2a10 10 0 100 20 10 10 0 000-20z","M12 6v6l4 2"]} fill="none"/>,
+  bike:    () => <Icon d={["M5 17a3 3 0 100-6 3 3 0 000 6z","M19 17a3 3 0 100-6 3 3 0 000 6z","M12 17l-3-9h-3","M14 6h3l2 8"]}/>,
+  coin:    () => <Icon d={["M12 2a10 10 0 100 20 10 10 0 000-20z","M12 6v12","M9 9h4.5a2.5 2.5 0 010 5H9"]}/>,
+  table:   () => <Icon d={["M4 8h16","M6 8v12","M18 8v12","M4 4h16v4H4z"]}/>,
+  pizza:   () => <Icon d={["M12 2L2 22h20L12 2z","M12 12a1 1 0 100-2 1 1 0 000 2z","M16 16a1 1 0 100-2 1 1 0 000 2z","M9 17a1 1 0 100-2 1 1 0 000 2z"]}/>,
+  home:    () => <Icon d={["M3 12l9-9 9 9","M5 10v10h14V10"]}/>,
+  user:    () => <Icon d={["M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2","M12 11a4 4 0 100-8 4 4 0 000 8z"]}/>,
+  qr:      () => <Icon d={["M3 3h7v7H3z","M14 3h7v7h-7z","M3 14h7v7H3z","M14 14h3v3h-3z","M19 14h2","M14 19h3","M14 17h2v2"]}/>,
+  trash:   () => <Icon d={["M3 6h18","M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2","M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"]}/>,
+  check:   () => <Icon d="M5 13l4 4L19 7"/>,
+  x:       () => <Icon d={["M18 6L6 18","M6 6l12 12"]}/>,
+  half:    () => <Icon d={["M12 2a10 10 0 100 20 10 10 0 000-20z","M12 2v20"]}/>,
+};
+
+// ── FOOD IMAGE PLACEHOLDER ──────────────────────────────────────
+function FoodImg({ kind, imgSrc, size='md' }) {
+  const sizes = { sm:56, md:96, lg:160, xl:220 };
+  const s = sizes[size] || sizes.md;
+  if (imgSrc) {
+    return (
+      <img src={imgSrc} alt="" style={{width:s, height:s, borderRadius:16, objectFit:'cover', flexShrink:0, boxShadow:'inset 0 -8px 16px rgba(0,0,0,0.18), 0 4px 12px rgba(0,0,0,0.25)'}}/>
+    );
+  }
+  const seed = (kind||'x').charCodeAt(0) + (kind||'x').charCodeAt(1 % (kind||'x').length) * 7;
+  const hueA = (seed * 23) % 360;
+  const hueB = (hueA + 40) % 360;
+  const emojiMap = { pizza:'🍕', burger:'🍔', lomo:'🥖', empa:'🥟', pasta:'🍝', tacos:'🌮', kid:'🍟', drink:'🥤', dessert:'🍰' };
+  const key = Object.keys(emojiMap).find(k => (kind||'').startsWith(k)) || 'pizza';
+  return (
+    <div style={{
+      width:s, height:s, borderRadius:16, flexShrink:0,
+      background:`linear-gradient(135deg, oklch(0.72 0.16 ${hueA}), oklch(0.62 0.17 ${hueB}))`,
+      backgroundImage:`radial-gradient(rgba(0,0,0,0.18) 1px, transparent 1.6px), linear-gradient(135deg, oklch(0.72 0.16 ${hueA}), oklch(0.62 0.17 ${hueB}))`,
+      backgroundSize:'6px 6px, 100% 100%',
+      display:'grid', placeItems:'center',
+      fontSize:s*0.55, lineHeight:1,
+      boxShadow:'inset 0 -8px 16px rgba(0,0,0,0.18), 0 4px 12px rgba(0,0,0,0.25)',
+    }}>
+      <span style={{filter:'drop-shadow(0 2px 4px rgba(0,0,0,0.35))'}}>{emojiMap[key]}</span>
+    </div>
+  );
+}
+
+// ── APP CONTEXT ─────────────────────────────────────────────────
+const AppCtx = createContext(null);
+function AppProvider({ children }) {
+  const [route, setRoute] = useState({ name:'home' });
+  const [cart, setCart] = useState([]);
+  const [mesa] = useState(() => {
+    const p = new URLSearchParams(window.location.search).get('mesa');
+    if (p && !isNaN(p)) return Number(p);
+    return (window.APP_CONFIG && window.APP_CONFIG.mesa) || 7;
+  });
+  const [pointsData, setPointsData] = useState(() => {
+    try {
+      // Solo cargar puntos guardados si el usuario está registrado
+      const cid = localStorage.getItem('lph_cliente_id');
+      if (!cid) return {balance:0, history:[]};
+      const d = JSON.parse(localStorage.getItem('lph_points') || '{}');
+      return {balance: d.balance||0, history: d.history||[]};
+    }
+    catch(e) { return {balance:0, history:[]}; }
+  });
+  const points = pointsData.balance;
+  const pointsHistory = pointsData.history;
+  const [clienteNombre, setClienteNombre] = useState(() => { try { return localStorage.getItem('lph_cliente_nombre') || ''; } catch(e) { return ''; } });
+  const clienteIdRef = useRef(() => { try { return localStorage.getItem('lph_cliente_id') || ''; } catch(e) { return ''; } });
+  const fbSyncReady = useRef(false);
+  const [theme, setTheme] = useState(() => { try { return localStorage.getItem('homero-theme')||'dark'; } catch(e) { return 'dark'; } });
+  const [homeStyle, setHomeStyle] = useState('A');
+  const [toast, setToast] = useState(null);
+  const [bumpCart, setBumpCart] = useState(0);
+  const [menuKey, setMenuKey] = useState(0);
+
+  useEffect(() => {
+    window.__refreshLPH = () => setMenuKey(k => k + 1);
+    return () => { delete window.__refreshLPH; };
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    try { localStorage.setItem('homero-theme', theme); } catch(e){}
+  }, [theme]);
+
+  // Sync puntos a localStorage/Firebase solo si el usuario está registrado
+  useEffect(() => {
+    const cid = localStorage.getItem('lph_cliente_id');
+    if (!cid) return; // No registrado: puntos son solo de sesión, no persisten
+    try { localStorage.setItem('lph_points', JSON.stringify(pointsData)); } catch(e) {}
+    if (!fbSyncReady.current) return;
+    if (window._cartaDb) {
+      window._cartaDb.collection('clientes').doc(cid).set(
+        { puntos: pointsData.balance, historial: pointsData.history, restaurantId: 'lph' },
+        { merge: true }
+      ).catch(() => {});
+    }
+  }, [pointsData]);
+
+  // Al montar: si el cliente está registrado, cargar puntos desde Firebase
+  useEffect(() => {
+    const cid = localStorage.getItem('lph_cliente_id');
+    if (!cid || !window._cartaDb) { fbSyncReady.current = true; return; }
+    window._cartaDb.collection('clientes').doc(cid).get()
+      .then(doc => {
+        if (doc && doc.exists) {
+          const d = doc.data();
+          setPointsData({ balance: d.puntos || 0, history: d.historial || [] });
+        }
+        fbSyncReady.current = true;
+      })
+      .catch(() => { fbSyncReady.current = true; });
+  }, []);
+
+  const registerCliente = async (nombre, tel) => {
+    const cid = 'cli_' + Date.now();
+    const data = {
+      nombre: nombre.trim(),
+      tel: (tel || '').trim(),
+      puntos: pointsData.balance,
+      historial: pointsData.history,
+      fechaAlta: new Date().toISOString(),
+      mesa: String((window.APP_CONFIG && window.APP_CONFIG.mesa) || ''),
+      restaurantId: 'lph',
+    };
+    if (window._cartaDb) {
+      await window._cartaDb.collection('clientes').doc(cid).set(data).catch(() => {});
+    }
+    try {
+      localStorage.setItem('lph_cliente_id', cid);
+      localStorage.setItem('lph_cliente_nombre', nombre.trim());
+    } catch(e) {}
+    setClienteNombre(nombre.trim());
+    fbSyncReady.current = true;
+  };
+
+  const earnPoints = (amount, label) => {
+    if (!amount || amount <= 0) return;
+    setPointsData(d => ({ balance: d.balance + amount, history: [{type:'earn', amount, label, ts:Date.now()}, ...d.history].slice(0,50) }));
+  };
+  const redeemPoints = (cost, label) => {
+    setPointsData(d => {
+      if (d.balance < cost) return d;
+      return { balance: d.balance - cost, history: [{type:'redeem', amount:cost, label, ts:Date.now()}, ...d.history].slice(0,50) };
+    });
+  };
+
+  useEffect(() => {
+    const handler = (e) => {
+      if (e.key === 'lph_products' || e.key === 'lph_categories' || e.key === 'lph_promos' || e.key === 'lph_config' || e.key === 'lph_rewards') {
+        window.location.reload();
+      }
+    };
+    window.addEventListener('storage', handler);
+    return () => window.removeEventListener('storage', handler);
+  }, []);
+
+  const addToCart = (item) => {
+    setCart(c => {
+      const ex = c.find(x => x.key === item.key);
+      if (ex) return c.map(x => x.key === item.key ? {...x, qty:x.qty+(item.qty||1)} : x);
+      return [...c, {...item, qty:item.qty||1}];
+    });
+    setBumpCart(b => b+1);
+    setToast({ msg:`Agregado: ${item.name}` });
+    setTimeout(() => setToast(null), 1800);
+  };
+  const updateQty = (key, qty) => setCart(c => qty<=0 ? c.filter(x=>x.key!==key) : c.map(x=>x.key===key ? {...x,qty} : x));
+  const clearCart = () => setCart([]);
+  const cartTotal = cart.reduce((s,x)=>s+x.price*x.qty,0);
+  const cartCount = cart.reduce((s,x)=>s+x.qty,0);
+  const nav = (name, params={}) => { setRoute({name,...params}); window.scrollTo(0,0); };
+  const back = () => nav('home');
+
+  return (
+    <AppCtx.Provider value={{ route,nav,back, cart,addToCart,updateQty,clearCart,cartTotal,cartCount,bumpCart, mesa,points,pointsHistory,earnPoints,redeemPoints, clienteNombre,registerCliente, theme,setTheme,homeStyle,setHomeStyle, toast, menuKey }}>
+      {children}
+    </AppCtx.Provider>
+  );
+}
+const useApp = () => useContext(AppCtx);
+
+// ── HEADER ──────────────────────────────────────────────────────
+function Header({ onCart, mesa, theme, setTheme, points }) {
+  const { cartCount, bumpCart, nav } = useApp();
+  return (
+    <header className="app-header">
+      <div className="hdr-left">
+        <div className="hdr-mesa" onClick={() => nav('mesa')}>
+          <I.qr/>
+          <div>
+            <div className="hdr-mesa-label">MESA</div>
+            <div className="hdr-mesa-num">{mesa}</div>
+          </div>
+        </div>
+      </div>
+      <div className="hdr-right">
+        <button className="hdr-icon" onClick={() => nav('points')}>
+          <I.coin/>
+          <span className="hdr-points">{points}</span>
+        </button>
+        <button className="hdr-icon" onClick={() => setTheme(theme==='dark'?'light':'dark')}>
+          {theme==='dark'?'☀️':'🌙'}
+        </button>
+        <button className={`hdr-cart ${bumpCart?'cart-bump':''}`} key={bumpCart} onClick={onCart}>
+          <I.cart/>
+          {cartCount>0 && <span className="hdr-badge">{cartCount}</span>}
+        </button>
+      </div>
+    </header>
+  );
+}
+
+// ── HOME A: MARQUEE ─────────────────────────────────────────────
+function HomeA() {
+  const { nav } = useApp();
+  return (
+    <div className="home home-a">
+      <div className="home-a-bg"/>
+      <div className="home-a-content">
+        <div className="home-a-marquee chalk-noise">
+          <div className="bulb-row">{Array.from({length:14}).map((_,i) => <span key={i} className="bulb"/>)}</div>
+          <div className="home-a-logo">
+
+            <h1 className="home-a-title flicker">LA PIZZERÍA</h1>
+            <div className="home-a-of">— DE —</div>
+            <h1 className="home-a-name">HOMERO</h1>
+            <div className="home-a-tag">— pizzas a la piedra —</div>
+          </div>
+          <div className="bulb-row">{Array.from({length:14}).map((_,i) => <span key={i} className="bulb"/>)}</div>
+        </div>
+        <div className="home-a-grid">
+          <button className="big-btn big-btn-yellow" onClick={() => nav('carta')}>
+            <span className="big-btn-emoji">🍕</span>
+            <span className="big-btn-label">VER CARTA</span>
+            <span className="big-btn-sub">9 categorías · 30+ productos</span>
+          </button>
+          <button className="big-btn big-btn-pink" onClick={() => nav('promos')}>
+            <span className="big-btn-emoji">🔥</span>
+            <span className="big-btn-label">PROMOS</span>
+            <span className="big-btn-sub">Hasta 25% OFF hoy</span>
+          </button>
+          <button className="big-btn big-btn-red" onClick={() => nav('whatsapp')}>
+            <span className="big-btn-emoji">💬</span>
+            <span className="big-btn-label">PEDIR POR WHATSAPP</span>
+          </button>
+          {(window.APP_CONFIG?.llamarMozoActivo !== false) && (
+          <button className="big-btn big-btn-cyan" onClick={() => nav('llamar')}>
+            <span className="big-btn-emoji">🔔</span>
+            <span className="big-btn-label">LLAMAR MOZO</span>
+          </button>
+          )}
+          <button className="big-btn big-btn-outline" onClick={() => nav('delivery')}>
+            <span className="big-btn-emoji">🛵</span>
+            <span className="big-btn-label">DELIVERY</span>
+            <span className="big-btn-sub">{(window.APP_CONFIG&&window.APP_CONFIG.deliveryTiempo)||'25-35 min'} · radio {(window.APP_CONFIG&&window.APP_CONFIG.deliveryRadio)||'3 km'}</span>
+          </button>
+        </div>
+        <MasPedidasStrip/>
+      </div>
+    </div>
+  );
+}
+
+// ── HOME B: STICKER POP ─────────────────────────────────────────
+function HomeB() {
+  const { nav } = useApp();
+  return (
+    <div className="home home-b">
+      <div className="home-b-hero halftone-yellow">
+        <div className="home-b-tag-row">
+
+          <span className="sticker sticker-blue" style={{transform:'rotate(3deg)'}}>PIZZA A LA PIEDRA</span>
+        </div>
+        <h1 className="home-b-title">
+          <span className="home-b-title-1">LA PIZZERÍA</span>
+          <span className="home-b-title-of">de</span>
+          <span className="home-b-title-2">HOMERO</span>
+        </h1>
+        <p className="home-b-sub">Carta digital · Pedí desde tu mesa o delivery 🛵</p>
+        <div className="home-b-pizzaslice wobble">🍕</div>
+      </div>
+      <div className="home-b-cta-grid">
+        <button className="card-btn card-btn-primary" onClick={() => nav('carta')}>
+          <div className="card-btn-em">🍕</div><div><div className="card-btn-l">VER CARTA</div><div className="card-btn-s">Empezá a pedir</div></div>
+        </button>
+        <button className="card-btn" onClick={() => nav('promos')}>
+          <div className="card-btn-em">🔥</div><div><div className="card-btn-l">PROMOS</div><div className="card-btn-s">3 activas</div></div>
+        </button>
+        <button className="card-btn" onClick={() => nav('whatsapp')}>
+          <div className="card-btn-em">💬</div><div><div className="card-btn-l">WHATSAPP</div><div className="card-btn-s">Pedido directo</div></div>
+        </button>
+        {(window.APP_CONFIG?.llamarMozoActivo !== false) && (
+        <button className="card-btn" onClick={() => nav('llamar')}>
+          <div className="card-btn-em">🔔</div><div><div className="card-btn-l">MOZO</div><div className="card-btn-s">A la mesa</div></div>
+        </button>
+        )}
+        <button className="card-btn card-btn-wide" onClick={() => nav('delivery')}>
+          <div className="card-btn-em">🛵</div><div><div className="card-btn-l">DELIVERY</div><div className="card-btn-s">{(window.APP_CONFIG&&window.APP_CONFIG.deliveryTiempo)||'25–35 min'} · radio {(window.APP_CONFIG&&window.APP_CONFIG.deliveryRadio)||'3 km'}</div></div>
+        </button>
+      </div>
+      <MasPedidasStrip/>
+    </div>
+  );
+}
+
+// ── HOME C: VINTAGE ─────────────────────────────────────────────
+function HomeC() {
+  const { nav } = useApp();
+  return (
+    <div className="home home-c">
+      <div className="home-c-paper">
+
+        <div className="home-c-ribbon">EDICIÓN ESPECIAL</div>
+        <h1 className="home-c-title">La Pizzería<br/><em>de Homero</em></h1>
+        <div className="home-c-rule"/>
+        <p className="home-c-lead">"La carta más completa del barrio, ahora en tu bolsillo."</p>
+        <div className="home-c-rule"/>
+        <div className="home-c-actions">
+          <button className="ghost-btn ghost-btn-primary" onClick={() => nav('carta')}>
+            <span>VER LA CARTA</span><span className="ghost-arrow">→</span>
+          </button>
+          <div className="home-c-grid">
+            <button className="ghost-btn" onClick={() => nav('promos')}><strong>PROMOS</strong><span>Hasta 25% off</span></button>
+            <button className="ghost-btn" onClick={() => nav('delivery')}><strong>DELIVERY</strong><span>{(window.APP_CONFIG&&window.APP_CONFIG.deliveryTiempo)||'25–35 min'}</span></button>
+            <button className="ghost-btn" onClick={() => nav('whatsapp')}><strong>WHATSAPP</strong><span>Al toque</span></button>
+            {(window.APP_CONFIG?.llamarMozoActivo !== false) && <button className="ghost-btn" onClick={() => nav('llamar')}><strong>MOZO</strong><span>A tu mesa</span></button>}
+          </div>
+        </div>
+      </div>
+      <MasPedidasStrip/>
+    </div>
+  );
+}
+
+// ── MÁS PEDIDAS STRIP ───────────────────────────────────────────
+function MasPedidasStrip() {
+  const { nav } = useApp();
+  const top = window.MENU_PRODUCTS.filter(p => p.top).slice(0,6);
+  return (
+    <section className="strip-section">
+      <div className="strip-head">
+        <div><h3 className="strip-title">LAS MÁS PEDIDAS</h3><div className="strip-sub">Lo que el barrio elige</div></div>
+        <button className="strip-link" onClick={() => nav('carta')}>Ver todo →</button>
+      </div>
+      <div className="strip-scroll">
+        {top.map(p => (
+          <button key={p.id} className="strip-card" onClick={() => nav('detail',{productId:p.id})}>
+            <FoodImg kind={p.img} imgSrc={p.imgSrc} size="md"/>
+            <div className="strip-card-name">{p.name}</div>
+            <div className="strip-card-price">{window.fmtARS(p.price)}</div>
+          </button>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+// ── CARTA ───────────────────────────────────────────────────────
+function Carta() {
+  const { nav, back } = useApp();
+  const [activeCat, setActiveCat] = useState(() => window.MENU_CATEGORIES[0]?.id || 'promos');
+  const [search, setSearch] = useState('');
+  const cats = window.MENU_CATEGORIES;
+  const products = window.MENU_PRODUCTS;
+  const filtered = useMemo(() => {
+    if (search.trim()) {
+      const q = search.toLowerCase();
+      return products.filter(p => p.name.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q));
+    }
+    return products.filter(p => p.cat === activeCat);
+  }, [activeCat, search]);
+  const tabRef = useRef(null);
+  useEffect(() => {
+    if (!tabRef.current) return;
+    const active = tabRef.current.querySelector('.cat-tab.active');
+    if (active) active.scrollIntoView({inline:'center',behavior:'smooth',block:'nearest'});
+  }, [activeCat]);
+  return (
+    <div className="screen-carta">
+      <div className="sub-header">
+        <button className="sh-back" onClick={back}><I.back/></button>
+        <h2 className="sh-title">Carta completa</h2>
+        <button className="sh-action" onClick={() => nav('builder')}><span style={{fontSize:18}}>🛠️</span> Armar pizza</button>
+      </div>
+      <div className="search-bar">
+        <I.search/>
+        <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Buscar pizza, lomito, etc."/>
+        {search && <button onClick={() => setSearch('')}><I.x/></button>}
+      </div>
+      {!search && (
+        <div className="cat-tabs" ref={tabRef}>
+          {cats.map(c => (
+            <button key={c.id} onClick={()=>setActiveCat(c.id)} className={`cat-tab ${activeCat===c.id?'active':''} cat-${c.accent}`}>
+              <span className="cat-emoji">{c.icon}</span>
+              <span className="cat-label">{c.label}</span>
+            </button>
+          ))}
+        </div>
+      )}
+      <div className="prod-list">
+        {activeCat==='pizzas' && !search && (
+          <button className="featured-card" onClick={() => nav('builder')}>
+            <div className="featured-emoji">🛠️</div>
+            <div><div className="featured-l">Armar tu pizza</div><div className="featured-s">Elegí ingredientes · Mitad y mitad</div></div>
+            <div className="featured-arrow">→</div>
+          </button>
+        )}
+        {filtered.length===0 && <div className="empty">No encontramos resultados.</div>}
+        {filtered.map(p => <ProdRow key={p.id} p={p}/>)}
+      </div>
+    </div>
+  );
+}
+
+function ProdRow({ p }) {
+  const { nav } = useApp();
+  return (
+    <button className="prod-row" onClick={() => nav('detail',{productId:p.id})}>
+      <FoodImg kind={p.img} imgSrc={p.imgSrc} size="md"/>
+      <div className="prod-row-body">
+        <div className="prod-row-head">
+          <div className="prod-row-name">{p.name}</div>
+          {p.badge && <span className="prod-row-badge">{p.badge}</span>}
+          {p.pop && !p.badge && <span className="prod-row-pop">⭐ Popular</span>}
+        </div>
+        <div className="prod-row-desc">{p.desc}</div>
+        <div className="prod-row-foot">
+          <div className="prod-row-price">
+            {p.oldPrice && <span className="prod-row-old">{window.fmtARS(p.oldPrice)}</span>}
+            <span>{window.fmtARS(p.price)}</span>
+          </div>
+          <span className="prod-row-cta"><I.plus/></span>
+        </div>
+      </div>
+    </button>
+  );
+}
+
+// ── DETAIL ──────────────────────────────────────────────────────
+function Detail({ productId }) {
+  const { back, addToCart } = useApp();
+  const p = window.MENU_PRODUCTS.find(x => x.id===productId);
+  const [qty, setQty] = useState(1);
+  const [extras, setExtras] = useState({});
+  const [notes, setNotes] = useState({});
+  const [customNote, setCustomNote] = useState('');
+  if (!p) return null;
+  const extrasList = window.MENU_EXTRAS[p.cat]||window.MENU_EXTRAS.default;
+  const extrasTotal = extrasList.reduce((s,e) => s+(extras[e.id]?e.price:0),0);
+  const lineTotal = (p.price+extrasTotal)*qty;
+  const submit = () => {
+    const extraNames = extrasList.filter(e=>extras[e.id]).map(e=>e.name);
+    const noteList = [...Object.keys(notes).filter(k=>notes[k]),customNote].filter(Boolean);
+    const key = `${p.id}-${extraNames.join(',')}-${noteList.join(',')}`;
+    addToCart({ key, productId:p.id, name:p.name, price:p.price+extrasTotal, qty, extras:extraNames, notes:noteList });
+    back();
+  };
+  return (
+    <div className="screen-detail">
+      <div className="detail-hero">
+        <button className="detail-back" onClick={back}><I.back/></button>
+        <FoodImg kind={p.img} imgSrc={p.imgSrc} size="xl"/>
+      </div>
+      <div className="detail-body slide-up">
+        <div className="detail-top">
+          {p.badge && <span className="detail-badge">{p.badge}</span>}
+          {p.top && <span className="detail-top-badge">⭐ Top pedido</span>}
+        </div>
+        <h1 className="detail-name">{p.name}</h1>
+        <p className="detail-desc">{p.desc}</p>
+        <div className="detail-price">{window.fmtARS(p.price)}</div>
+        <section className="sec">
+          <div className="sec-head"><h3 className="sec-title">Aclaraciones</h3><div className="sec-sub">Tocá las que apliquen</div></div>
+          <div className="chip-grid">
+            {window.MENU_NOTES.map(n => (
+              <button key={n} className={`chip ${notes[n]?'chip-on':''}`} onClick={()=>setNotes(s=>({...s,[n]:!s[n]}))}>
+                {notes[n]&&<I.check/>} {n}
+              </button>
+            ))}
+          </div>
+          <input className="custom-note" placeholder="Otra aclaración..." value={customNote} onChange={e=>setCustomNote(e.target.value)}/>
+        </section>
+        <section className="sec">
+          <div className="sec-head"><h3 className="sec-title">Agregar extras</h3><div className="sec-sub">Sumá adicionales a tu pedido</div></div>
+          <div className="extra-list">
+            {extrasList.map(e => (
+              <label key={e.id} className={`extra-row ${extras[e.id]?'on':''}`}>
+                <input type="checkbox" checked={!!extras[e.id]} onChange={ev=>setExtras(s=>({...s,[e.id]:ev.target.checked}))}/>
+                <span className="extra-name">{e.name}</span>
+                <span className="extra-price">+{window.fmtARS(e.price)}</span>
+              </label>
+            ))}
+          </div>
+        </section>
+      </div>
+      <div className="detail-foot">
+        <div className="qty-stepper">
+          <button onClick={()=>setQty(q=>Math.max(1,q-1))}><I.minus/></button>
+          <span>{qty}</span>
+          <button onClick={()=>setQty(q=>q+1)}><I.plus/></button>
+        </div>
+        <button className="btn-cta" onClick={submit}>
+          <span>Agregar</span><span className="btn-cta-price">{window.fmtARS(lineTotal)}</span>
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ── BUILDER ─────────────────────────────────────────────────────
+function Builder() {
+  const { back, addToCart } = useApp();
+  const [mode, setMode] = useState('entera');
+  const [size, setSize] = useState('grande');
+  const [a, setA] = useState({'i-muzza':true,'i-tomate':true});
+  const [b, setB] = useState({'i-muzza':true,'i-tomate':true});
+  const [name, setName] = useState('');
+  const SIZE_PRICE = { chica:6500, mediana:8000, grande:9500, ...(window.PIZZA_SIZE_PRICES||{}) };
+  const ings = window.PIZZA_INGREDIENTS;
+  const calcSide = (sel) => ings.reduce((s,i)=>s+(sel[i.id]?i.price:0),0);
+  const total = mode==='entera' ? SIZE_PRICE[size]+calcSide(a) : SIZE_PRICE[size]+(calcSide(a)+calcSide(b))/2;
+  const submit = () => {
+    const left = ings.filter(i=>a[i.id]&&!i.base).map(i=>i.name);
+    const right = ings.filter(i=>b[i.id]&&!i.base).map(i=>i.name);
+    const desc = mode==='mitad'
+      ? `Mitad: ${left.join(', ')||'muzza clasica'} | Mitad: ${right.join(', ')||'muzza clasica'}`
+      : `Con: ${left.join(', ')||'clasica'}`;
+    addToCart({ key:`pz-custom-${Date.now()}`, name:name||(mode==='mitad'?'Pizza Mitad y Mitad':'Pizza a tu gusto'), price:Math.round(total), qty:1, productId:'custom', notes:[`${size}`,desc], custom:true });
+    back();
+  };
+  return (
+    <div className="screen-builder">
+      <div className="sub-header sticky">
+        <button className="sh-back" onClick={back}><I.back/></button>
+        <h2 className="sh-title">Armá tu pizza</h2>
+      </div>
+      <div className="builder-modes">
+        <button className={`mode-btn ${mode==='entera'?'on':''}`} onClick={()=>setMode('entera')}>🍕 Entera</button>
+        <button className={`mode-btn ${mode==='mitad'?'on':''}`} onClick={()=>setMode('mitad')}>
+          <span style={{display:'inline-flex'}}><I.half/></span> Mitad y mitad
+        </button>
+      </div>
+      <PizzaPreview mode={mode} a={a} b={b} ings={ings}/>
+      <div className="size-row">
+        {[{id:'chica',label:'Chica',sub:'6 porciones'},{id:'mediana',label:'Mediana',sub:'8 porciones'},{id:'grande',label:'Grande',sub:'10 porciones'}].map(s => (
+          <button key={s.id} className={`size-btn ${size===s.id?'on':''}`} onClick={()=>setSize(s.id)}>
+            <strong>{s.label}</strong><span>{s.sub}</span><span className="size-price">{window.fmtARS(SIZE_PRICE[s.id])}</span>
+          </button>
+        ))}
+      </div>
+      {mode==='entera' ? (
+        <BuilderSide title="Ingredientes" sel={a} setSel={setA} ings={ings}/>
+      ) : (
+        <Fragment>
+          <BuilderSide title="Mitad A" subtitle="Tu primera mitad" sel={a} setSel={setA} ings={ings} accent="yellow"/>
+          <BuilderSide title="Mitad B" subtitle="Tu segunda mitad" sel={b} setSel={setB} ings={ings} accent="red"/>
+        </Fragment>
+      )}
+      <div className="builder-name">
+        <label>Ponele un nombre (opcional)</label>
+        <input value={name} onChange={e=>setName(e.target.value)} placeholder='Ej: "La especial mía"'/>
+      </div>
+      <div className="detail-foot">
+        <div className="builder-summary">
+          <div className="builder-sum-l">Pizza {size}</div>
+          <div className="builder-sum-s">{mode==='mitad'?`Mitad/mitad · ${ings.filter(i=>(a[i.id]||b[i.id])&&!i.base).length} ingr.`:`Con ${ings.filter(i=>a[i.id]&&!i.base).length} extras`}</div>
+        </div>
+        <button className="btn-cta" onClick={submit}>
+          <span>Agregar</span><span className="btn-cta-price">{window.fmtARS(Math.round(total))}</span>
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function BuilderSide({ title, subtitle, sel, setSel, ings, accent }) {
+  return (
+    <div className={`builder-side ${accent?`builder-side-${accent}`:''}`}>
+      <div className="builder-side-head">
+        <strong>{title}</strong>{subtitle && <span>{subtitle}</span>}
+      </div>
+      <div className="ing-grid">
+        {ings.filter(i=>!i.base).map(i => (
+          <button key={i.id} className={`ing-chip ${sel[i.id]?'on':''}`} onClick={()=>setSel(s=>({...s,[i.id]:!s[i.id]}))}>
+            <span className="ing-name">{i.name}</span>
+            <span className="ing-price">+{window.fmtARS(i.price)}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function PizzaPreview({ mode, a, b, ings }) {
+  const dotsFor = (sel, side) => {
+    const list = ings.filter(i=>sel[i.id]&&!i.base);
+    return list.flatMap((ing,idx) => {
+      const seed = ing.id.charCodeAt(0)+ing.id.charCodeAt(1)*7;
+      return Array.from({length:4}).map((_,j) => {
+        const angle = ((seed+j*91)%360)*Math.PI/180;
+        let r = 22+((seed+j*31)%18);
+        let cx = 50+Math.cos(angle)*r;
+        let cy = 50+Math.sin(angle)*r;
+        if (side==='a'&&cx>50) cx=50-(cx-50);
+        if (side==='b'&&cx<50) cx=50+(50-cx);
+        const colors = ['#E63946','#FFCA28','#7CFC8E','#FF5E94','#A8DADC','#F4E9C8'];
+        return { cx, cy, r:2+(j%2), color:colors[(seed+idx)%colors.length], key:ing.id+j+side };
+      });
+    });
+  };
+  const allDots = mode==='mitad' ? [...dotsFor(a,'a'),...dotsFor(b,'b')] : dotsFor(a,'whole');
+  return (
+    <div className="pizza-preview">
+      <svg viewBox="0 0 100 100" width="240" height="240">
+        <defs>
+          <radialGradient id="crust" cx="50%" cy="50%" r="50%"><stop offset="80%" stopColor="#E8AE00"/><stop offset="100%" stopColor="#A66800"/></radialGradient>
+          <radialGradient id="cheese" cx="50%" cy="40%" r="55%"><stop offset="0%" stopColor="#FFE89A"/><stop offset="100%" stopColor="#F0C24B"/></radialGradient>
+        </defs>
+        <circle cx="50" cy="50" r="48" fill="url(#crust)"/>
+        <circle cx="50" cy="50" r="42" fill="url(#cheese)"/>
+        {mode==='mitad' && <line x1="50" y1="8" x2="50" y2="92" stroke="#9A6800" strokeWidth="0.6" strokeDasharray="1.5 1.5"/>}
+        {allDots.map(d => <circle key={d.key} cx={d.cx} cy={d.cy} r={d.r} fill={d.color} opacity="0.92"/>)}
+      </svg>
+    </div>
+  );
+}
+
+// ── CART ─────────────────────────────────────────────────────────
+function Cart() {
+  const { back, cart, updateQty, clearCart, cartTotal, mesa, nav, earnPoints } = useApp();
+  const [tipo, setTipo] = useState('mesa');
+  const [mesaInput, setMesaInput] = useState('');
+  const [formaPago, setFormaPago] = useState('efectivo');
+  const [direccion, setDireccion] = useState('');
+  const [tel, setTel] = useState('');
+  const deliveryFee = tipo==='delivery' ? ((window.APP_CONFIG&&window.APP_CONFIG.deliveryCosto)||1500) : 0;
+  const _cfg = window.APP_CONFIG || {};
+
+  // Ajuste por forma de pago
+  const _pagoTipoMap = { efectivo: _cfg.pagoEfectivoTipo, tarjeta: _cfg.pagoTarjetaTipo, transferencia: _cfg.pagoTransfTipo };
+  const _pagoPctMap  = { efectivo: _cfg.pagoEfectivoPct,  tarjeta: _cfg.pagoTarjetaPct,  transferencia: _cfg.pagoTransfPct  };
+  const _pagoTipo = _pagoTipoMap[formaPago] || 'ninguno';
+  const _pagoPct  = Number(_pagoPctMap[formaPago]) || 0;
+  const subtotalBase = cartTotal + deliveryFee;
+  const pagoAjuste = _pagoTipo === 'ninguno' || !_pagoPct ? 0
+    : _pagoTipo === 'descuento' ? -Math.round(subtotalBase * _pagoPct / 100)
+    : Math.round(subtotalBase * _pagoPct / 100);
+  const total = subtotalBase + pagoAjuste;
+
+  const ptsActivo = _cfg.puntosActivo !== false;
+  const ptsPor1000 = _cfg.puntosPor1000 || 10;
+  const ptsGanados = ptsActivo ? Math.floor(total / 1000) * ptsPor1000 : 0;
+  const mesaFinal = mesaInput.trim() || String(mesa);
+  const pagoLabel = { efectivo:'💵 Efectivo', tarjeta:'💳 Tarjeta', transferencia:'📲 Transferencia' }[formaPago] || formaPago;
+  const buildOrder = () => {
+    const orderId = String(Date.now());
+    const mesaLabel = tipo==='mesa' ? mesaFinal : tipo==='retiro' ? 'Retiro' : 'Delivery';
+    return {
+      id:           orderId,
+      restaurantId: 'lph',
+      mesa:         mesaLabel,
+      tipo,
+      formaPago,
+      direccion: tipo==='delivery' ? direccion : '',
+      tel:       tipo==='delivery' ? tel : '',
+      items:     cart.map(it => ({
+        nombre:   it.name,
+        cantidad: it.qty,
+        subtotal: it.price * it.qty,
+        nota:     (it.notes||[]).join(', '),
+      })),
+      notas:  '',
+      total,
+      estado: 'pendiente',
+      fecha:  new Date().toISOString(),
+    };
+  };
+  const guardarOrden = (order) => {
+    try {
+      const prev = JSON.parse(localStorage.getItem('lph_orders') || '[]');
+      localStorage.setItem('lph_orders', JSON.stringify([order, ...prev].slice(0, 50)));
+    } catch(e) {}
+    if (window._cartaDb) {
+      window._cartaDb.collection('pedidos').doc(order.id).set(order)
+        .catch(e => console.warn('Firebase order error', e));
+    }
+  };
+  const validarForm = () => {
+    if (tipo==='mesa' && !mesaInput.trim()) { alert('Ingresá el número de tu mesa antes de continuar.'); return false; }
+    if (tipo==='delivery' && !direccion.trim()) { alert('Ingresá la dirección de entrega.'); return false; }
+    return true;
+  };
+  const confirmarDirecto = () => {
+    if (!validarForm()) return;
+    const order = buildOrder();
+    guardarOrden(order);
+    if (ptsGanados > 0) earnPoints(ptsGanados, `Pedido #${order.id.slice(-4)}`);
+    nav('confirmed', { total, orderId: order.id, ptsGanados, formaPago });
+  };
+  const irATransferencia = () => {
+    if (!validarForm()) return;
+    const orderData = buildOrder();
+    nav('pago-transf', { orderData, ptsGanados, formaPago });
+  };
+  const sendWhatsApp = () => {
+    if (!validarForm()) return;
+    const lines = ['*Pedido — La Pizzería de Homero*',''];
+    cart.forEach(it => {
+      lines.push(`• ${it.qty}× ${it.name} — ${window.fmtARS(it.price*it.qty)}`);
+      if (it.extras?.length) lines.push(`   _Extras: ${it.extras.join(', ')}_`);
+      if (it.notes?.length) lines.push(`   _Aclaraciones: ${it.notes.join(', ')}_`);
+    });
+    lines.push('');
+    if (tipo==='mesa') lines.push(`📍 Mesa ${mesaFinal}`);
+    if (tipo==='delivery') lines.push(`🛵 Delivery a: ${direccion} · Tel: ${tel}`);
+    if (tipo==='retiro') lines.push('🏠 Retiro en local');
+    lines.push(`${pagoLabel}`);
+    if (pagoAjuste !== 0) lines.push(pagoAjuste < 0 ? `🎁 Descuento ${_pagoPct}%: −${window.fmtARS(Math.abs(pagoAjuste))}` : `📌 Recargo ${_pagoPct}%: +${window.fmtARS(pagoAjuste)}`);
+    lines.push(`*Total: ${window.fmtARS(total)}*`);
+    const msg = encodeURIComponent(lines.join('\n'));
+    window.open(`https://wa.me/${(window.APP_CONFIG&&window.APP_CONFIG.whatsapp)||'5491155557777'}?text=${msg}`,'_blank');
+    const order = buildOrder();
+    guardarOrden(order);
+    if (ptsGanados > 0) earnPoints(ptsGanados, `Pedido #${order.id.slice(-4)}`);
+    nav('confirmed', { total, orderId: order.id, ptsGanados, formaPago });
+  };
+  if (cart.length===0) {
+    return (
+      <div className="screen-cart">
+        <div className="sub-header"><button className="sh-back" onClick={back}><I.back/></button><h2 className="sh-title">Tu pedido</h2></div>
+        <div className="empty-state">
+          <div className="empty-emoji">🛒</div>
+          <h3>Carrito vacío</h3>
+          <p>Andá a la carta y agregá algo rico</p>
+          <button className="btn-cta btn-cta-block" onClick={() => nav('carta')}>Ver carta</button>
+        </div>
+      </div>
+    );
+  }
+  return (
+    <div className="screen-cart">
+      <div className="sub-header">
+        <button className="sh-back" onClick={back}><I.back/></button>
+        <h2 className="sh-title">Tu pedido</h2>
+        <button className="sh-action sh-action-text" onClick={clearCart}>Vaciar</button>
+      </div>
+      <div className="cart-items">
+        {cart.map(it => (
+          <div key={it.key} className="cart-item">
+            <div className="cart-item-body">
+              <div className="cart-item-name">{it.name}</div>
+              {it.extras?.length>0 && <div className="cart-item-meta">+ {it.extras.join(', ')}</div>}
+              {it.notes?.length>0 && <div className="cart-item-meta">📝 {it.notes.join(', ')}</div>}
+              <div className="cart-item-price">{window.fmtARS(it.price*it.qty)}</div>
+            </div>
+            <div className="cart-qty">
+              <button onClick={()=>updateQty(it.key,it.qty-1)}><I.minus/></button>
+              <span>{it.qty}</span>
+              <button onClick={()=>updateQty(it.key,it.qty+1)}><I.plus/></button>
+            </div>
+          </div>
+        ))}
+      </div>
+      <section className="sec" style={{margin:'0 16px'}}>
+        <div className="sec-head"><h3 className="sec-title">Tipo de pedido</h3></div>
+        <div className="seg-row">
+          {[{id:'mesa',l:'En mesa',s:'En tu mesa'},{id:'retiro',l:'Retiro',s:'En local'},{id:'delivery',l:'Delivery',s:(window.APP_CONFIG&&window.APP_CONFIG.deliveryTiempo)||'25-35 min'}].map(t => (
+            <button key={t.id} className={`seg-btn ${tipo===t.id?'on':''}`} onClick={()=>setTipo(t.id)}>
+              <strong>{t.l}</strong><span>{t.s}</span>
+            </button>
+          ))}
+        </div>
+      </section>
+      {tipo==='mesa' && (
+        <div style={{padding:'0 16px 4px'}}>
+          <input className="input" type="number" min="1" placeholder="¿Número de mesa?" value={mesaInput} onChange={e=>setMesaInput(e.target.value)} style={{fontWeight:700,fontSize:18,textAlign:'center'}}/>
+        </div>
+      )}
+      {tipo==='delivery' && (
+        <div style={{padding:'0 16px'}}>
+          <input className="input" placeholder="Dirección de entrega" value={direccion} onChange={e=>setDireccion(e.target.value)}/>
+          <input className="input" placeholder="Teléfono" value={tel} onChange={e=>setTel(e.target.value)}/>
+        </div>
+      )}
+      <section className="sec" style={{margin:'0 16px'}}>
+        <div className="sec-head"><h3 className="sec-title">Forma de pago</h3></div>
+        <div className="seg-row">
+          {[{id:'efectivo',l:'💵',s:'Efectivo'},{id:'tarjeta',l:'💳',s:'Tarjeta'},{id:'transferencia',l:'📲',s:'Transferencia'}].map(p => (
+            <button key={p.id} className={`seg-btn ${formaPago===p.id?'on':''}`} onClick={()=>setFormaPago(p.id)}>
+              <strong>{p.l}</strong><span>{p.s}</span>
+            </button>
+          ))}
+        </div>
+      </section>
+      <div className="cart-totals">
+        <div className="row"><span>Subtotal</span><span>{window.fmtARS(cartTotal)}</span></div>
+        {deliveryFee>0 && <div className="row"><span>Envío</span><span>{window.fmtARS(deliveryFee)}</span></div>}
+        {pagoAjuste!==0 && (
+          <div className="row" style={{color: pagoAjuste<0 ? '#38A169' : '#E63946'}}>
+            <span>{pagoAjuste<0 ? `Descuento ${_pagoPct}% (${pagoLabel})` : `Recargo ${_pagoPct}% (${pagoLabel})`}</span>
+            <span>{pagoAjuste<0 ? '−' : '+'}{window.fmtARS(Math.abs(pagoAjuste))}</span>
+          </div>
+        )}
+        <div className="row total"><span>Total</span><span>{window.fmtARS(total)}</span></div>
+        {ptsGanados > 0 && (
+          <div className="pts-preview">
+            <I.coin/> Vas a ganar <strong style={{marginLeft:3}}>{ptsGanados} pts</strong> con este pedido
+          </div>
+        )}
+      </div>
+      <div className="cart-foot">
+        {formaPago === 'efectivo' ? (
+          <button className="btn-cta btn-cta-block" style={{display:'flex',alignItems:'center',justifyContent:'space-between',gap:8}} onClick={confirmarDirecto}>
+            <span>✅ Confirmar pedido</span><span className="btn-cta-price">{window.fmtARS(total)}</span>
+          </button>
+        ) : formaPago === 'transferencia' ? (
+          <button className="btn-cta btn-cta-block" style={{display:'flex',alignItems:'center',justifyContent:'space-between',gap:8,background:'#1a56db'}} onClick={irATransferencia}>
+            <span>📲 Ver datos para transferir</span><span className="btn-cta-price">{window.fmtARS(total)}</span>
+          </button>
+        ) : (
+          <button className="btn-wpp" onClick={sendWhatsApp}><I.whatsapp/><span>Enviar pedido por WhatsApp</span><span className="btn-cta-price">{window.fmtARS(total)}</span></button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ── PROMOS ───────────────────────────────────────────────────────
+function Promos() {
+  const { back } = useApp();
+  const promos = window.MENU_PRODUCTS.filter(p=>p.cat==='promos');
+  return (
+    <div className="screen-promos">
+      <div className="sub-header"><button className="sh-back" onClick={back}><I.back/></button><h2 className="sh-title">🔥 Promos de hoy</h2></div>
+      <div className="promo-list">{promos.map(p => <PromoCard key={p.id} p={p}/>)}</div>
+    </div>
+  );
+}
+
+function PromoCard({ p }) {
+  const { nav } = useApp();
+  const [tLeft, setTLeft] = useState(p.countdown);
+  useEffect(() => {
+    const start = Date.now();
+    const tick = setInterval(() => setTLeft(Math.max(0,p.countdown-(Date.now()-start))),1000);
+    return () => clearInterval(tick);
+  },[p.countdown]);
+  const fmt = (ms) => { const s=Math.floor(ms/1000); return `${String(Math.floor(s/3600)).padStart(2,'0')}:${String(Math.floor((s%3600)/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`; };
+  const off = p.oldPrice ? Math.round(((p.oldPrice-p.price)/p.oldPrice)*100) : 0;
+  return (
+    <div className="promo-card chalkboard chalk-noise">
+      <div className="promo-card-frame wood-frame"/>
+      <div className="promo-card-body">
+        <div className="promo-card-top">
+          <span className="promo-card-badge">{p.badge}</span>
+          {off>0 && <span className="promo-card-off">-{off}%</span>}
+        </div>
+        <div className="promo-card-title">{p.name}</div>
+        <div className="promo-card-desc">{p.desc}</div>
+        <div className="promo-card-pricing">
+          {p.oldPrice && <span className="promo-card-old">{window.fmtARS(p.oldPrice)}</span>}
+          <span className="promo-card-new neon-yellow">{window.fmtARS(p.price)}</span>
+        </div>
+        <div className="promo-card-foot">
+          <div className="countdown"><I.clock/><span>Termina en <strong>{fmt(tLeft)}</strong></span></div>
+          <button className="btn-mini-cta" onClick={()=>nav('detail',{productId:p.id})}>Lo quiero</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── LLAMAR MOZO ──────────────────────────────────────────────────
+function LlamarMozo() {
+  const { back, mesa } = useApp();
+  const [sent, setSent] = useState(false);
+  const [reason, setReason] = useState('');
+  const [loading, setLoading] = useState(false);
+  const reasons = ['Pedir la cuenta','Más servilletas','Más bebida','Cambiar algo','Otra cosa'];
+
+  const enviarLlamado = async (r) => {
+    setReason(r);
+    setLoading(true);
+    if (window._cartaDb) {
+      try {
+        await window._cartaDb.collection('llamados').add({
+          restaurantId: 'lph',
+          mesa: String(mesa),
+          motivo: r,
+          fecha: new Date().toISOString(),
+          estado: 'pendiente',
+        });
+      } catch(e) {}
+    }
+    setLoading(false);
+    setSent(true);
+  };
+
+  if (sent) {
+    return (
+      <div className="screen-llamar">
+        <div className="sub-header"><button className="sh-back" onClick={back}><I.back/></button><h2 className="sh-title">Llamando al mozo</h2></div>
+        <div className="llamar-success">
+          <div className="bell-wrap"><div className="bell-ring"><I.bell/></div></div>
+          <h2>¡Mozo en camino!</h2>
+          <p>Mesa {mesa} · {reason}</p>
+          <p className="muted">Tiempo estimado: 1-2 min</p>
+          <button className="btn-cta btn-cta-block" onClick={back}>Listo</button>
+        </div>
+      </div>
+    );
+  }
+  return (
+    <div className="screen-llamar">
+      <div className="sub-header"><button className="sh-back" onClick={back}><I.back/></button><h2 className="sh-title">Llamar al mozo</h2></div>
+      <div className="llamar-mesa"><div className="muted">Tu mesa</div><div className="llamar-mesa-num">{mesa}</div></div>
+      <section className="sec" style={{margin:'0 16px'}}>
+        <div className="sec-head"><h3 className="sec-title">¿Para qué lo llamás?</h3><div className="sec-sub">Seleccioná un motivo</div></div>
+        <div className="reason-grid">
+          {reasons.map(r => <button key={r} className={`reason-btn${loading?' disabled':''}`} disabled={loading} onClick={()=>enviarLlamado(r)}>{r}</button>)}
+        </div>
+      </section>
+    </div>
+  );
+}
+
+// ── DELIVERY LIVE ────────────────────────────────────────────────
+function DeliveryLive() {
+  const { back } = useApp();
+  const [step, setStep] = useState(1);
+  useEffect(() => {
+    const t1 = setTimeout(()=>setStep(2),3500);
+    const t2 = setTimeout(()=>setStep(3),7000);
+    return () => { clearTimeout(t1); clearTimeout(t2); };
+  },[]);
+  const steps = [
+    {l:'Pedido recibido',s:'Confirmamos tu pedido',emoji:'📝'},
+    {l:'En la cocina',s:'Lo estamos preparando',emoji:'👨‍🍳'},
+    {l:'En camino',s:'El delivery salió',emoji:'🛵'},
+    {l:'Entregado',s:'¡Disfrutalo!',emoji:'✅'},
+  ];
+  return (
+    <div className="screen-delivery">
+      <div className="sub-header"><button className="sh-back" onClick={back}><I.back/></button><h2 className="sh-title">Tu pedido en vivo</h2></div>
+      <div className="delivery-eta">
+        <div className="muted">Llega en aprox.</div>
+        <div className="delivery-eta-time neon-yellow">28 min</div>
+        <div className="muted">Pedido #1043 · Mariano</div>
+      </div>
+      <div className="delivery-track">
+        {steps.map((s,i) => (
+          <div key={i} className={`track-step ${i<=step?'active':''} ${i===step?'current':''}`}>
+            <div className="track-dot">{i<=step?'✓':i+1}</div>
+            <div className="track-body"><div className="track-l">{s.emoji} {s.l}</div><div className="track-s">{s.s}</div></div>
+            {i<steps.length-1 && <div className="track-line"/>}
+          </div>
+        ))}
+      </div>
+      <div className="delivery-driver">
+        <div className="driver-avatar">🛵</div>
+        <div><strong>Tu delivery es Mariano</strong><div className="muted">Moto 200cc · Patente A234BCD</div></div>
+        <button className="driver-call">📞</button>
+      </div>
+    </div>
+  );
+}
+
+// ── REVIEWS ──────────────────────────────────────────────────────
+function Reviews() {
+  const { back } = useApp();
+  const [name, setName] = useState('');
+  const [stars, setStars] = useState(5);
+  const [text, setText] = useState('');
+  const [extra, setExtra] = useState([]);
+  const submit = (e) => {
+    e.preventDefault();
+    if (!name||!text) return;
+    setExtra([{name,stars,text,date:'ahora',avatar:name[0]?.toUpperCase()||'?'},...extra]);
+    setName(''); setText(''); setStars(5);
+  };
+  const all = [...extra,...window.REVIEWS];
+  const avg = (all.reduce((s,r)=>s+r.stars,0)/all.length).toFixed(1);
+  return (
+    <div className="screen-reviews">
+      <div className="sub-header"><button className="sh-back" onClick={back}><I.back/></button><h2 className="sh-title">Reseñas</h2></div>
+      <div className="rev-summary">
+        <div className="rev-big">{avg}</div>
+        <div>
+          <div className="rev-stars">{[1,2,3,4,5].map(i=><span key={i} style={{color:i<=Math.round(avg)?'var(--yellow)':'var(--fg-3)'}}>★</span>)}</div>
+          <div className="muted">{all.length} opiniones</div>
+        </div>
+      </div>
+      <form className="rev-form" onSubmit={submit}>
+        <h3>Dejá tu opinión</h3>
+        <input className="input" placeholder="Tu nombre" value={name} onChange={e=>setName(e.target.value)}/>
+        <div className="rev-form-stars">{[1,2,3,4,5].map(i=><button type="button" key={i} onClick={()=>setStars(i)} className={i<=stars?'on':''}>★</button>)}</div>
+        <textarea className="input" rows={3} placeholder="Contanos cómo estuvo todo..." value={text} onChange={e=>setText(e.target.value)}/>
+        <button className="btn-cta" type="submit">Publicar reseña</button>
+      </form>
+      <div className="rev-list">
+        {all.map((r,i) => (
+          <div key={i} className="rev-item">
+            <div className="rev-avatar">{r.avatar}</div>
+            <div className="rev-body">
+              <div className="rev-head"><strong>{r.name}</strong><span className="muted">· {r.date}</span></div>
+              <div className="rev-stars">{[1,2,3,4,5].map(j=><span key={j} style={{color:j<=r.stars?'var(--yellow)':'var(--fg-3)'}}>★</span>)}</div>
+              <p>{r.text}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ── POINTS ───────────────────────────────────────────────────────
+function Points() {
+  const { back, points, pointsHistory, redeemPoints, clienteNombre, nav } = useApp();
+  const cfg = window.APP_CONFIG || {};
+  const puntosPor1000 = cfg.puntosPor1000 || 10;
+  const rewards = (window.MENU_REWARDS && window.MENU_REWARDS.length) ? window.MENU_REWARDS : [];
+  const nextReward = rewards.find(r => r.cost > points);
+  const fmtDate = ts => new Date(ts).toLocaleDateString('es-AR',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+  return (
+    <div className="screen-points">
+      <div className="sub-header"><button className="sh-back" onClick={back}><I.back/></button><h2 className="sh-title">Homero Club</h2></div>
+      <div className="pt-card">
+        <div className="pt-head"><I.coin/><span>Homero Club</span>{clienteNombre && <span style={{marginLeft:'auto',fontSize:12,opacity:0.8}}>👋 {clienteNombre}</span>}</div>
+        <div className="pt-balance"><span className="pt-num">{points}</span><span className="pt-label">puntos</span></div>
+        {nextReward ? (
+          <>
+            <div className="pt-progress"><div className="pt-progress-bar" style={{width:`${Math.min((points/nextReward.cost)*100,100)}%`}}/></div>
+            <div className="muted">Te faltan <strong>{nextReward.cost - points} pts</strong> para {nextReward.emoji} {nextReward.label}</div>
+          </>
+        ) : (
+          <>
+            <div className="pt-progress"><div className="pt-progress-bar" style={{width:'100%'}}/></div>
+            <div className="muted">¡Nivel máximo! Tenés acceso a todos los premios 🎉</div>
+          </>
+        )}
+        <div className="pt-rate">Ganás {puntosPor1000} pts por cada $1.000 pedido</div>
+      </div>
+      <div style={{padding:'16px 0 0'}}>
+        <div style={{padding:'0 16px 10px'}}><h3 style={{fontFamily:'var(--font-display)',fontSize:14,letterSpacing:'0.04em'}}>CANJEÁ TUS PUNTOS</h3></div>
+        <div className="rew-list">
+          {rewards.map(r => (
+            <div key={r.id} className={`rew-item ${points>=r.cost?'':'rew-locked'}`}>
+              <div className="rew-emoji">{r.emoji}</div>
+              <div className="rew-body"><div className="rew-label">{r.label}</div><div className="muted">{r.cost} pts</div></div>
+              <button className="rew-btn" disabled={points<r.cost} onClick={()=>redeemPoints(r.cost, r.label)}>
+                {points>=r.cost?'Canjear':'Bloqueado'}
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+      {!clienteNombre && (
+        <div style={{margin:'0 16px 4px',padding:'16px',background:'rgba(255,202,40,0.08)',border:'1.5px dashed rgba(255,202,40,0.4)',borderRadius:'var(--r-md)'}}>
+          <div style={{fontFamily:'var(--font-display)',fontSize:13,letterSpacing:'0.04em',marginBottom:6}}>🪙 ¡GUARDÁ TUS PUNTOS!</div>
+          <div className="muted" style={{fontSize:13,marginBottom:12}}>Registrate con tu nombre para no perder tus puntos si cambiás de dispositivo.</div>
+          <button className="btn-cta" style={{padding:'10px 20px',fontSize:13}} onClick={()=>nav('register')}>Registrarme gratis →</button>
+        </div>
+      )}
+      {pointsHistory.length > 0 && (
+        <div style={{padding:'20px 0 32px'}}>
+          <div style={{padding:'0 16px 10px'}}><h3 style={{fontFamily:'var(--font-display)',fontSize:14,letterSpacing:'0.04em'}}>HISTORIAL</h3></div>
+          <div className="pts-history">
+            {pointsHistory.map((e,i) => (
+              <div key={i} className="pts-hist-row">
+                <div className="pts-hist-icon">{e.type==='earn'?'🪙':'🎁'}</div>
+                <div className="pts-hist-body">
+                  <div className="pts-hist-label">{e.label}</div>
+                  <div className="muted" style={{fontSize:11}}>{fmtDate(e.ts)}</div>
+                </div>
+                <div className={`pts-hist-amt ${e.type==='earn'?'pts-earn':'pts-redeem'}`}>
+                  {e.type==='earn'?'+':'-'}{e.amount} pts
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── REGISTRO CLIENTE ─────────────────────────────────────────────
+function Register() {
+  const { nav, registerCliente } = useApp();
+  const [nombre, setNombre] = useState('');
+  const [tel, setTel] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [done, setDone] = useState(false);
+
+  const handleSubmit = async () => {
+    if (!nombre.trim()) return;
+    setLoading(true);
+    await registerCliente(nombre, tel);
+    setLoading(false);
+    setDone(true);
+    setTimeout(() => nav('points'), 1400);
+  };
+
+  if (done) {
+    return (
+      <div className="screen-register" style={{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',minHeight:'70vh',gap:12,padding:'32px 24px',textAlign:'center'}}>
+        <div style={{fontSize:56}}>🎉</div>
+        <div style={{fontFamily:'var(--font-display)',fontSize:22,color:'var(--yellow)'}}>¡BIENVENIDO!</div>
+        <div className="muted">Tus puntos están guardados, {nombre.trim()}.</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="screen-register">
+      <div className="sub-header">
+        <button className="sh-back" onClick={()=>nav('points')}><I.back/></button>
+        <h2 className="sh-title">Homero Club</h2>
+      </div>
+      <div style={{padding:'24px 16px 0',textAlign:'center'}}>
+        <div style={{fontSize:48,marginBottom:8}}>🪙</div>
+        <h2 style={{fontFamily:'var(--font-display)',fontSize:22,letterSpacing:'0.04em',color:'var(--yellow)',marginBottom:8}}>REGISTRATE GRATIS</h2>
+        <p className="muted" style={{marginBottom:24}}>Guardá tus puntos y accedé a premios exclusivos. Solo necesitamos tu nombre.</p>
+      </div>
+      <div style={{padding:'0 16px',display:'flex',flexDirection:'column',gap:12}}>
+        <div>
+          <div style={{fontSize:12,fontWeight:700,marginBottom:6,textTransform:'uppercase',letterSpacing:'0.06em',opacity:0.7}}>Nombre *</div>
+          <input
+            className="input"
+            placeholder="Tu nombre"
+            value={nombre}
+            onChange={e=>setNombre(e.target.value)}
+            autoFocus
+          />
+        </div>
+        <div>
+          <div style={{fontSize:12,fontWeight:700,marginBottom:6,textTransform:'uppercase',letterSpacing:'0.06em',opacity:0.7}}>Teléfono <span style={{fontWeight:400,opacity:0.6}}>(opcional)</span></div>
+          <input
+            className="input"
+            placeholder="Ej: 11-1234-5678"
+            value={tel}
+            onChange={e=>setTel(e.target.value)}
+            type="tel"
+          />
+        </div>
+        <button
+          className="btn-cta btn-cta-block"
+          onClick={handleSubmit}
+          disabled={!nombre.trim() || loading}
+          style={{marginTop:8,opacity:(!nombre.trim()||loading)?0.5:1}}
+        >
+          {loading ? 'Guardando...' : '🪙 Unirme al Homero Club'}
+        </button>
+        <p className="muted" style={{textAlign:'center',fontSize:12}}>Tus datos solo se usan para identificar tus puntos.</p>
+      </div>
+    </div>
+  );
+}
+
+// ── MESA ─────────────────────────────────────────────────────────
+function MesaInfo() {
+  const { back, mesa, nav } = useApp();
+  return (
+    <div className="screen-mesa">
+      <div className="sub-header"><button className="sh-back" onClick={back}><I.back/></button><h2 className="sh-title">Tu mesa</h2></div>
+      <div className="mesa-card chalkboard chalk-noise">
+        <div className="mesa-content">
+          <div className="muted">Estás en</div>
+          <div className="mesa-num">MESA {mesa}</div>
+          <div className="mesa-tag">— Bienvenido —</div>
+          <div className="mesa-actions">
+            {(window.APP_CONFIG?.llamarMozoActivo !== false) && <button className="btn-cta" onClick={()=>nav('llamar')}>🔔 Llamar mozo</button>}
+            <button className="btn-cta btn-cta-ghost" onClick={()=>nav('carta')}>🍕 Ver carta</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── WHATSAPP DIRECT ───────────────────────────────────────────────
+function WppShortcut() {
+  const { back, mesa, nav, cart } = useApp();
+  return (
+    <div className="screen-wpp">
+      <div className="sub-header"><button className="sh-back" onClick={back}><I.back/></button><h2 className="sh-title">Pedir por WhatsApp</h2></div>
+      <div className="wpp-card">
+        <div className="wpp-emoji">💬</div>
+        <h2>Hablá directo con la pizzería</h2>
+        <p className="muted">Si ya tenés items en el carrito, los enviamos formateados. Si no, te pasamos a un chat directo.</p>
+        <button className="btn-wpp btn-cta-block" style={{marginBottom:12}} onClick={()=>cart.length?nav('cart'):window.open(`https://wa.me/${(window.APP_CONFIG&&window.APP_CONFIG.whatsapp)||'5491155557777'}?text=Hola!`,'_blank')}>
+          <I.whatsapp/><span>{cart.length?`Enviar ${cart.length} item(s)`:'Abrir chat'}</span>
+        </button>
+        <button className="ghost-btn ghost-btn-primary" onClick={()=>nav('carta')}><span>O ver la carta primero</span><span className="ghost-arrow">→</span></button>
+      </div>
+    </div>
+  );
+}
+
+// ── PAGO TRANSFERENCIA ───────────────────────────────────────────
+function PagoTransf({ orderData, ptsGanados: ptsG, formaPago: fp }) {
+  const { back, nav, earnPoints } = useApp();
+  const alias = (window.APP_CONFIG && window.APP_CONFIG.aliasCBU) || '';
+  const [loading, setLoading] = useState(false);
+  const confirmar = () => {
+    if (loading) return;
+    setLoading(true);
+    const order = { ...orderData, estadoPago: 'pendiente-verificacion' };
+    try {
+      const prev = JSON.parse(localStorage.getItem('lph_orders') || '[]');
+      localStorage.setItem('lph_orders', JSON.stringify([order, ...prev].slice(0, 50)));
+    } catch(e) {}
+    if (window._cartaDb) {
+      window._cartaDb.collection('pedidos').doc(String(order.id)).set(order)
+        .catch(e => console.warn('Firebase order error', e));
+    }
+    if (ptsG > 0) earnPoints(ptsG, `Pedido #${String(order.id).slice(-4)}`);
+    nav('confirmed', { total: order.total, orderId: order.id, ptsGanados: ptsG, formaPago: fp });
+  };
+  return (
+    <div className="screen-confirmed" style={{justifyContent:'flex-start'}}>
+      <div className="sub-header"><button className="sh-back" onClick={back}><I.back/></button><h2 className="sh-title">Pagar por transferencia</h2></div>
+      <div className="confirmed-content slide-up" style={{paddingTop:32}}>
+        <div className="confirmed-emoji">📲</div>
+        <div className="estado-label">Datos para transferir</div>
+        <div className="estado-sub">Realizá la transferencia y luego confirmá tu pedido.</div>
+        {alias ? (
+          <div style={{margin:'20px 0',background:'rgba(255,202,40,0.08)',border:'1.5px solid rgba(255,202,40,0.35)',borderRadius:12,padding:'16px 20px',width:'100%',maxWidth:320,textAlign:'center'}}>
+            <div style={{fontSize:11,fontWeight:700,letterSpacing:'0.08em',opacity:0.6,marginBottom:8,textTransform:'uppercase'}}>Alias / CBU</div>
+            <div style={{fontFamily:'monospace',fontSize:16,fontWeight:800,wordBreak:'break-all',color:'var(--yellow)',letterSpacing:'0.02em'}}>{alias}</div>
+          </div>
+        ) : (
+          <div className="muted" style={{margin:'20px 0',textAlign:'center'}}>Alias/CBU no configurado. Consultá con el local.</div>
+        )}
+        <div className="confirmed-total">{window.fmtARS(orderData ? orderData.total : 0)}</div>
+        <div className="confirmed-actions" style={{marginTop:20,width:'100%',maxWidth:320}}>
+          <button className="btn-cta btn-cta-block" onClick={confirmar} disabled={loading} style={{opacity:loading?0.6:1}}>
+            {loading ? 'Enviando pedido...' : '✅ Ya transferí, confirmar pedido'}
+          </button>
+          <button className="ghost-btn ghost-btn-primary" style={{marginTop:12}} onClick={back}><span>Volver al carrito</span><span className="ghost-arrow">→</span></button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── CONFIRMED ────────────────────────────────────────────────────
+const ESTADOS = [
+  { key:'pendiente',  emoji:'📋', label:'Recibido'   },
+  { key:'preparando', emoji:'👨‍🍳', label:'Preparando' },
+  { key:'listo',      emoji:'✅', label:'Listo'       },
+  { key:'entregado',  emoji:'🎉', label:'Entregado'   },
+];
+const ESTADO_MSG = {
+  pendiente:  { emoji:'📋', h:'¡Pedido recibido!',   sub:'Ya lo tienen, en un momento empiezan a prepararlo.' },
+  preparando: { emoji:'👨‍🍳', h:'¡Cocinando!',          sub:'Ya están preparando tu pedido.' },
+  listo:      { emoji:'✅', h:'¡Listo!',              sub:'Ya está listo. Enseguida te lo llevamos.' },
+  entregado:  { emoji:'🎉', h:'¡Buen provecho!',      sub:'¡Que lo disfrutes!' },
+};
+function Confirmed({ total, orderId, ptsGanados, formaPago }) {
+  const { nav, clearCart, clienteNombre } = useApp();
+  const [estado, setEstado] = useState('pendiente');
+  useEffect(() => { clearCart(); }, []);
+  useEffect(() => {
+    if (!orderId || !window._cartaDb) return;
+    const unsub = window._cartaDb.collection('pedidos').doc(String(orderId))
+      .onSnapshot(snap => {
+        if (snap && snap.exists) setEstado(snap.data().estado || 'pendiente');
+      }, () => {});
+    return () => unsub();
+  }, [orderId]);
+  const baseInfo = ESTADO_MSG[estado] || ESTADO_MSG.pendiente;
+  const info = estado === 'pendiente' && formaPago === 'transferencia'
+    ? { ...baseInfo, sub: 'Tu pedido fue recibido. Verificaremos tu transferencia pronto.' }
+    : baseInfo;
+  const stepIdx = ESTADOS.findIndex(s => s.key === estado);
+  const esRegistrado = !!clienteNombre;
+  const puntosActivo = (window.APP_CONFIG && window.APP_CONFIG.puntosActivo) !== false;
+  return (
+    <div className="screen-confirmed">
+      <div className="confirmed-content slide-up">
+        <div className="confirmed-emoji">{info.emoji}</div>
+        <div className="estado-label">{info.h}</div>
+        <div className="estado-sub">{info.sub}</div>
+        <div className="confirmed-total">{window.fmtARS(total||0)}</div>
+        {puntosActivo && ptsGanados > 0 && esRegistrado && (
+          <div className="pts-earned"><I.coin/> ¡Ganaste <strong style={{margin:'0 3px'}}>+{ptsGanados} pts</strong> en Homero Club!</div>
+        )}
+        {puntosActivo && ptsGanados > 0 && !esRegistrado && (
+          <div style={{margin:'12px 0 4px',background:'rgba(255,202,40,0.08)',border:'1.5px dashed rgba(255,202,40,0.4)',borderRadius:14,padding:'18px 16px',textAlign:'center',width:'100%',maxWidth:320}}>
+            <div style={{fontSize:32,marginBottom:8}}>🎉</div>
+            <div style={{fontFamily:'var(--font-display)',fontSize:15,letterSpacing:'0.04em',color:'var(--yellow)',marginBottom:6}}>¡GANASTE {ptsGanados} PUNTOS!</div>
+            <div className="muted" style={{fontSize:13,marginBottom:14}}>¿Querés unirte a nuestro Homero Club? Registrate gratis y no perdas tus puntos.</div>
+            <button className="btn-cta" style={{padding:'11px 20px',fontSize:13,width:'100%'}} onClick={()=>nav('register')}>🪙 Registrarme y guardar mis puntos</button>
+          </div>
+        )}
+        {orderId && (
+          <div className="order-stepper">
+            {ESTADOS.map((s,i) => {
+              const cls = i < stepIdx ? 'done' : i === stepIdx ? 'active' : '';
+              return (
+                <div key={s.key} className={`step-item ${cls}`}>
+                  <div className="step-dot">{i <= stepIdx ? s.emoji : ''}</div>
+                  <div className="step-label">{s.label}</div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+        <div className="confirmed-actions" style={{marginTop:8}}>
+          <button className="ghost-btn ghost-btn-primary" onClick={()=>nav('home')}><span>Volver al inicio</span><span className="ghost-arrow">→</span></button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── BOTTOM NAV ───────────────────────────────────────────────────
+function BottomNav({ route, nav }) {
+  const items = [
+    {id:'home', label:'Inicio', icon:<I.home/>},
+    {id:'carta', label:'Carta', icon:<I.pizza/>},
+    {id:'reviews', label:'Reseñas', icon:<I.star/>},
+    {id:'points', label:'Puntos', icon:<I.coin/>},
+  ];
+  return (
+    <nav className="bottom-nav">
+      {items.map(it => (
+        <button key={it.id} className={`nav-btn ${route.name===it.id?'active':''}`} onClick={()=>nav(it.id)}>
+          {it.icon}<span>{it.label}</span>
+        </button>
+      ))}
+    </nav>
+  );
+}
+
+// ── HOME STYLE SELECTOR (floating) ───────────────────────────────
+function HomeStyleToggle({ homeStyle, setHomeStyle }) {
+  const styles = [
+    {id:'A', label:'🪑 Pizarra'},
+    {id:'B', label:'🎨 Stickers'},
+    {id:'C', label:'📰 Vintage'},
+  ];
+  return (
+    <div style={{position:'fixed',bottom:76,left:'50%',transform:'translateX(-50%)',display:'flex',gap:6,background:'color-mix(in srgb,var(--bg) 92%,transparent)',backdropFilter:'blur(10px)',padding:'6px 8px',borderRadius:999,border:'1.5px solid var(--border)',zIndex:70}}>
+      {styles.map(s => (
+        <button key={s.id} onClick={()=>setHomeStyle(s.id)}
+          style={{padding:'5px 12px',borderRadius:999,fontSize:11,fontWeight:700,background:homeStyle===s.id?'var(--yellow)':'transparent',color:homeStyle===s.id?'var(--ink)':'var(--fg-3)',transition:'all 0.15s'}}>
+          {s.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+// ── MAIN APP ─────────────────────────────────────────────────────
+function App() {
+  const ctx = useApp();
+  const { route, theme, setTheme, mesa, points, nav, homeStyle, setHomeStyle, toast } = ctx;
+
+  const renderHome = () => {
+    if (homeStyle==='B') return <HomeB/>;
+    if (homeStyle==='C') return <HomeC/>;
+    return <HomeA/>;
+  };
+
+  const renderRoute = () => {
+    switch(route.name) {
+      case 'home':      return renderHome();
+      case 'carta':     return <Carta/>;
+      case 'detail':    return <Detail productId={route.productId}/>;
+      case 'builder':   return <Builder/>;
+      case 'cart':      return <Cart/>;
+      case 'promos':    return <Promos/>;
+      case 'llamar':    return <LlamarMozo/>;
+      case 'delivery':  return <DeliveryLive/>;
+      case 'reviews':   return <Reviews/>;
+      case 'points':    return <Points/>;
+      case 'mesa':      return <MesaInfo/>;
+      case 'register':  return <Register/>;
+      case 'whatsapp':  return <WppShortcut/>;
+      case 'pago-transf': return <PagoTransf orderData={route.orderData} ptsGanados={route.ptsGanados} formaPago={route.formaPago}/>;
+      case 'confirmed': return <Confirmed total={route.total} orderId={route.orderId} ptsGanados={route.ptsGanados} formaPago={route.formaPago}/>;
+      default:          return renderHome();
+    }
+  };
+
+  const showHeader = !['confirmed','pago-transf'].includes(route.name);
+  const showBottomNav = ['home','carta','reviews','points'].includes(route.name);
+  const showWppFab = !['confirmed','cart','whatsapp','pago-transf'].includes(route.name);
+  const showHomeToggle = route.name === 'home';
+
+  return (
+    <div className="app-shell">
+      {showHeader && <Header onCart={()=>nav('cart')} mesa={mesa} theme={theme} setTheme={setTheme} points={points}/>}
+      <main>{renderRoute()}</main>
+      {showBottomNav && <BottomNav route={route} nav={nav}/>}
+      {toast && <div className="toast">✓ {toast.msg}</div>}
+      {showWppFab && (
+        <button className="fab-wpp" onClick={()=>nav('whatsapp')} title="WhatsApp"><I.whatsapp/></button>
+      )}
+      {showHomeToggle && (
+        <HomeStyleToggle homeStyle={homeStyle} setHomeStyle={setHomeStyle}/>
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<AppProvider><App/></AppProvider>);
+  </script>
+</body>
+</html>

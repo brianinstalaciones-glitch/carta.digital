@@ -1,0 +1,2224 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Parripollo El Maxi — Carta</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    :root {
+      --bg:        #F5F5F5;
+      --surface:   #FFFFFF;
+      --amber:     #DA291C;
+      --amber-dk:  #A81E15;
+      --ink:       #1A1A1A;
+      --ink2:      #555555;
+      --ink3:      #999999;
+      --border:    #EBEBEB;
+      --red:       #E53E3E;
+      --green:     #38A169;
+      --font:      'Oswald', Arial, sans-serif;
+      --font-title: 'Bebas Neue', Arial, sans-serif;
+      --r-card:    16px;
+      --r-pill:    999px;
+      --r-btn:     12px;
+    }
+
+
+    /* PEM - Bebas Neue en titulos y display */
+    .hero-title, .cat-label, .product-name, .section-title,
+    h1, h2, h3, h4, .app-footer-name, .cart-title,
+    .mozo-title, .club-name, .reward-name {
+      font-family: var(--font-title) !important;
+      letter-spacing: 0.04em;
+    }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    #app {
+      max-width: 430px;
+      margin: 0 auto;
+      min-height: 100vh;
+      background: var(--bg);
+      position: relative;
+    }
+
+    /* ── HERO BANNER ──────────────────────────────────────── */
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 280px;
+      background: #120000;
+      overflow: hidden;
+    }
+
+    .hero-logo-bg {
+      position: absolute;
+      inset: -20px;
+      background: url('logo.jpg') center/cover no-repeat;
+      filter: blur(18px);
+      opacity: 0.22;
+      transform: scale(1.08);
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 70% at 50% 50%, rgba(218,41,28,0.30) 0%, transparent 70%),
+        linear-gradient(160deg, rgba(18,0,0,0.85) 0%, rgba(10,0,0,0.92) 100%);
+    }
+
+    .hero-parrilla-svg {
+      position: absolute;
+      right: 16px;
+      bottom: 16px;
+      opacity: 0.18;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 2;
+      padding: 20px 20px 16px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .hero-logo-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .hero-logo {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      object-fit: contain;
+      background: rgba(0,0,0,0.45);
+      padding: 6px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+    }
+    .hero-name {
+      display: flex;
+      flex-direction: column;
+    }
+    .hero-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.1;
+      letter-spacing: -0.3px;
+    }
+    .hero-sub {
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 0.02em;
+    }
+
+    .hero-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .hero-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 10px;
+      border-radius: var(--r-pill);
+      background: rgba(255,255,255,0.12);
+      font-size: 11px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.85);
+    }
+    .hero-pill .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #4ADE80;
+      flex-shrink: 0;
+    }
+    .hero-pill .icon { font-size: 12px; }
+
+    /* ── INFO ROW ─────────────────────────────────────────── */
+    .info-row {
+      background: var(--surface);
+      padding: 14px 20px;
+      display: flex;
+      gap: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .info-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .info-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink3);
+    }
+    .info-val {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .info-sep {
+      width: 1px;
+      background: var(--border);
+      align-self: stretch;
+    }
+
+    /* ── SEARCH BAR ───────────────────────────────────────── */
+    .search-wrap {
+      padding: 12px 16px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+    }
+    .search-inner {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg);
+      border-radius: var(--r-pill);
+      padding: 10px 16px;
+      border: 1.5px solid transparent;
+      transition: border-color 200ms;
+    }
+    .search-inner:focus-within {
+      border-color: var(--amber);
+    }
+    .search-icon {
+      font-size: 16px;
+      color: var(--ink3);
+    }
+    .search-input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--ink);
+      outline: none;
+    }
+    .search-input::placeholder { color: var(--ink3); }
+
+    /* ── CATEGORY NAV ─────────────────────────────────────── */
+    .cat-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .cat-nav-scroll {
+      display: flex;
+      gap: 4px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding: 10px 16px;
+    }
+    .cat-nav-scroll::-webkit-scrollbar { display: none; }
+
+    .cat-chip {
+      flex-shrink: 0;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 7px 16px;
+      border-radius: var(--r-pill);
+      border: none;
+      cursor: pointer;
+      transition: background 150ms, color 150ms;
+      background: var(--bg);
+      color: var(--ink2);
+      white-space: nowrap;
+    }
+    .cat-chip.active {
+      background: var(--amber);
+      color: #fff;
+    }
+
+    /* ── SECTION ──────────────────────────────────────────── */
+    .menu-section {
+      scroll-margin-top: 56px;
+      padding-top: 4px;
+    }
+
+    .section-title-row {
+      padding: 20px 16px 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-title-text {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--ink);
+      letter-spacing: -0.3px;
+    }
+    .section-count {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink3);
+      background: var(--border);
+      padding: 2px 8px;
+      border-radius: var(--r-pill);
+    }
+
+    /* ── CARDS GRID ───────────────────────────────────────── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      padding: 0 16px 8px;
+    }
+
+    .card-featured {
+      grid-column: 1 / -1;
+    }
+
+    .menu-card {
+      background: var(--surface);
+      border-radius: var(--r-card);
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 150ms, box-shadow 150ms;
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+    }
+    .menu-card:active {
+      transform: scale(0.97);
+    }
+
+    .card-img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      background: linear-gradient(135deg, #1a0e00 0%, #2d1a00 50%, #1a0e00 100%);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .card-img img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .card-img-featured {
+      aspect-ratio: 16/7;
+    }
+
+    .card-img::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(232,137,10,0.2) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .card-img-icon {
+      position: relative;
+      z-index: 1;
+      opacity: 0.35;
+    }
+
+    .card-badges {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      z-index: 2;
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+    .card-badge {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: var(--r-pill);
+      letter-spacing: 0.04em;
+    }
+    .badge-hot   { background: #fff; color: var(--amber-dk); }
+    .badge-new   { background: var(--amber); color: #fff; }
+    .badge-pop   { background: rgba(0,0,0,0.55); color: #fff; backdrop-filter: blur(4px); }
+    .badge-veg   { background: rgba(56,161,105,0.9); color: #fff; }
+
+    .card-body {
+      padding: 10px 12px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+    }
+    .card-body-featured {
+      padding: 12px 16px 14px;
+    }
+
+    .card-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.3;
+    }
+    .card-name-featured { font-size: 17px; }
+
+    .card-desc {
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--ink3);
+      line-height: 1.45;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .card-desc-featured { font-size: 12px; }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 6px;
+    }
+
+    .card-price {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--ink);
+      letter-spacing: -0.3px;
+    }
+    .card-price-featured { font-size: 20px; }
+    .card-price span {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--ink3);
+      margin-right: 1px;
+    }
+
+    .card-add-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--amber);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 150ms, transform 150ms;
+      flex-shrink: 0;
+    }
+    .card-add-btn:active {
+      background: var(--amber-dk);
+      transform: scale(0.9);
+    }
+    .card-add-btn svg {
+      width: 14px; height: 14px;
+      stroke: #fff;
+      stroke-width: 2.5;
+      fill: none;
+      stroke-linecap: round;
+    }
+    .card-add-btn-featured {
+      width: 36px; height: 36px;
+    }
+    .card-add-btn-featured svg { width: 16px; height: 16px; }
+
+    /* ── LIST ITEMS ─────────────────────────────────────── */
+    .list-items {
+      padding: 0 16px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .list-item {
+      background: var(--surface);
+      border-radius: var(--r-card);
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: background 150ms;
+    }
+    .list-item:active { background: #fafafa; }
+
+    .list-item-body {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .list-item-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.3;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      white-space: normal;
+    }
+    .list-item-desc {
+      font-size: 12px;
+      color: var(--ink3);
+      line-height: 1.4;
+      word-wrap: break-word;
+      white-space: normal;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .list-item-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .list-item-price {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--ink);
+      letter-spacing: -0.2px;
+    }
+    .list-add-btn {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 150ms, border-color 150ms;
+    }
+    .list-add-btn:active {
+      background: var(--amber);
+      border-color: var(--amber);
+    }
+    .list-add-btn svg {
+      width: 12px; height: 12px;
+      stroke: var(--ink2);
+      stroke-width: 2.5;
+      fill: none;
+      stroke-linecap: round;
+    }
+    .list-add-btn:active svg { stroke: #fff; }
+
+    /* ── SECTION DIVIDER ─────────────────────────────────── */
+    .section-sep {
+      height: 8px;
+      background: var(--bg);
+    }
+
+    /* ── FOOTER ──────────────────────────────────────────── */
+    .app-footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 28px 20px 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      text-align: center;
+    }
+    .app-footer img {
+      width: 64px;
+      height: 64px;
+      object-fit: contain;
+      border-radius: 14px;
+      background: #120000;
+      padding: 6px;
+    }
+    .app-footer-name {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--ink);
+    }
+    .app-footer-meta {
+      font-size: 13px;
+      color: var(--ink3);
+      line-height: 1.7;
+    }
+    .app-footer-addr {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--amber-dk);
+      background: rgba(232,137,10,0.08);
+      padding: 6px 14px;
+      border-radius: var(--r-pill);
+    }
+    .footer-legal {
+      font-size: 11px;
+      color: var(--ink3);
+      margin-top: 4px;
+    }
+    .footer-wa {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #25D366;
+      color: #fff;
+      padding: 10px 22px;
+      border-radius: var(--r-pill);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 700;
+      margin-top: 4px;
+    }
+
+    /* ── CART BUBBLE ─────────────────────────────────────── */
+    .cart-bubble {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 200;
+      background: var(--ink);
+      color: #fff;
+      border-radius: var(--r-pill);
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+      cursor: pointer;
+      transition: transform 200ms, opacity 200ms;
+      white-space: nowrap;
+      font-family: var(--font);
+      border: none;
+      min-width: 220px;
+      justify-content: space-between;
+    }
+    .cart-bubble.hidden {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(-50%) translateY(20px);
+    }
+    .cart-count {
+      background: var(--amber);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 800;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .cart-label {
+      font-size: 14px;
+      font-weight: 700;
+      flex: 1;
+      text-align: center;
+    }
+    .cart-total {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--amber);
+    }
+
+    /* ── MODAL PRODUCTO ─────────────────────────────────────────── */
+    .pm-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.58);
+      z-index: 400; display: none;
+      align-items: flex-end; justify-content: center;
+      backdrop-filter: blur(4px);
+    }
+    .pm-overlay.open { display: flex; }
+
+    .pm-panel {
+      width: 100%; max-width: 430px;
+      max-height: 92vh; overflow-y: auto;
+      background: var(--surface);
+      border-radius: 24px 24px 0 0;
+      animation: slideUp 300ms cubic-bezier(.22,.68,0,1.2);
+      position: relative;
+    }
+    .pm-img {
+      width: 100%; aspect-ratio: 16/8;
+      background: linear-gradient(135deg, #1a0e00, #2d1a00);
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden; flex-shrink: 0; position: relative;
+    }
+    .pm-img img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+    .pm-img-placeholder { opacity: .25; }
+    .pm-badges { position:absolute; top:12px; left:12px; display:flex; gap:6px; z-index:2; }
+
+    .pm-close {
+      position: absolute; top: 12px; right: 12px;
+      width: 32px; height: 32px; border-radius: 50%;
+      background: rgba(0,0,0,0.45); backdrop-filter: blur(4px);
+      border: none; cursor: pointer; color: #fff; font-size: 16px;
+      display: flex; align-items: center; justify-content: center; z-index: 10;
+    }
+
+    .pm-body { padding: 20px 20px 8px; }
+    .pm-name  { font-size: 20px; font-weight: 800; color: var(--ink); letter-spacing: -.3px; line-height: 1.2; }
+    .pm-desc  { font-size: 14px; color: var(--ink2); line-height: 1.6; margin-top: 6px; }
+    .pm-price { font-size: 24px; font-weight: 800; color: var(--ink); letter-spacing: -.4px; margin-top: 10px; }
+    .pm-price span { font-size: 14px; font-weight: 500; color: var(--ink3); margin-right: 2px; }
+
+    .pm-section { padding: 14px 20px; border-top: 1px solid var(--border); }
+    .pm-section-label {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .07em; color: var(--ink3); margin-bottom: 8px;
+    }
+    .pm-notas {
+      width: 100%; border: 1.5px solid var(--border); border-radius: 12px;
+      padding: 10px 13px; font-family: var(--font); font-size: 14px;
+      color: var(--ink); background: var(--bg); resize: none;
+      outline: none; height: 68px; line-height: 1.5; transition: border-color 200ms;
+    }
+    .pm-notas:focus { border-color: var(--amber); background: #fff; }
+    .pm-notas::placeholder { color: var(--ink3); }
+
+    .pm-footer {
+      padding: 14px 20px 32px;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      border-top: 1px solid var(--border);
+    }
+    .pm-add-btn {
+      flex: 1; padding: 14px 20px; border-radius: 14px; border: none;
+      background: var(--amber); color: #fff;
+      font-family: var(--font); font-size: 15px; font-weight: 700;
+      cursor: pointer; transition: background 150ms, transform 100ms;
+    }
+    .pm-add-btn:hover  { background: var(--amber-dk); }
+    .pm-add-btn:active { transform: scale(.97); }
+
+    /* ── CART OVERLAY + PANEL ───────────────────────────────────── */
+    .cart-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 300; display: none;
+      backdrop-filter: blur(3px);
+    }
+    .cart-overlay.open { display: block; }
+
+    .cart-panel {
+      position: fixed; bottom: 0;
+      left: 50%; transform: translateX(-50%) translateY(100%);
+      width: 100%; max-width: 430px;
+      max-height: 92vh;
+      background: var(--surface);
+      border-radius: 24px 24px 0 0;
+      display: flex; flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 -8px 40px rgba(0,0,0,0.25);
+      z-index: 301;
+      transition: transform 320ms cubic-bezier(.22,.68,0,1.2);
+    }
+    .cart-panel.open { transform: translateX(-50%) translateY(0); }
+
+    .cart-handle {
+      width: 36px; height: 4px; border-radius: 2px;
+      background: var(--border); margin: 12px auto 0;
+      flex-shrink: 0;
+    }
+    .cart-header {
+      padding: 12px 20px 12px;
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid var(--border); flex-shrink: 0;
+    }
+    .cart-panel-title { font-size: 18px; font-weight: 800; }
+    .cart-panel-badge {
+      background: var(--amber); color: #fff;
+      font-size: 12px; font-weight: 800;
+      padding: 2px 8px; border-radius: 999px; margin-left: 8px;
+    }
+    .cart-close-btn {
+      width: 30px; height: 30px; border-radius: 8px; border: none;
+      background: var(--bg); cursor: pointer; font-size: 16px;
+      display: flex; align-items: center; justify-content: center; color: var(--ink2);
+    }
+
+    /* Items list */
+    .cart-body { flex: 1; overflow-y: auto; }
+    .cart-item {
+      display: flex; align-items: flex-start;
+      gap: 10px; padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .cart-item-info { flex: 1; min-width: 0; }
+    .cart-item-name { font-size: 14px; font-weight: 700; color: var(--ink); line-height: 1.3; }
+    .cart-item-desc {
+      font-size: 12px; color: var(--ink3); margin-top: 2px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .cart-item-unit { font-size: 12px; color: var(--ink2); margin-top: 4px; font-weight: 600; }
+    .qty-controls { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+    .qty-btn {
+      width: 28px; height: 28px; border-radius: 50%;
+      border: 1.5px solid var(--border); background: var(--bg);
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      font-size: 16px; font-weight: 700; color: var(--ink);
+      transition: all 150ms; line-height: 1;
+    }
+    .qty-btn:active { background: var(--amber); border-color: var(--amber); color: #fff; }
+    .qty-num { font-size: 15px; font-weight: 800; min-width: 20px; text-align: center; }
+    .cart-item-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex-shrink: 0; }
+    .cart-item-subtotal { font-size: 15px; font-weight: 800; color: var(--ink); }
+    .cart-remove-btn {
+      background: none; border: none; cursor: pointer;
+      color: var(--ink3); font-size: 13px; padding: 2px 4px; border-radius: 4px;
+    }
+    .cart-remove-btn:hover { color: var(--red); background: var(--red-bg, rgba(229,62,62,.08)); }
+
+    /* Sections del footer */
+    .cart-section {
+      padding: 14px 20px;
+      border-top: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .cart-section-label {
+      font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .07em;
+      color: var(--ink3); margin-bottom: 8px;
+    }
+    .cart-notas {
+      width: 100%; border: 1.5px solid var(--border);
+      border-radius: 12px; padding: 10px 13px;
+      font-family: var(--font); font-size: 14px; color: var(--ink);
+      background: var(--bg); resize: none; outline: none;
+      height: 68px; line-height: 1.5; transition: border-color 200ms;
+    }
+    .cart-notas:focus { border-color: var(--amber); background: #fff; }
+    .cart-notas::placeholder { color: var(--ink3); }
+
+    .cart-mesa-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .cart-mesa-label { font-size: 14px; font-weight: 700; color: var(--ink); }
+    .cart-mesa-input {
+      width: 72px; border: 1.5px solid var(--border);
+      border-radius: 10px; padding: 8px 10px;
+      font-family: var(--font); font-size: 16px; font-weight: 700;
+      text-align: center; color: var(--ink);
+      background: var(--bg); outline: none; transition: border-color 200ms;
+    }
+    .cart-mesa-input:focus { border-color: var(--amber); }
+
+    .cart-total-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 20px; border-top: 2px solid var(--border); flex-shrink: 0;
+    }
+    .cart-total-label { font-size: 15px; font-weight: 700; color: var(--ink2); }
+    .cart-total-val   { font-size: 22px; font-weight: 800; color: var(--ink); letter-spacing: -.3px; }
+
+    .cart-actions { padding: 10px 20px 32px; display: flex; flex-direction: column; gap: 8px; flex-shrink: 0; }
+    .cart-btn {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 14px; border-radius: 14px; border: none;
+      font-family: var(--font); font-size: 15px; font-weight: 700;
+      cursor: pointer; transition: background 150ms, transform 100ms; width: 100%;
+    }
+    .cart-btn:active { transform: scale(.98); }
+    .cart-btn-mesa { background: var(--ink); color: #fff; }
+    .cart-btn-mesa:hover { background: #2a2a2a; }
+    .cart-btn-wa   { background: #25D366; color: #fff; }
+    .cart-btn-wa:hover { background: #1db954; }
+
+    /* ── MEDIO DE PAGO ───────────────────────────────────────── */
+    .pago-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--ink3); padding: 4px 20px 0; }
+    .pago-btns  { display: flex; gap: 8px; padding: 8px 20px 4px; }
+    .pago-btn   { flex: 1; padding: 9px 4px; border-radius: 12px; border: 1.5px solid var(--border); background: var(--bg); font-family: var(--font); font-size: 11px; font-weight: 700; color: var(--ink2); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px; transition: all 150ms; }
+    .pago-btn.on { border-color: var(--amber); background: rgba(232,137,10,0.1); color: var(--amber-dk); }
+    .pago-btn-em { font-size: 17px; line-height: 1; }
+
+    /* ── TRANSFER OVERLAY ───────────────────────────────────── */
+    .transf-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 400; align-items: flex-end; justify-content: center; backdrop-filter: blur(4px); }
+    .transf-overlay.open { display: flex; }
+    .transf-panel { background: var(--surface); border-radius: 24px 24px 0 0; width: 100%; max-width: 430px; padding: 28px 24px 40px; display: flex; flex-direction: column; gap: 14px; }
+    .transf-title { font-size: 20px; font-weight: 800; }
+    .transf-sub   { font-size: 14px; color: var(--ink2); line-height: 1.5; }
+    .transf-box   { background: var(--bg); border-radius: 14px; padding: 16px 18px; }
+    .transf-row   { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--border); }
+    .transf-row:last-child { border-bottom: none; }
+    .transf-lbl   { font-size: 11px; font-weight: 700; color: var(--ink3); text-transform: uppercase; letter-spacing: .06em; }
+    .transf-val   { font-size: 16px; font-weight: 800; color: var(--ink); }
+    .transf-total { font-size: 26px; font-weight: 800; color: var(--amber-dk); text-align: center; }
+    .transf-btn-ok   { width: 100%; padding: 15px; border-radius: 14px; border: none; background: var(--ink); color: #fff; font-family: var(--font); font-size: 16px; font-weight: 700; cursor: pointer; }
+    .transf-btn-back { width: 100%; padding: 12px; border-radius: 12px; border: 1.5px solid var(--border); background: none; font-family: var(--font); font-size: 14px; font-weight: 600; color: var(--ink2); cursor: pointer; }
+
+    /* Empty cart / confirm */
+    .cart-empty {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 10px; padding: 48px 24px; text-align: center;
+    }
+    .cart-empty-icon { font-size: 44px; }
+    .cart-empty-text { font-size: 16px; font-weight: 800; color: var(--ink2); }
+    .cart-empty-sub  { font-size: 13px; color: var(--ink3); }
+
+    .cart-confirm {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 12px; padding: 36px 24px; text-align: center;
+    }
+    .cart-confirm-icon  { font-size: 54px; }
+    .cart-confirm-title { font-size: 20px; font-weight: 800; }
+    .cart-confirm-mesa  { font-size: 28px; font-weight: 800; color: var(--amber); }
+    .cart-confirm-sub   { font-size: 14px; color: var(--ink2); line-height: 1.65; }
+
+    /* ── FUEGO CLUB BANNER ───────────────────────────────────── */
+    .fclub-section {
+      margin: 0 16px 24px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #1a0a00 0%, #2b1400 60%, #1a0a00 100%);
+      border: 1.5px solid rgba(232,137,10,.25);
+      overflow: hidden;
+    }
+    .fclub-header {
+      display: flex; align-items: center; gap: 10px;
+      padding: 16px 18px 10px;
+    }
+    .fclub-coin { font-size: 28px; line-height: 1; flex-shrink: 0; }
+    .fclub-title { font-size: 17px; font-weight: 800; color: #fff; letter-spacing: -.2px; }
+    .fclub-sub   { font-size: 12px; color: rgba(255,255,255,.55); margin-top: 1px; line-height: 1.4; }
+    .fclub-body  { padding: 0 18px 18px; }
+    .fclub-form  { display: flex; flex-direction: column; gap: 10px; }
+    .fclub-input {
+      width: 100%; box-sizing: border-box;
+      padding: 11px 14px; border-radius: 10px;
+      border: 1.5px solid rgba(232,137,10,.3);
+      background: rgba(255,255,255,.05); color: #fff;
+      font-size: 15px; font-family: var(--font);
+      outline: none;
+    }
+    .fclub-input::placeholder { color: rgba(255,255,255,.35); }
+    .fclub-input:focus { border-color: var(--amber); }
+    .fclub-btn {
+      width: 100%; padding: 13px; border-radius: 12px;
+      border: none; cursor: pointer;
+      background: var(--amber); color: #fff;
+      font-size: 15px; font-weight: 800; font-family: var(--font);
+      letter-spacing: .01em;
+    }
+    .fclub-btn:active { opacity: .85; }
+    .fclub-ok {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px 18px; background: rgba(232,137,10,.1);
+      border-top: 1px solid rgba(232,137,10,.15);
+    }
+    .fclub-ok-icon { font-size: 26px; flex-shrink: 0; }
+    .fclub-ok-name { font-size: 15px; font-weight: 700; color: #fff; }
+    .fclub-ok-sub  { font-size: 12px; color: rgba(255,255,255,.5); margin-top: 1px; }
+
+    /* ── TRIAL BANNER ─────────────────────────────────────────── */
+    .trial-banner {
+      background: var(--amber);
+      color: #fff;
+      padding: 9px 16px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      display: none;
+    }
+
+    /* ── PLATO DEL DÍA ────────────────────────────────────────── */
+    .pdd-banner {
+      background: linear-gradient(135deg, #1a0e00 0%, #2d1800 100%);
+      border-radius: 18px; padding: 16px; margin-bottom: 4px;
+      display: flex; gap: 14px; align-items: center;
+      border: 1.5px solid rgba(232,137,10,.35);
+      cursor: pointer; transition: opacity .15s;
+    }
+    .pdd-banner:active { opacity: .85; }
+    .pdd-banner-img {
+      width: 76px; min-width: 76px; height: 76px; border-radius: 12px;
+      object-fit: cover; background: rgba(255,255,255,.06);
+    }
+    .pdd-banner-placeholder {
+      width: 76px; min-width: 76px; height: 76px; border-radius: 12px;
+      background: rgba(255,255,255,.06); display: flex; align-items: center;
+      justify-content: center; font-size: 28px;
+    }
+    .pdd-banner-info { flex: 1; display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+    .pdd-banner-label { font-size: 9px; font-weight: 800; color: var(--amber); text-transform: uppercase; letter-spacing: .14em; }
+    .pdd-banner-name  { font-size: 16px; font-weight: 800; color: #fff; letter-spacing: -.2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .pdd-banner-desc  { font-size: 12px; color: rgba(255,255,255,.5); line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .pdd-banner-nota  { font-size: 11px; color: var(--amber); font-weight: 700; }
+    .pdd-banner-price { font-size: 15px; font-weight: 800; color: var(--amber); margin-top: 2px; }
+
+    /* ── LLAMAR MOZO ────────────────────────────────────────── */
+    #fab-mozo {
+      position: fixed;
+      bottom: 90px;
+      right: 18px;
+      z-index: 199;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: var(--amber);
+      color: #000;
+      border: none;
+      font-size: 22px;
+      box-shadow: 0 4px 18px rgba(232,137,10,0.45);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 200ms, opacity 200ms;
+    }
+    #fab-mozo.hidden { opacity:0; pointer-events:none; transform:scale(0.8); }
+    .mozo-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 400;
+      align-items: flex-end;
+      justify-content: center;
+      backdrop-filter: blur(4px);
+    }
+    .mozo-overlay.show { display: flex; }
+    .mozo-panel {
+      background: var(--surface);
+      border-radius: 24px 24px 0 0;
+      padding: 24px 20px 36px;
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .mozo-handle { width: 40px; height: 4px; background: var(--border); border-radius: 2px; margin: 0 auto -4px; }
+    .mozo-title { font-size: 18px; font-weight: 800; text-align: center; }
+    .mozo-mesa-row { display:flex; align-items:center; gap:10px; }
+    .mozo-mesa-label { font-size:14px; font-weight:700; color:var(--ink2); white-space:nowrap; }
+    .mozo-mesa-input { flex:1; padding:10px 14px; border:2px solid var(--border); border-radius:12px; font-size:18px; font-weight:800; text-align:center; font-family:var(--font); background:var(--bg); color:var(--ink); }
+    .mozo-mesa-input:focus { border-color:var(--amber); outline:none; }
+    .mozo-reasons { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+    .mozo-reason-btn {
+      padding: 12px 8px;
+      border-radius: 12px;
+      border: 2px solid var(--border);
+      background: var(--bg);
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: var(--font);
+      transition: background 150ms, border-color 150ms;
+    }
+    .mozo-reason-btn:hover { border-color:var(--amber); background:var(--amber-bg); }
+    .mozo-success { text-align:center; padding:16px 0; display:flex; flex-direction:column; align-items:center; gap:10px; }
+    .mozo-bell-wrap { width:72px; height:72px; background:var(--amber-bg); border-radius:50%; display:grid; place-items:center; border:3px solid var(--amber); font-size:32px; }
+
+    /* ── TRIAL OVERLAY ────────────────────────────────────────── */
+    .trial-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(10,6,0,0.88);
+      z-index: 500;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(8px);
+    }
+    .trial-overlay.show { display: flex; }
+    .trial-overlay-card {
+      background: var(--surface);
+      border-radius: 24px;
+      padding: 36px 28px;
+      max-width: 340px;
+      width: calc(100% - 40px);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.4);
+    }
+    .trial-overlay-icon { font-size: 52px; line-height: 1; }
+    .trial-overlay-title { font-size: 22px; font-weight: 800; color: var(--ink); letter-spacing: -0.3px; }
+    .trial-overlay-text  { font-size: 14px; color: var(--ink2); line-height: 1.65; }
+    .trial-overlay-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: #25D366;
+      color: #fff;
+      padding: 13px 24px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 700;
+      width: 100%;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-logo-bg"></div>
+    <div class="hero-bg"></div>
+    <svg class="hero-parrilla-svg" width="160" height="100" viewBox="0 0 160 100">
+      <line x1="10" y1="15" x2="150" y2="15" stroke="#DA291C" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="10" y1="33" x2="150" y2="33" stroke="#DA291C" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="10" y1="51" x2="150" y2="51" stroke="#DA291C" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="10" y1="69" x2="150" y2="69" stroke="#DA291C" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="25"  y1="8" x2="25"  y2="76" stroke="#DA291C" stroke-width="1" opacity="0.4"/>
+      <line x1="55"  y1="8" x2="55"  y2="76" stroke="#DA291C" stroke-width="1" opacity="0.4"/>
+      <line x1="85"  y1="8" x2="85"  y2="76" stroke="#DA291C" stroke-width="1" opacity="0.4"/>
+      <line x1="115" y1="8" x2="115" y2="76" stroke="#DA291C" stroke-width="1" opacity="0.4"/>
+      <line x1="145" y1="8" x2="145" y2="76" stroke="#DA291C" stroke-width="1" opacity="0.4"/>
+      <path d="M35 84 Q40 74 45 84" stroke="#E8760A" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <path d="M70 84 Q76 72 82 84" stroke="#E8760A" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <path d="M105 84 Q110 76 115 84" stroke="#E8760A" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    </svg>
+    <div class="hero-inner">
+      <div class="hero-logo-wrap">
+        <img src="logo.jpg" alt="Parripollo El Maxi" class="hero-logo" onerror="this.style.display='none'" />
+        <span class="hero-title" style="text-align:center">Parripollo El Maxi</span>
+        <span class="hero-sub" style="text-align:center;margin-top:-6px">Parrilla Restó · Merlo</span>
+      </div>
+      <div class="hero-info">
+        <div class="hero-pill"><span class="dot"></span> Abierto ahora</div>
+        <div class="hero-pill"><span class="icon">📍</span> Juana Azurduy 452, Merlo</div>
+        <div class="hero-pill"><span class="icon">🍗</span> Asado 100% Argentino</div>
+        <div class="hero-pill"><span class="icon">🔥</span> Sabor único y jugoso</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- INFO ROW -->
+  <div class="info-row">
+    <div class="info-item">
+      <span class="info-label">Horario</span>
+      <span class="info-val">Todos los días</span>
+    </div>
+    <div class="info-sep"></div>
+    <div class="info-item">
+      <span class="info-label">Especialidad</span>
+      <span class="info-val">Parrilla · Asado</span>
+    </div>
+    <div class="info-sep"></div>
+    <div class="info-item">
+      <span class="info-label">Estilo</span>
+      <span class="info-val">Tradicional</span>
+    </div>
+  </div>
+
+  <!-- SEARCH -->
+  <div class="search-wrap">
+    <div class="search-inner">
+      <span class="search-icon">🔍</span>
+      <input class="search-input" type="text" placeholder="Buscar en la carta…" id="search-input" />
+    </div>
+  </div>
+
+  <!-- CATEGORY NAV -->
+  <nav class="cat-nav">
+    <div class="cat-nav-scroll" id="cat-scroll"></div>
+  </nav>
+
+  <!-- PLATO DEL DÍA -->
+  <div id="pdd-banner" style="display:none;padding:0 16px 4px"></div>
+
+  <!-- MAIN CONTENT -->
+  <main id="main-content">
+  </main>
+
+  <!-- FUEGO CLUB BANNER -->
+  <section class="fclub-section" id="fclub-section">
+    <div class="fclub-header">
+      <div class="fclub-coin">🪙</div>
+      <div>
+        <div class="fclub-title">Fuego Club</div>
+        <div class="fclub-sub">Descuentos exclusivos para asociados · Registrate gratis</div>
+      </div>
+    </div>
+    <div class="fclub-body" id="fclub-body">
+      <div class="fclub-form">
+        <input class="fclub-input" id="fclub-nombre" type="text"      placeholder="Tu nombre" autocomplete="name" />
+        <input class="fclub-input" id="fclub-tel"    type="tel"       placeholder="Celular (ej: 1130000000)" autocomplete="tel" />
+        <button class="fclub-btn" onclick="registrarClub()">🔥 Unirme al Fuego Club</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="app-footer">
+    <img src="logo.jpg" alt="Parripollo El Maxi" onerror="this.style.display='none'" />
+    <div class="app-footer-name">Parripollo El Maxi</div>
+    <div class="app-footer-meta">Parrilla Restó · Gastronomía tradicional</div>
+    <div class="app-footer-addr">📍 Juana Azurduy 452 · Merlo, San Luis</div>
+    <a class="footer-wa" href="https://wa.me/543000000000?text=Hola!%20Quisiera%20hacer%20una%20reserva." target="_blank">💬 Escribinos por WhatsApp</a>
+    <div class="footer-legal">Precios en ARS · IVA incluido · Sujeto a cambios</div>
+  </footer>
+
+</div>
+
+<!-- MODAL PRODUCTO -->
+<div class="pm-overlay" id="pm-overlay" onclick="closePMOnOverlay(event)">
+  <div class="pm-panel" id="pm-panel">
+    <div class="pm-img" id="pm-img">
+      <svg class="pm-img-placeholder" width="60" height="60" viewBox="0 0 44 44" fill="none" stroke="#DA291C" stroke-width="1.5"><circle cx="22" cy="18" r="10"/><path d="M10 36 Q16 26 22 28 Q28 30 34 36"/></svg>
+      <div class="pm-badges" id="pm-badges"></div>
+    </div>
+    <button class="pm-close" onclick="closePM()">✕</button>
+    <div class="pm-body">
+      <div class="pm-name"  id="pm-name"></div>
+      <div class="pm-desc"  id="pm-desc"></div>
+      <div class="pm-price" id="pm-price"></div>
+    </div>
+    <div class="pm-section">
+      <div class="pm-section-label">Aclaraciones para este plato</div>
+      <textarea class="pm-notas" id="pm-notas" placeholder="Ej: sin cebolla · cocción jugosa · extra queso · alergias…"></textarea>
+    </div>
+    <div class="pm-footer">
+      <div class="qty-controls" style="flex-shrink:0">
+        <button class="qty-btn" onclick="pmDelta(-1)">−</button>
+        <span class="qty-num" id="pm-qty">1</span>
+        <button class="qty-btn" onclick="pmDelta(1)">+</button>
+      </div>
+      <button class="pm-add-btn" onclick="addFromPM()">Agregar al pedido</button>
+    </div>
+  </div>
+</div>
+
+<!-- CART OVERLAY -->
+<div class="cart-overlay" id="cart-overlay" onclick="handleOverlayClick(event)"></div>
+
+<!-- CART PANEL -->
+<div class="cart-panel" id="cart-panel">
+  <div class="cart-handle"></div>
+  <div class="cart-header">
+    <div style="display:flex;align-items:center">
+      <span class="cart-panel-title">Tu pedido</span>
+      <span class="cart-panel-badge" id="cp-badge">0</span>
+    </div>
+    <button class="cart-close-btn" onclick="closeCart()">✕</button>
+  </div>
+
+  <!-- Items (scrollable) -->
+  <div class="cart-body" id="cp-body"></div>
+
+  <!-- Footer (solo visible con items) -->
+  <div id="cp-footer" style="display:none">
+    <div class="cart-section">
+      <div class="cart-section-label">Aclaraciones del pedido</div>
+      <textarea class="cart-notas" id="cp-notas" placeholder="Ej: sin cebolla · cocción jugosa · extra queso · sin sal…"></textarea>
+    </div>
+    <div class="cart-total-row">
+      <span class="cart-total-label">Total</span>
+      <span class="cart-total-val" id="cp-total">$0</span>
+    </div>
+    <div id="cp-pts-banner"></div>
+    <div class="cart-actions">
+      <div class="cart-mesa-row">
+        <span class="cart-mesa-label">🍽 Mesa N°</span>
+        <input type="number" class="cart-mesa-input" id="cp-mesa" placeholder="—" min="1" />
+      </div>
+      <div class="pago-label">Medio de pago</div>
+      <div class="pago-btns">
+        <button class="pago-btn on" id="pago-efectivo"       onclick="selPago('efectivo')"><span class="pago-btn-em">💵</span>Efectivo</button>
+        <button class="pago-btn"    id="pago-transferencia"  onclick="selPago('transferencia')"><span class="pago-btn-em">🏦</span>Transf.</button>
+        <button class="pago-btn"    id="pago-tarjeta"        onclick="selPago('tarjeta')"><span class="pago-btn-em">💳</span>Tarjeta</button>
+      </div>
+      <button class="cart-btn cart-btn-mesa" id="cp-confirm-btn" onclick="confirmarPedido()">✅ Confirmar pedido</button>
+      <button class="cart-btn cart-btn-wa"   onclick="pedirPorWA()">💬 Enviar por WhatsApp</button>
+    </div>
+  </div>
+</div>
+
+<!-- TRANSFER OVERLAY -->
+<div class="transf-overlay" id="transf-overlay">
+  <div class="transf-panel">
+    <div class="transf-title">📲 Datos para transferir</div>
+    <div class="transf-sub">Realizá la transferencia por el monto exacto y luego confirmá tu pedido.</div>
+    <div class="transf-box">
+      <div class="transf-row"><span class="transf-lbl">Alias / CVU</span><span class="transf-val" id="transf-alias">—</span></div>
+      <div class="transf-row"><span class="transf-lbl">A nombre de</span><span class="transf-val">Parripollo El Maxi</span></div>
+    </div>
+    <div class="transf-total" id="transf-monto">$0</div>
+    <button class="transf-btn-ok" onclick="confirmarTransferencia()">✅ Ya transferí — Confirmar pedido</button>
+    <button class="transf-btn-back" onclick="cerrarTransf()">← Volver al pedido</button>
+  </div>
+</div>
+
+<!-- TRIAL EXPIRED OVERLAY -->
+<div class="trial-overlay" id="trial-overlay">
+  <div class="trial-overlay-card">
+    <div class="trial-overlay-icon">⏰</div>
+    <div class="trial-overlay-title">Período de prueba finalizado</div>
+    <div class="trial-overlay-text">
+      Los 15 días de prueba gratuita de esta carta digital han terminado.<br><br>
+      Contactanos para seguir disfrutando del servicio.
+    </div>
+    <a class="trial-overlay-btn" href="https://wa.me/542665253058?text=Hola!%20Quiero%20contratar%20la%20carta%20digital." target="_blank">
+      💬 Contratar por WhatsApp
+    </a>
+  </div>
+</div>
+
+<!-- FAB LLAMAR MOZO -->
+<button id="fab-mozo" class="hidden" onclick="abrirMozoModal()" title="Llamar al mozo">🔔</button>
+
+<!-- MODAL LLAMAR MOZO -->
+<div class="mozo-overlay" id="mozo-overlay" onclick="cerrarMozoModal(event)">
+  <div class="mozo-panel" onclick="event.stopPropagation()">
+    <div class="mozo-handle"></div>
+    <div id="mozo-body">
+      <div class="mozo-title">Llamar al mozo</div>
+      <div class="mozo-mesa-row">
+        <span class="mozo-mesa-label">🍽 Mesa N°</span>
+        <input type="number" class="mozo-mesa-input" id="mozo-mesa-input" placeholder="—" min="1" />
+      </div>
+      <div style="font-size:13px;font-weight:600;color:var(--ink3)">¿Para qué lo llamás?</div>
+      <div class="mozo-reasons" id="mozo-reasons">
+        <button class="mozo-reason-btn" onclick="enviarLlamadoAFL('Pedir la cuenta')">Pedir la cuenta</button>
+        <button class="mozo-reason-btn" onclick="enviarLlamadoAFL('Más servilletas')">Más servilletas</button>
+        <button class="mozo-reason-btn" onclick="enviarLlamadoAFL('Más bebida')">Más bebida</button>
+        <button class="mozo-reason-btn" onclick="enviarLlamadoAFL('Cambiar algo')">Cambiar algo</button>
+        <button class="mozo-reason-btn" onclick="enviarLlamadoAFL('Consultar al mozo')">Consultar</button>
+        <button class="mozo-reason-btn" onclick="enviarLlamadoAFL('Otra cosa')">Otra cosa</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CART BUBBLE -->
+<button class="cart-bubble hidden" id="cart-bubble" onclick="showCart()">
+  <div class="cart-count" id="cart-count">0</div>
+  <span class="cart-label">Ver pedido</span>
+  <span class="cart-total" id="cart-total">$0</span>
+</button>
+
+<script>
+// ── DATOS DEFAULT ───────────────────────────────────────────
+const DEFAULT_PRODUCTS = [
+  { id:1,  nombre:"Tabla de Achuras",        desc:"Chorizo, morcilla, chinchulines y riñones con chimichurri.",   precio:5800,  cat:"Entradas",        disp:true,  img:null },
+  { id:2,  nombre:"Provoleta a la Parrilla", desc:"Con orégano, pimiento y aceite de oliva.",                    precio:4200,  cat:"Entradas",        disp:true,  img:null },
+  { id:3,  nombre:"Empanadas (x6)",           desc:"Carne cortada a cuchillo, masa criolla artesanal.",          precio:5200,  cat:"Entradas",        disp:true,  img:null },
+  { id:4,  nombre:"Ensalada de la Casa",      desc:"Verdes, tomate, cebolla morada y aceitunas.",                precio:3500,  cat:"Entradas",        disp:true,  img:null },
+  { id:5,  nombre:"Asado a la Parrilla",      desc:"Costilla de novillo, cocción lenta al carbón.",              precio:18500, cat:"Parrilla",        disp:true,  img:null },
+  { id:6,  nombre:"Tira de Asado",            desc:"Tira entera de novillo. 500g aprox.",                       precio:16800, cat:"Parrilla",        disp:true,  img:null },
+  { id:7,  nombre:"Bife de Chorizo",          desc:"400g, término a elección. Papas o ensalada.",               precio:19800, cat:"Parrilla",        disp:true,  img:null },
+  { id:8,  nombre:"Parrillada para Dos",      desc:"Tira, vacío, chorizo, morcilla, chinchulines y provoleta.", precio:38000, cat:"Parrilla",        disp:true,  img:null },
+  { id:9,  nombre:"Lomo al Punto",            desc:"250g, término a elección.",                                 precio:21500, cat:"Carnes",          disp:true,  img:null },
+  { id:10, nombre:"Milanesa Napolitana",      desc:"Jamón, tomate y queso fundido. Con papas.",                 precio:14800, cat:"Carnes",          disp:true,  img:null },
+  { id:11, nombre:"Pollo a la Parrilla",      desc:"Medio pollo a la brasa con hierbas.",                       precio:12500, cat:"Carnes",          disp:true,  img:null },
+  { id:12, nombre:"Matambre a la Pizza",      desc:"Mozzarella, tomate y orégano al horno.",                    precio:16200, cat:"Carnes",          disp:true,  img:null },
+  { id:13, nombre:"Papas Fritas",             desc:"Doradas y crocantes.",                                      precio:3800,  cat:"Guarnición", disp:true,  img:null },
+  { id:14, nombre:"Puré Casero",              desc:"Con manteca y nuez moscada.",                               precio:3500,  cat:"Guarnición", disp:true,  img:null },
+  { id:15, nombre:"Verduras a la Parrilla",   desc:"Zapallito, morrón, berenjena y choclo.",                    precio:4500,  cat:"Guarnición", disp:true,  img:null },
+  { id:16, nombre:"Flan con DDL",             desc:"Casero con crema batida.",                                  precio:4200,  cat:"Postres",         disp:true,  img:null },
+  { id:17, nombre:"Tiramisú de la Casa",      desc:"Mascarpone, café espresso y cacao amargo.",                 precio:5200,  cat:"Postres",         disp:true,  img:null },
+  { id:18, nombre:"Vino de la Casa",          desc:"Tinto o blanco, ¼ litro mendocino.",                       precio:3500,  cat:"Bebidas",         disp:true,  img:null },
+  { id:19, nombre:"Cerveza Artesanal",        desc:"Rubia o roja, 500ml local.",                                precio:4800,  cat:"Bebidas",         disp:true,  img:null },
+  { id:20, nombre:"Fernet con Cola",          desc:"Fernet Branca + Coca-Cola.",                                precio:4200,  cat:"Bebidas",         disp:true,  img:null, destacado:false },
+  { id:21, nombre:"Bife de Chorizo 400g",     desc:"Corte premium al carbón con papas rústicas y chimichurri de la casa.", precio:24500, cat:"Plato Principal", disp:true, img:null, destacado:true },
+  { id:22, nombre:"Lomo a la Pimienta",       desc:"250g en medallón con salsa de pimienta verde, papas doradas y ensalada.", precio:26000, cat:"Plato Principal", disp:true, img:null, destacado:true },
+  { id:23, nombre:"Pollo al Verdeo",          desc:"Suprema grillada con salsa de puerro, crema y papas al horno.", precio:19800, cat:"Plato Principal", disp:true, img:null, destacado:false },
+  { id:24, nombre:"Milanesa de Lomo",         desc:"Lomo tiernísimo apanado con papas fritas y limón.", precio:22500, cat:"Plato Principal", disp:true, img:null, destacado:false },
+];
+const DEFAULT_CATS = [
+  { nombre:"Entradas",        emoji:"🥗" },
+  { nombre:"Plato Principal", emoji:"🍽️" },
+  { nombre:"Parrilla",        emoji:"🔥" },
+  { nombre:"Carnes",          emoji:"🥩" },
+  { nombre:"Guarnición",      emoji:"🍟" },
+  { nombre:"Postres",         emoji:"🍮" },
+  { nombre:"Bebidas",         emoji:"🍺" },
+];
+// Categorias que usan layout de lista compacta en lugar de cards
+const LIST_CATS = new Set(['Guarnición', 'Bebidas']);
+
+// ── CARGAR DATOS ────────────────────────────────────────────
+function loadData() {
+  const ps = localStorage.getItem('pem_products');
+  const cs = localStorage.getItem('pem_categories');
+  return {
+    products:   ps ? JSON.parse(ps) : DEFAULT_PRODUCTS,
+    categories: cs ? JSON.parse(cs) : DEFAULT_CATS,
+  };
+}
+
+// ── RENDER PRINCIPAL ────────────────────────────────────────
+function renderMenu(filterQ = '') {
+  const { products, categories } = loadData();
+  const main = document.getElementById('main-content');
+  const catScroll = document.getElementById('cat-scroll');
+  main.innerHTML = '';
+  catScroll.innerHTML = '';
+
+  // Categorías ordenadas según lista del admin; las que no estén en la lista se agregan al final
+  const catOrder = categories.map(c => c.nombre);
+  const extraCats = [...new Set(products.filter(p => p.disp).map(p => p.cat))]
+    .filter(n => !catOrder.includes(n));
+  const visibleCats = [...catOrder, ...extraCats]
+    .filter(n => products.some(p => p.disp && p.cat === n))
+    .map(n => categories.find(c => c.nombre === n) || { nombre: n, emoji: '🍽️' });
+
+  // Chips de categoría
+  visibleCats.forEach((c, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'cat-chip' + (i === 0 ? ' active' : '');
+    btn.dataset.cat = c.nombre;
+    btn.textContent = c.emoji + ' ' + c.nombre;
+    btn.addEventListener('click', () => {
+      const el = document.getElementById('sec-' + slugify(c.nombre));
+      if (!el) return;
+      const nav = document.querySelector('.cat-nav');
+      const y = el.getBoundingClientRect().top + window.pageYOffset - (nav.offsetHeight + 8);
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    });
+    catScroll.appendChild(btn);
+  });
+
+  const q = filterQ.toLowerCase().trim();
+
+  visibleCats.forEach((c, i) => {
+    const items = products.filter(p =>
+      p.disp &&
+      p.cat === c.nombre &&
+      (!q || p.nombre.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q))
+    );
+    if (!items.length) return;
+
+    if (i > 0) {
+      const sep = document.createElement('div');
+      sep.className = 'section-sep';
+      main.appendChild(sep);
+    }
+
+    const sec = document.createElement('section');
+    sec.className = 'menu-section';
+    sec.id = 'sec-' + slugify(c.nombre);
+
+    const titleRow = document.createElement('div');
+    titleRow.className = 'section-title-row';
+    titleRow.innerHTML = `<span class="section-title-text">${c.nombre}</span><span class="section-count">${items.length}</span>`;
+    sec.appendChild(titleRow);
+
+    if (LIST_CATS.has(c.nombre)) {
+      const list = document.createElement('div');
+      list.className = 'list-items';
+      items.forEach(p => list.appendChild(buildListItem(p)));
+      sec.appendChild(list);
+    } else {
+      const grid = document.createElement('div');
+      grid.className = 'cards-grid';
+      items.forEach((p, idx) => grid.appendChild(buildCard(p, idx === 0)));
+      sec.appendChild(grid);
+    }
+
+    main.appendChild(sec);
+  });
+
+  if (!main.children.length) {
+    main.innerHTML = '<div style="text-align:center;padding:60px 20px;color:#999;font-size:15px">Sin resultados para "<strong>' + filterQ + '</strong>"</div>';
+  }
+
+  setupScrollSpy();
+}
+
+function slugify(str) {
+  return str.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/\s+/g,'-');
+}
+
+// ── CARD (grid) ─────────────────────────────────────────────
+const PLUS_SVG = '<svg viewBox="0 0 14 14" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><line x1="7" y1="2" x2="7" y2="12"/><line x1="2" y1="7" x2="12" y2="7"/></svg>';
+
+function buildCard(p, featured) {
+  const card = document.createElement('div');
+  card.className = 'menu-card' + (featured ? ' card-featured' : '');
+  card.style.cursor = 'pointer';
+  card.addEventListener('click', () => openPM(p));
+
+  const imgDiv = document.createElement('div');
+  imgDiv.className = 'card-img' + (featured ? ' card-img-featured' : '');
+
+  if (p.img) {
+    const im = document.createElement('img');
+    im.src = p.img; im.alt = p.nombre;
+    imgDiv.appendChild(im);
+  } else {
+    imgDiv.innerHTML = `<svg class="card-img-icon" width="44" height="44" viewBox="0 0 44 44" fill="none" stroke="#DA291C" stroke-width="1.5"><circle cx="22" cy="18" r="10"/><path d="M10 36 Q16 26 22 28 Q28 30 34 36"/></svg>`;
+  }
+
+  if (p.destacado) {
+    const badges = document.createElement('div');
+    badges.className = 'card-badges';
+    badges.innerHTML = '<span class="card-badge badge-hot">⭐ Recomendado</span>';
+    imgDiv.appendChild(badges);
+  }
+
+  card.appendChild(imgDiv);
+
+  const body = document.createElement('div');
+  body.className = 'card-body' + (featured ? ' card-body-featured' : '');
+  body.innerHTML = `
+    <div class="card-name${featured ? ' card-name-featured' : ''}">${p.nombre}</div>
+    <div class="card-desc${featured ? ' card-desc-featured' : ''}">${p.desc}</div>
+    <div class="card-footer">
+      <div class="card-price${featured ? ' card-price-featured' : ''}"><span>$</span>${p.precio.toLocaleString('es-AR')}</div>
+      <button class="card-add-btn${featured ? ' card-add-btn-featured' : ''}">${PLUS_SVG}</button>
+    </div>
+  `;
+  body.querySelector('.card-add-btn').addEventListener('click', function(e) {
+    e.stopPropagation();
+    openPM(p);
+  });
+
+  card.appendChild(body);
+  return card;
+}
+
+// ── LIST ITEM ────────────────────────────────────────────────
+const PLUS_SM = '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="6" y1="1" x2="6" y2="11"/><line x1="1" y1="6" x2="11" y2="6"/></svg>';
+
+function buildListItem(p) {
+  const row = document.createElement('div');
+  row.className = 'list-item';
+
+  // Cuerpo — nombre + descripción
+  const body = document.createElement('div');
+  body.className = 'list-item-body';
+
+  const name = document.createElement('div');
+  name.className = 'list-item-name';
+  name.textContent = p.nombre;
+
+  const desc = document.createElement('div');
+  desc.className = 'list-item-desc';
+  desc.textContent = p.desc;
+
+  body.appendChild(name);
+  body.appendChild(desc);
+
+  // Derecha — precio + botón
+  const right = document.createElement('div');
+  right.className = 'list-item-right';
+
+  const price = document.createElement('div');
+  price.className = 'list-item-price';
+  price.textContent = '$' + p.precio.toLocaleString('es-AR');
+
+  row.addEventListener('click', () => openPM(p));
+
+  const btn = document.createElement('button');
+  btn.className = 'list-add-btn';
+  btn.innerHTML = PLUS_SM;
+  btn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    openPM(p);
+  });
+
+  right.appendChild(price);
+  right.appendChild(btn);
+
+  row.appendChild(body);
+  row.appendChild(right);
+  return row;
+}
+
+// ── CARRITO ──────────────────────────────────────────────────
+let cartItems = []; // [{_cartId, id, nombre, desc, precio, cantidad, nota}]
+let _cid = 0;
+
+function cartTotal() { return cartItems.reduce((s,i) => s + i.precio * i.cantidad, 0); }
+function cartCount() { return cartItems.reduce((s,i) => s + i.cantidad, 0); }
+
+function updateBubble() {
+  const n = cartCount();
+  document.getElementById('cart-count').textContent = n;
+  document.getElementById('cart-total').textContent = '$' + cartTotal().toLocaleString('es-AR');
+  document.getElementById('cart-bubble').classList.toggle('hidden', n === 0);
+}
+
+function addToCartItem(product, cantidad, nota) {
+  nota = (nota || '').trim();
+  const ex = cartItems.find(i => i.id === product.id && i.nota === nota);
+  if (ex) { ex.cantidad += cantidad; }
+  else     { cartItems.push({ _cartId: ++_cid, id: product.id, nombre: product.nombre, desc: product.desc || '', precio: product.precio, cantidad, nota }); }
+  updateBubble();
+  if (document.getElementById('cart-panel').classList.contains('open')) renderCartPanel();
+}
+
+function showCart() { openCart(); }
+
+function openCart() {
+  renderCartPanel();
+  document.getElementById('cart-overlay').classList.add('open');
+  document.getElementById('cart-panel').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeCart() {
+  document.getElementById('cart-overlay').classList.remove('open');
+  document.getElementById('cart-panel').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('cart-overlay')) closeCart();
+}
+
+function renderCartPanel() {
+  const body   = document.getElementById('cp-body');
+  const footer = document.getElementById('cp-footer');
+  document.getElementById('cp-badge').textContent = cartCount();
+
+  if (!cartItems.length) {
+    body.innerHTML = `<div class="cart-empty">
+      <div class="cart-empty-icon">🛒</div>
+      <div class="cart-empty-text">Tu pedido está vacío</div>
+      <div class="cart-empty-sub">Tocá un plato para agregarlo</div>
+    </div>`;
+    footer.style.display = 'none';
+    return;
+  }
+
+  footer.style.display = '';
+  body.innerHTML = cartItems.map(item => `
+    <div class="cart-item">
+      <div class="cart-item-info">
+        <div class="cart-item-name">${item.nombre}</div>
+        <div class="cart-item-unit">$${item.precio.toLocaleString('es-AR')} c/u</div>
+        ${item.nota ? `<div style="font-size:12px;color:var(--amber-dk);margin-top:3px;font-weight:600">📝 ${item.nota}</div>` : ''}
+        <div class="qty-controls">
+          <button class="qty-btn" onclick="changeQty(${item._cartId},-1)">−</button>
+          <span class="qty-num">${item.cantidad}</span>
+          <button class="qty-btn" onclick="changeQty(${item._cartId},1)">+</button>
+        </div>
+      </div>
+      <div class="cart-item-right">
+        <button class="cart-remove-btn" onclick="removeItem(${item._cartId})" title="Quitar">✕</button>
+        <div class="cart-item-subtotal">$${(item.precio * item.cantidad).toLocaleString('es-AR')}</div>
+      </div>
+    </div>`).join('');
+
+  updateTotalDisplay();
+}
+
+function updatePtsBanner() {
+  const el = document.getElementById('cp-pts-banner');
+  if (!el) return;
+  const cfg = JSON.parse(localStorage.getItem('pem_config') || '{}');
+  if (cfg.puntosActivo === false) { el.innerHTML = ''; return; }
+  const puntosPor1000 = Number(cfg.puntosPor1000) || 10;
+  const pts = Math.floor(cartTotal() / 1000) * puntosPor1000;
+  const cid = localStorage.getItem('pem_cliente_id');
+
+  if (cid) {
+    el.innerHTML = pts > 0
+      ? `<div style="margin:0 20px 8px;padding:10px 14px;background:rgba(232,137,10,0.1);border-radius:12px;border:1.5px solid rgba(232,137,10,0.3);display:flex;align-items:center;gap:8px;">
+           <span style="font-size:18px;">🔥</span>
+           <span style="font-size:13px;color:var(--ink);">Con este pedido ganás <strong style="color:var(--amber-dk);">${pts.toLocaleString('es-AR')} pts</strong> en el Fuego Club</span>
+         </div>`
+      : '';
+  } else {
+    const ptsText = pts > 0 ? `Ganás <b style="color:var(--amber);">${pts.toLocaleString('es-AR')} pts</b> con esta compra · ` : '';
+    el.innerHTML = `
+      <div onclick="closeCart();setTimeout(()=>document.getElementById('fclub-section')?.scrollIntoView({behavior:'smooth'}),300)"
+        style="margin:0 20px 8px;padding:12px 14px;background:linear-gradient(135deg,#1a0e00,#2d1800);border-radius:12px;border:1.5px solid rgba(232,137,10,0.4);cursor:pointer;display:flex;align-items:center;gap:10px;">
+        <span style="font-size:22px;flex-shrink:0;">🪙</span>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:800;color:#fff;">Uníte gratis al Fuego Club</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.6);line-height:1.4;margin-top:2px;">${ptsText}Canjeá premios exclusivos</div>
+        </div>
+        <span style="color:var(--amber);font-size:16px;font-weight:700;flex-shrink:0;">→</span>
+      </div>`;
+  }
+}
+
+function changeQty(cartId, delta) {
+  const item = cartItems.find(i => i._cartId === cartId);
+  if (!item) return;
+  item.cantidad += delta;
+  if (item.cantidad <= 0) cartItems = cartItems.filter(i => i._cartId !== cartId);
+  updateBubble();
+  renderCartPanel();
+}
+
+function removeItem(cartId) {
+  cartItems = cartItems.filter(i => i._cartId !== cartId);
+  updateBubble();
+  renderCartPanel();
+}
+
+// ── MEDIO DE PAGO ─────────────────────────────────────────────
+let _formaPago = 'efectivo';
+
+function selPago(p) {
+  _formaPago = p;
+  ['efectivo','transferencia','tarjeta'].forEach(id => {
+    document.getElementById('pago-'+id).classList.toggle('on', id === p);
+  });
+  const btn = document.getElementById('cp-confirm-btn');
+  if (p === 'transferencia') {
+    btn.textContent = '📲 Ver datos para transferir';
+    btn.style.background = '#1a56db';
+  } else {
+    btn.textContent = '✅ Confirmar pedido';
+    btn.style.background = '';
+  }
+  updateTotalDisplay();
+}
+
+function getPagoAjuste(formaPago) {
+  const cfg = JSON.parse(localStorage.getItem('pem_config') || '{}');
+  const keys = { efectivo:'Efectivo', tarjeta:'Tarjeta', transferencia:'Transf' };
+  const k = keys[formaPago];
+  if (!k) return { tipo:'ninguno', pct:0 };
+  return { tipo: cfg['pago'+k+'Tipo'] || 'ninguno', pct: Number(cfg['pago'+k+'Pct']) || 0 };
+}
+
+function calcTotalAjustado(formaPago) {
+  const base = cartTotal();
+  const { tipo, pct } = getPagoAjuste(formaPago);
+  if (tipo === 'descuento') return Math.round(base * (1 - pct / 100));
+  if (tipo === 'recargo')   return Math.round(base * (1 + pct / 100));
+  return base;
+}
+
+function updateTotalDisplay() {
+  const { tipo, pct } = getPagoAjuste(_formaPago);
+  const base = cartTotal();
+  const ajustado = calcTotalAjustado(_formaPago);
+  document.getElementById('cp-total').textContent = '$' + ajustado.toLocaleString('es-AR');
+
+  let ajusteEl = document.getElementById('cp-ajuste-row');
+  if (tipo !== 'ninguno' && pct > 0) {
+    const delta = Math.abs(ajustado - base);
+    const esDesc = tipo === 'descuento';
+    const label = esDesc ? `Descuento ${pct}% (${_formaPago})` : `Recargo ${pct}% (${_formaPago})`;
+    const color = esDesc ? 'var(--green)' : 'var(--red)';
+    const sign  = esDesc ? '−' : '+';
+    if (!ajusteEl) {
+      ajusteEl = document.createElement('div');
+      ajusteEl.id = 'cp-ajuste-row';
+      ajusteEl.style.cssText = 'display:flex;justify-content:space-between;padding:2px 20px 6px;font-size:13px;';
+      const totalRow = document.querySelector('.cart-total-row');
+      totalRow.parentNode.insertBefore(ajusteEl, totalRow);
+    }
+    ajusteEl.innerHTML = `<span style="color:${color};">${label}</span><span style="color:${color};font-weight:700;">${sign}$${delta.toLocaleString('es-AR')}</span>`;
+    ajusteEl.style.display = 'flex';
+  } else if (ajusteEl) {
+    ajusteEl.style.display = 'none';
+  }
+  updatePtsBanner();
+}
+
+function buildOrder(mesa, notas, formaPago) {
+  return {
+    id:           String(Date.now()),
+    restaurantId: 'pem',
+    fecha:        new Date().toISOString(),
+    mesa:         mesa || 'Sin mesa',
+    tipo:         mesa ? 'mesa' : 'retiro',
+    formaPago:    formaPago,
+    estadoPago:   formaPago === 'transferencia' ? 'pendiente-verificacion' : 'ok',
+    items:        cartItems.map(i => ({ nombre:i.nombre, precio:i.precio, cantidad:i.cantidad, subtotal:i.precio*i.cantidad, nota:i.nota })),
+    notas,
+    subtotal:     cartTotal(),
+    total:        calcTotalAjustado(formaPago),
+    estado:       'pendiente',
+  };
+}
+
+function guardarOrden(order) {
+  const orders = JSON.parse(localStorage.getItem('pem_orders') || '[]');
+  orders.unshift(order);
+  localStorage.setItem('pem_orders', JSON.stringify(orders));
+  localStorage.setItem('pem_new_order', String(Date.now()));
+  guardarPedidoFirebase(order);
+  sumarPuntosCliente(order.total);
+}
+
+async function sumarPuntosCliente(total) {
+  const cid = localStorage.getItem('pem_cliente_id');
+  if (!cid || typeof _db === 'undefined' || !_db) return;
+  const cfg = JSON.parse(localStorage.getItem('pem_config') || '{}');
+  if (cfg.puntosActivo === false) return;
+  const puntosPor1000 = Number(cfg.puntosPor1000) || 10;
+  const ptsGanados = Math.floor(total / 1000) * puntosPor1000;
+  if (ptsGanados <= 0) return;
+  try {
+    const ref = _db.collection('clientes').doc(cid);
+    const snap = await ref.get();
+    const ptsActuales = snap.exists ? (snap.data().puntos || 0) : 0;
+    const entry = { type: 'earn', amount: ptsGanados, label: 'Pedido $' + total.toLocaleString('es-AR'), ts: Date.now() };
+    await ref.set(
+      { puntos: ptsActuales + ptsGanados, historial: firebase.firestore.FieldValue.arrayUnion(entry) },
+      { merge: true }
+    );
+  } catch(e) {}
+}
+
+function mostrarConfirmacion(mesa) {
+  document.getElementById('cp-footer').style.display = 'none';
+  document.getElementById('cp-body').innerHTML = `<div class="cart-confirm">
+    <div class="cart-confirm-icon">✅</div>
+    <div class="cart-confirm-title">¡Pedido enviado!</div>
+    ${mesa ? `<div class="cart-confirm-mesa">Mesa ${mesa}</div>` : ''}
+    <div class="cart-confirm-sub">Tu pedido está en preparación.<br>El mozo te avisará cuando esté listo.</div>
+    <button class="cart-btn cart-btn-mesa" style="margin-top:10px;max-width:220px" onclick="closeCart();resetCart()">Cerrar</button>
+  </div>`;
+}
+
+function confirmarPedido() {
+  const mesa  = document.getElementById('cp-mesa').value.trim();
+  const notas = document.getElementById('cp-notas').value.trim();
+
+  if (_formaPago === 'transferencia') {
+    const cfg   = JSON.parse(localStorage.getItem('pem_config') || '{}');
+    const alias = cfg.aliasCBU || '';
+    if (!alias) { alert('El local aún no configuró los datos de transferencia. Elegí otro medio de pago.'); return; }
+    document.getElementById('transf-alias').textContent = alias;
+    document.getElementById('transf-monto').textContent = '$' + calcTotalAjustado('transferencia').toLocaleString('es-AR');
+    document.getElementById('transf-overlay').classList.add('open');
+    return;
+  }
+
+  const order = buildOrder(mesa, notas, _formaPago);
+  guardarOrden(order);
+  mostrarConfirmacion(mesa);
+}
+
+function confirmarTransferencia() {
+  const mesa  = document.getElementById('cp-mesa').value.trim();
+  const notas = document.getElementById('cp-notas').value.trim();
+  const order = buildOrder(mesa, notas, 'transferencia');
+  guardarOrden(order);
+  cerrarTransf();
+  mostrarConfirmacion(mesa);
+}
+
+function cerrarTransf() {
+  document.getElementById('transf-overlay').classList.remove('open');
+}
+
+function pedirPorWA() {
+  const mesa  = document.getElementById('cp-mesa').value.trim();
+  const notas = document.getElementById('cp-notas').value.trim();
+  if (!cartItems.length) return;
+
+  const cfg    = JSON.parse(localStorage.getItem('pem_config') || '{}');
+  const waNum  = cfg.whatsapp || '542665253058';
+  const pagoLabels = { efectivo:'💵 Efectivo', transferencia:'🏦 Transferencia', tarjeta:'💳 Tarjeta/débito' };
+  const pagoLabel  = pagoLabels[_formaPago] || '';
+
+  let msg = `🧾 *Nuevo pedido — Parripollo El Maxi*${mesa ? '\n🍽 Mesa ' + mesa : ''}\n`;
+  if (pagoLabel) msg += `💳 Pago: ${pagoLabel}\n`;
+  msg += '\n';
+  cartItems.forEach(i => {
+    msg += `• ${i.nombre} x${i.cantidad} — $${(i.precio*i.cantidad).toLocaleString('es-AR')}`;
+    if (i.nota) msg += `\n  📝 ${i.nota}`;
+    msg += '\n';
+  });
+  if (notas) msg += `\n📋 *Nota:* ${notas}`;
+  msg += `\n\n💰 *Total: $${cartTotal().toLocaleString('es-AR')}*`;
+
+  window.open(`https://wa.me/${waNum}?text=${encodeURIComponent(msg)}`, '_blank');
+}
+
+function resetCart() { cartItems = []; _cid = 0; updateBubble(); }
+
+// ── MODAL PRODUCTO ────────────────────────────────────────────
+let _pmProduct = null;
+let _pmQty = 1;
+
+function openPM(p) {
+  _pmProduct = p; _pmQty = 1;
+  document.getElementById('pm-qty').textContent = 1;
+  document.getElementById('pm-notas').value = '';
+  document.getElementById('pm-name').textContent  = p.nombre;
+  document.getElementById('pm-desc').textContent  = p.desc;
+  document.getElementById('pm-price').innerHTML   = `<span>$</span>${p.precio.toLocaleString('es-AR')}`;
+
+  const imgEl = document.getElementById('pm-img');
+  imgEl.querySelectorAll('img').forEach(el => el.remove());
+  if (p.img) {
+    const im = document.createElement('img');
+    im.src = p.img; im.alt = p.nombre;
+    imgEl.insertBefore(im, imgEl.firstChild);
+  }
+
+  document.getElementById('pm-badges').innerHTML = p.destacado
+    ? '<span class="card-badge badge-hot">⭐ Recomendado</span>' : '';
+
+  document.getElementById('pm-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closePM() {
+  document.getElementById('pm-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function closePMOnOverlay(e) {
+  if (e.target === document.getElementById('pm-overlay')) closePM();
+}
+
+function pmDelta(d) {
+  _pmQty = Math.max(1, _pmQty + d);
+  document.getElementById('pm-qty').textContent = _pmQty;
+}
+
+function addFromPM() {
+  if (!_pmProduct) return;
+  const nota = document.getElementById('pm-notas').value.trim();
+  addToCartItem(_pmProduct, _pmQty, nota);
+  closePM();
+}
+
+// ── SCROLL SPY ───────────────────────────────────────────────
+let spyObserver = null;
+function setupScrollSpy() {
+  if (spyObserver) spyObserver.disconnect();
+  spyObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const id = e.target.id.replace('sec-', '');
+      document.querySelectorAll('.cat-chip').forEach(c => {
+        c.classList.toggle('active', slugify(c.dataset.cat) === id);
+      });
+      const active = document.querySelector(`.cat-chip.active`);
+      if (active) active.scrollIntoView({ inline: 'nearest', block: 'nearest' });
+    });
+  }, { rootMargin: '-35% 0px -60% 0px' });
+
+  document.querySelectorAll('.menu-section').forEach(el => spyObserver.observe(el));
+}
+
+// ── BUSQUEDA ─────────────────────────────────────────────────
+document.getElementById('search-input').addEventListener('input', function() {
+  renderMenu(this.value);
+});
+
+// ── ACTUALIZACIÓN EN TIEMPO REAL ─────────────────────────────
+window.addEventListener('storage', e => {
+  if (e.key === 'pem_products' || e.key === 'pem_categories') {
+    renderMenu(document.getElementById('search-input').value);
+  }
+  if (e.key === 'pem_plato_dia') renderPlatoDia();
+  if (e.key === 'sa_clients') initClub();
+});
+
+// ── PLATO DEL DÍA ────────────────────────────────────────────
+function renderPlatoDia() {
+  const banner = document.getElementById('pdd-banner');
+  const pdd = JSON.parse(localStorage.getItem('pem_plato_dia') || 'null');
+  if (!pdd) { banner.style.display = 'none'; return; }
+
+  banner.style.display = 'block';
+
+  const precio = pdd.precioEsp || pdd.precio;
+  const desc   = pdd.descEsp   || pdd.desc || '';
+
+  banner.innerHTML = `
+    <div class="pdd-banner" onclick="openPddModal()">
+      ${pdd.img
+        ? `<img class="pdd-banner-img" src="${pdd.img}" alt="${pdd.nombre}" />`
+        : `<div class="pdd-banner-placeholder">🍽️</div>`}
+      <div class="pdd-banner-info">
+        <div class="pdd-banner-label">✦ Plato del día</div>
+        <div class="pdd-banner-name">${pdd.nombre}</div>
+        ${desc ? `<div class="pdd-banner-desc">${desc}</div>` : ''}
+        ${pdd.nota ? `<div class="pdd-banner-nota">${pdd.nota}</div>` : ''}
+        <div class="pdd-banner-price">$${Number(precio).toLocaleString('es-AR')}</div>
+      </div>
+    </div>`;
+}
+
+function openPddModal() {
+  const pdd = JSON.parse(localStorage.getItem('pem_plato_dia') || 'null');
+  if (!pdd) return;
+  const precio = pdd.precioEsp || pdd.precio;
+  const desc   = pdd.descEsp   || pdd.desc || '';
+  const product = { ...pdd, precio, desc };
+  openPM(product);
+}
+
+// ── INICIO ───────────────────────────────────────────────────
+renderMenu();
+renderPlatoDia();
+initClub();
+
+// ── FUEGO CLUB ───────────────────────────────────────────────
+function initClub() {
+  const section = document.getElementById('fclub-section');
+  if (!section) return;
+
+  // verificar si el Club está habilitado en el plan del superadmin
+  const clients  = JSON.parse(localStorage.getItem('sa_clients') || '[]');
+  const myEmail  = (JSON.parse(localStorage.getItem('pem_admin_creds') || '{"email":"admin@pem.com"}').email || '').toLowerCase();
+  const me       = clients.find(c => c.rid === 'pem') || clients.find(c => (c.email || '').toLowerCase() === myEmail);
+  const features = (me && me.features) ? me.features : {};
+
+  if (features.club === false) {
+    section.style.display = 'none';
+    return;
+  }
+
+  section.style.display = '';
+  const cid = localStorage.getItem('pem_cliente_id');
+  if (!cid) return;
+  const nombre = localStorage.getItem('pem_cliente_nombre') || 'Asociado';
+  const bodyEl = document.getElementById('fclub-body');
+  if (!bodyEl) return;
+  bodyEl.innerHTML = `
+    <div class="fclub-ok">
+      <div class="fclub-ok-icon">🔥</div>
+      <div>
+        <div class="fclub-ok-name">¡Bienvenido, ${nombre}!</div>
+        <div class="fclub-ok-sub">Sos parte del Fuego Club · Acumulás puntos por cada pedido</div>
+      </div>
+    </div>`;
+}
+
+async function registrarClub() {
+  const nombre = (document.getElementById('fclub-nombre').value || '').trim();
+  const tel    = (document.getElementById('fclub-tel').value    || '').trim();
+  if (!nombre) { document.getElementById('fclub-nombre').focus(); return; }
+
+  const btn = document.querySelector('.fclub-btn');
+  btn.textContent = 'Guardando…';
+  btn.disabled = true;
+
+  const cid  = 'pem_cli_' + Date.now();
+  const data = {
+    nombre, tel,
+    puntos: 0,
+    historial: [],
+    restaurantId: 'pem',
+    fechaAlta: new Date().toISOString(),
+  };
+
+  if (typeof _db !== 'undefined') {
+    try { await _db.collection('clientes').doc(cid).set(data); } catch(e) {}
+  }
+
+  localStorage.setItem('pem_cliente_id',     cid);
+  localStorage.setItem('pem_cliente_nombre', nombre);
+
+  const bodyEl = document.getElementById('fclub-body');
+  bodyEl.innerHTML = `
+    <div class="fclub-ok">
+      <div class="fclub-ok-icon">🔥</div>
+      <div>
+        <div class="fclub-ok-name">¡Bienvenido, ${nombre}!</div>
+        <div class="fclub-ok-sub">Sos parte del Fuego Club · Acumulás puntos por cada pedido</div>
+      </div>
+    </div>`;
+}
+
+// ── TRIAL 15 DÍAS ────────────────────────────────────────────
+(function checkTrial() {
+  const KEY   = 'pem_trial_start';
+  const DAYS  = 15;
+  let start = localStorage.getItem(KEY);
+  if (!start) {
+    start = new Date().toISOString();
+    localStorage.setItem(KEY, start);
+  }
+  const elapsed   = Math.floor((Date.now() - new Date(start)) / 86400000);
+  const remaining = Math.max(0, DAYS - elapsed);
+
+  if (remaining === 0) {
+    document.getElementById('trial-overlay').classList.add('show');
+  }
+})();
+</script>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script>
+const _fbApp = firebase.initializeApp({
+  apiKey:            "AIzaSyB_7_SHPCR6az9jLDhi5b2VJxvCgV2DPNE",
+  authDomain:        "cartas-digitaleds-merlo.firebaseapp.com",
+  projectId:         "cartas-digitaleds-merlo",
+  storageBucket:     "cartas-digitaleds-merlo.firebasestorage.app",
+  messagingSenderId: "959472664879",
+  appId:             "1:959472664879:web:0f4f0ede6c56337b0a21da"
+});
+const _db = firebase.firestore();
+
+async function guardarPedidoFirebase(order) {
+  try {
+    await _db.collection('pedidos').doc(String(order.id)).set(order);
+  } catch(e) {
+    console.warn('Firebase no disponible, pedido solo en localStorage', e);
+  }
+}
+
+// ── SINCRONIZACIÓN DE MENÚ ───────────────────────────────────
+async function cargarMenuFirebase() {
+  try {
+    const doc = await _db.collection('menuData').doc('pem').get();
+    if (doc.exists) {
+      const data = doc.data();
+      if (data.products) {
+        const imgDocs = await Promise.all(
+          data.products.map(p => _db.collection('menuData').doc('pem_img_' + p.id).get().catch(() => null))
+        );
+        const prodsWithImg = data.products.map((p, i) => ({
+          ...p, img: (imgDocs[i] && imgDocs[i].exists) ? imgDocs[i].data().img : null
+        }));
+        localStorage.setItem('pem_products', JSON.stringify(prodsWithImg));
+      }
+      if (data.categories) localStorage.setItem('pem_categories', JSON.stringify(data.categories));
+      if (data.config)     localStorage.setItem('pem_config',     JSON.stringify(data.config));
+      if (data.platoDia)        localStorage.setItem('pem_plato_dia', JSON.stringify(data.platoDia));
+      else if (data.platoDia === null) localStorage.removeItem('pem_plato_dia');
+      renderMenu(document.getElementById('search-input').value);
+      renderPlatoDia();
+    }
+  } catch(e) {}
+}
+
+_db.collection('menuData').doc('pem').onSnapshot(async snap => {
+  if (!snap.exists) return;
+  const data = snap.data();
+  try {
+    if (data.products) {
+      const imgDocs = await Promise.all(
+        data.products.map(p => _db.collection('menuData').doc('pem_img_' + p.id).get().catch(() => null))
+      );
+      const prodsWithImg = data.products.map((p, i) => ({
+        ...p, img: (imgDocs[i] && imgDocs[i].exists) ? imgDocs[i].data().img : null
+      }));
+      localStorage.setItem('pem_products', JSON.stringify(prodsWithImg));
+    }
+  } catch(e) {
+    if (data.products) localStorage.setItem('pem_products', JSON.stringify(data.products));
+  }
+  if (data.categories) localStorage.setItem('pem_categories', JSON.stringify(data.categories));
+  if (data.config)     localStorage.setItem('pem_config',     JSON.stringify(data.config));
+  if (data.platoDia)        localStorage.setItem('pem_plato_dia', JSON.stringify(data.platoDia));
+  else if (data.platoDia === null) localStorage.removeItem('pem_plato_dia');
+  renderMenu(document.getElementById('search-input').value);
+  renderPlatoDia();
+  _initFabMozo();
+}, () => {});
+
+cargarMenuFirebase();
+
+// ── LLAMAR MOZO ──────────────────────────────────────────────
+function _mozoActivo() {
+  const cfg = JSON.parse(localStorage.getItem('pem_config') || '{}');
+  return cfg.llamarMozoActivo !== false;
+}
+
+function _initFabMozo() {
+  const fab = document.getElementById('fab-mozo');
+  if (!fab) return;
+  if (_mozoActivo()) fab.classList.remove('hidden');
+  else fab.classList.add('hidden');
+}
+
+function abrirMozoModal() {
+  // Pre-llenar mesa si el usuario ya la escribió en el carrito
+  const cartMesa = document.getElementById('cp-mesa');
+  const mozoInput = document.getElementById('mozo-mesa-input');
+  if (cartMesa && cartMesa.value) mozoInput.value = cartMesa.value;
+  document.getElementById('mozo-overlay').classList.add('show');
+}
+
+function cerrarMozoModal(e) {
+  if (!e || e.target === document.getElementById('mozo-overlay')) {
+    document.getElementById('mozo-overlay').classList.remove('show');
+    // Reset a estado inicial
+    setTimeout(() => {
+      document.getElementById('mozo-body').innerHTML = `
+        <div class="mozo-title">Llamar al mozo</div>
+        <div class="mozo-mesa-row">
+          <span class="mozo-mesa-label">🍽 Mesa N°</span>
+          <input type="number" class="mozo-mesa-input" id="mozo-mesa-input" placeholder="—" min="1" />
+        </div>
+        <div style="font-size:13px;font-weight:600;color:var(--ink3)">¿Para qué lo llamás?</div>
+        <div class="mozo-reasons">
+          <button class="mozo-reason-btn" onclick="enviarLlamadoAFL('Pedir la cuenta')">Pedir la cuenta</button>
+          <button class="mozo-reason-btn" onclick="enviarLlamadoAFL('Más servilletas')">Más servilletas</button>
+          <button class="mozo-reason-btn" onclick="enviarLlamadoAFL('Más bebida')">Más bebida</button>
+          <button class="mozo-reason-btn" onclick="enviarLlamadoAFL('Cambiar algo')">Cambiar algo</button>
+          <button class="mozo-reason-btn" onclick="enviarLlamadoAFL('Consultar al mozo')">Consultar</button>
+          <button class="mozo-reason-btn" onclick="enviarLlamadoAFL('Otra cosa')">Otra cosa</button>
+        </div>`;
+    }, 300);
+  }
+}
+
+async function enviarLlamadoAFL(motivo) {
+  const mesa = (document.getElementById('mozo-mesa-input')?.value || '').trim();
+  if (!mesa) {
+    document.getElementById('mozo-mesa-input')?.focus();
+    document.getElementById('mozo-mesa-input')?.style && (document.getElementById('mozo-mesa-input').style.borderColor = 'var(--red, #E53E3E)');
+    return;
+  }
+  // Sync mesa al carrito
+  const cartMesa = document.getElementById('cp-mesa');
+  if (cartMesa) cartMesa.value = mesa;
+
+  try {
+    if (typeof _db !== 'undefined' && _db) {
+      await _db.collection('llamados').add({
+        restaurantId: 'pem',
+        mesa: String(mesa),
+        motivo,
+        fecha: new Date().toISOString(),
+        estado: 'pendiente',
+      });
+    }
+  } catch(e) {}
+
+  document.getElementById('mozo-body').innerHTML = `
+    <div class="mozo-success">
+      <div class="mozo-bell-wrap">🔔</div>
+      <div style="font-size:18px;font-weight:800">¡Mozo en camino!</div>
+      <div style="font-size:14px;color:var(--ink2)">Mesa ${mesa} · ${motivo}</div>
+      <div style="font-size:12px;color:var(--ink3)">Tiempo estimado: 1-2 min</div>
+      <button class="mozo-reason-btn" style="grid-column:span 2;margin-top:8px;border-color:var(--amber);background:var(--amber-bg)"
+        onclick="cerrarMozoModal()">Listo</button>
+    </div>`;
+}
+
+// Inicializar FAB cuando carga el config
+_initFabMozo();
+</script>
+
+</body>
+</html>

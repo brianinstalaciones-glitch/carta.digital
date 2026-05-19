@@ -1,0 +1,167 @@
+{
+  "restaurante": {
+    "nombre": "Fuego Lento",
+    "slogan": "Cocina con alma, tiempo y sabor",
+    "logo": "",
+    "whatsapp": "+34 600 000 000",
+    "email": "info@elrincon.com",
+    "moneda": "€"
+  },
+  "categorias": ["Entradas", "Principales", "Postres", "Bebidas"],
+  "platos": [
+    {
+      "id": 1,
+      "nombre": "Croquetas de Jamón",
+      "descripcion": "Cremosas croquetas caseras de jamón ibérico con bechamel suave y rebozado crujiente.",
+      "precio": 9.50,
+      "categoria": "Entradas",
+      "imagen": "https://images.unsplash.com/photo-1601050690597-df0568f70950?w=600&q=80",
+      "disponible": true,
+      "destacado": true,
+      "alergenos": ["gluten", "lácteos", "huevo"]
+    },
+    {
+      "id": 2,
+      "nombre": "Tabla de Ibéricos",
+      "descripcion": "Selección de embutidos ibéricos: jamón, chorizo, salchichón y queso curado.",
+      "precio": 18.00,
+      "categoria": "Entradas",
+      "imagen": "https://images.unsplash.com/photo-1544025162-d76694265947?w=600&q=80",
+      "disponible": true,
+      "destacado": false,
+      "alergenos": ["lácteos"]
+    },
+    {
+      "id": 3,
+      "nombre": "Gazpacho Andaluz",
+      "descripcion": "Sopa fría de tomate tradicional con pepino, pimiento y un toque de ajo. Servido con picatostes.",
+      "precio": 7.50,
+      "categoria": "Entradas",
+      "imagen": "https://images.unsplash.com/photo-1547592166-23ac45744acd?w=600&q=80",
+      "disponible": true,
+      "destacado": false,
+      "alergenos": ["gluten"]
+    },
+    {
+      "id": 4,
+      "nombre": "Patatas Bravas",
+      "descripcion": "Patatas fritas al punto con salsa brava picante y alioli casero.",
+      "precio": 6.50,
+      "categoria": "Entradas",
+      "imagen": "https://images.unsplash.com/photo-1562967914-608f82629710?w=600&q=80",
+      "disponible": true,
+      "destacado": false,
+      "alergenos": ["huevo"]
+    },
+    {
+      "id": 5,
+      "nombre": "Solomillo a la Brasa",
+      "descripcion": "Solomillo de ternera a la brasa con reducción de vino tinto, patatas asadas y verduras de temporada.",
+      "precio": 26.00,
+      "categoria": "Principales",
+      "imagen": "https://images.unsplash.com/photo-1558030006-450675393462?w=600&q=80",
+      "disponible": true,
+      "destacado": true,
+      "alergenos": []
+    },
+    {
+      "id": 6,
+      "nombre": "Lubina al Horno",
+      "descripcion": "Lubina fresca al horno con patatas panadera, tomate cherry y aceite de oliva virgen extra.",
+      "precio": 22.00,
+      "categoria": "Principales",
+      "imagen": "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=600&q=80",
+      "disponible": true,
+      "destacado": false,
+      "alergenos": ["pescado"]
+    },
+    {
+      "id": 7,
+      "nombre": "Risotto de Setas",
+      "descripcion": "Cremoso risotto con mezcla de setas silvestres, parmesano y trufa negra rallada.",
+      "precio": 16.50,
+      "categoria": "Principales",
+      "imagen": "https://images.unsplash.com/photo-1476124369491-e7addf5db371?w=600&q=80",
+      "disponible": true,
+      "destacado": false,
+      "alergenos": ["lácteos"]
+    },
+    {
+      "id": 8,
+      "nombre": "Pollo al Limón",
+      "descripcion": "Muslo de pollo confitado en salsa de limón y hierbas provenzales con arroz basmati.",
+      "precio": 14.00,
+      "categoria": "Principales",
+      "imagen": "https://images.unsplash.com/photo-1598103442097-8b74394b95c8?w=600&q=80",
+      "disponible": true,
+      "destacado": false,
+      "alergenos": []
+    },
+    {
+      "id": 9,
+      "nombre": "Tarta de Queso",
+      "descripcion": "Cheesecake al horno estilo vasco con corazón cremoso y base de galleta, acompañado de mermelada de frutos rojos.",
+      "precio": 7.00,
+      "categoria": "Postres",
+      "imagen": "https://images.unsplash.com/photo-1578775887804-699de7086ff9?w=600&q=80",
+      "disponible": true,
+      "destacado": true,
+      "alergenos": ["gluten", "lácteos", "huevo"]
+    },
+    {
+      "id": 10,
+      "nombre": "Crema Catalana",
+      "descripcion": "Postre tradicional catalán con crema de vainilla y azúcar quemado al momento.",
+      "precio": 6.00,
+      "categoria": "Postres",
+      "imagen": "https://images.unsplash.com/photo-1470124182917-cc6e71b22ecc?w=600&q=80",
+      "disponible": true,
+      "destacado": false,
+      "alergenos": ["lácteos", "huevo"]
+    },
+    {
+      "id": 11,
+      "nombre": "Coulant de Chocolate",
+      "descripcion": "Bizcocho caliente de chocolate negro con corazón fundente, servido con helado de vainilla.",
+      "precio": 7.50,
+      "categoria": "Postres",
+      "imagen": "https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=600&q=80",
+      "disponible": true,
+      "destacado": false,
+      "alergenos": ["gluten", "lácteos", "huevo"]
+    },
+    {
+      "id": 12,
+      "nombre": "Vino de la Casa",
+      "descripcion": "Selección del sommelier. Disponible tinto, blanco o rosado. Copa o botella.",
+      "precio": 3.50,
+      "categoria": "Bebidas",
+      "imagen": "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=600&q=80",
+      "disponible": true,
+      "destacado": false,
+      "alergenos": ["sulfitos"]
+    },
+    {
+      "id": 13,
+      "nombre": "Limonada Natural",
+      "descripcion": "Limonada artesanal con limones frescos, menta y un toque de jengibre. Sin azúcar añadida.",
+      "precio": 4.00,
+      "categoria": "Bebidas",
+      "imagen": "https://images.unsplash.com/photo-1621263764928-df1444c5e859?w=600&q=80",
+      "disponible": true,
+      "destacado": false,
+      "alergenos": []
+    },
+    {
+      "id": 14,
+      "nombre": "Café Especial",
+      "descripcion": "Espresso de origen único de Colombia, disponible solo, cortado, con leche o americano.",
+      "precio": 2.50,
+      "categoria": "Bebidas",
+      "imagen": "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=600&q=80",
+      "disponible": true,
+      "destacado": false,
+      "alergenos": ["lácteos"]
+    }
+  ]
+}

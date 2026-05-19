@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Cocina · De Otro Mundo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<style>
+  body { background: #050505; overflow-x: hidden; }
+
+  .topbar {
+    position: sticky; top: 0; z-index: 30;
+    background: rgba(10,10,10,0.92);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--line);
+  }
+  .topbar-inner {
+    max-width: 1600px; margin: 0 auto;
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 20px;
+  }
+  .top-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 28px; text-transform: uppercase; line-height: 1; }
+  .top-clock { font-family: 'JetBrains Mono', monospace; font-size: 14px; color: var(--text-2); }
+  .topbar .actions { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+
+  .live-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 12px; border-radius: var(--radius-pill);
+    background: rgba(37,211,102,0.16); color: var(--green);
+    font-size: 12px; font-weight: 700;
+  }
+  .live-pill .dot { background: var(--green); animation: pulse 1.4s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  /* Tabs móviles */
+  .tabs {
+    display: none;
+    padding: 10px 16px; gap: 6px; overflow-x: auto;
+    border-bottom: 1px solid var(--line);
+  }
+  .tabs button {
+    flex-shrink: 0;
+    padding: 8px 14px; border-radius: var(--radius-pill);
+    background: var(--surface-2); color: var(--text-2);
+    font-size: 13px; font-weight: 600;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .tabs button.active { background: var(--orange); color: #fff; }
+  .tabs button .badge {
+    background: rgba(0,0,0,0.25); padding: 1px 7px; border-radius: 999px; font-size: 11px;
+  }
+
+  /* Tablero */
+  .board {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+    max-width: 1600px; margin: 0 auto;
+    padding: 16px 16px 32px;
+    align-items: start;
+  }
+  @media (max-width: 1100px) { .board { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 720px) {
+    .tabs { display: flex; }
+    .board { grid-template-columns: 1fr; }
+    .col { display: none; }
+    .col.active { display: block; }
+  }
+
+  .col {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 12px;
+    min-height: 200px;
+  }
+  .col-head {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 4px 12px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid var(--line);
+  }
+  .col-head .pip {
+    width: 10px; height: 10px; border-radius: 50%;
+  }
+  .col-head h3 {
+    margin: 0; font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800; font-size: 18px; text-transform: uppercase; letter-spacing: 0.04em;
+  }
+  .col-head .badge {
+    margin-left: auto;
+    background: var(--surface-3); color: var(--text);
+    padding: 2px 9px; border-radius: 999px;
+    font-size: 12px; font-weight: 700;
+  }
+
+  .col-pendiente .col-head .pip { background: var(--yellow); }
+  .col-preparando .col-head .pip { background: var(--orange); box-shadow: 0 0 0 4px rgba(255,80,0,0.18); }
+  .col-listo .col-head .pip { background: var(--green); }
+  .col-entregado .col-head .pip { background: var(--text-dim); }
+
+  /* Tarjeta de pedido */
+  .order {
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 10px;
+    transition: border-color .2s ease;
+  }
+  .order.new { animation: flash 1.2s ease; }
+  .order.urgent { border-color: rgba(239,68,68,0.5); }
+  @keyframes flash {
+    0% { box-shadow: 0 0 0 0 rgba(255,80,0,0.6); border-color: var(--orange); }
+    100% { box-shadow: 0 0 0 14px rgba(255,80,0,0); border-color: var(--line); }
+  }
+
+  .order-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+  .order-num { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 28px; line-height: 1; color: var(--orange); }
+  .order-time { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text-2); }
+  .order-modo { font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 999px; background: var(--surface-3); color: var(--text-2); text-transform: uppercase; letter-spacing: 0.06em; display: inline-flex; align-items: center; gap: 4px; }
+  .order-modo .mi { font-size: 13px; }
+
+  .order-client { margin: 8px 0 4px; font-weight: 600; font-size: 14px; }
+  .order-meta { color: var(--text-2); font-size: 12px; margin-bottom: 10px; }
+
+  .order-items { display: flex; flex-direction: column; gap: 4px; margin: 8px 0; }
+  .item-line { display: flex; gap: 8px; align-items: baseline; font-size: 14px; padding: 4px 0; border-top: 1px dashed var(--line); }
+  .item-line:first-child { border-top: none; }
+  .item-line .q { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 18px; color: var(--orange); min-width: 32px; }
+  .item-line .n { flex: 1; }
+  .item-line .obs { color: var(--text-2); font-size: 12px; font-style: italic; }
+
+  .order-obs {
+    margin-top: 8px; padding: 8px 10px;
+    background: rgba(255,80,0,0.08); border: 1px solid rgba(255,80,0,0.2);
+    border-radius: 8px;
+    font-size: 12px;
+    display: flex; gap: 6px; align-items: flex-start;
+  }
+  .order-obs .mi { font-size: 16px; color: var(--orange); }
+
+  .order-reward {
+    margin-top: 8px; padding: 8px 10px;
+    background: rgba(212,175,55,0.10); border: 1px solid rgba(212,175,55,0.3);
+    border-radius: 8px;
+    font-size: 12px;
+    display: flex; gap: 8px; align-items: center;
+  }
+  .order-reward .mi { font-size: 18px; color: var(--gold); }
+  .order-reward strong { color: var(--gold); }
+  .item-line.is-reward .q,
+  .item-line.is-reward .n { color: var(--gold); }
+  .item-line.is-reward .n strong { color: var(--gold); }
+
+  .order-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 12px; }
+  .order-actions .full { grid-column: 1/-1; }
+  .order-actions button {
+    height: 38px; border-radius: 8px;
+    font-size: 13px; font-weight: 600;
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    background: var(--surface-3); color: var(--text);
+    transition: all .15s ease;
+  }
+  .order-actions button:hover { background: var(--orange); color: #fff; }
+  .order-actions button.secondary { background: transparent; border: 1px solid var(--line-strong); color: var(--text-2); }
+  .order-actions button.secondary:hover { background: var(--surface-3); color: var(--text); }
+  .order-actions button.advance { background: var(--orange); color: #fff; }
+  .order-actions button.advance:hover { background: var(--orange-soft); }
+  .order-actions button .mi { font-size: 16px; }
+
+  .empty-col { padding: 30px 10px; text-align: center; color: var(--text-dim); font-size: 13px; }
+  .empty-col .mi { font-size: 32px; color: var(--text-dim); opacity: 0.5; }
+
+  /* Demo */
+  .demo-btn {
+    background: var(--surface-2); color: var(--text-2);
+    border: 1px solid var(--line); height: 36px; padding: 0 14px;
+    border-radius: var(--radius-pill); font-size: 12px; font-weight: 600;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .demo-btn:hover { background: var(--surface-3); color: var(--text); }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="logo-circle" style="width:44px;height:44px"></div>
+    <div>
+      <div class="top-title">Cocina</div>
+      <div class="top-clock" id="clock">--:--</div>
+    </div>
+    <div class="actions">
+      <span class="live-pill"><span class="dot"></span>En vivo</span>
+      <button class="demo-btn" onclick="demoOrder()" title="Crear pedido de prueba"><span class="mi" style="font-size:18px">science</span>Demo</button>
+      <a class="btn btn-outline btn-sm" href="salon.html"><span class="mi">restaurant</span>Salón</a>
+      <a class="btn btn-outline btn-sm" href="admin.html"><span class="mi">arrow_back</span>Admin</a>
+    </div>
+  </div>
+  <div class="tabs" id="tabs">
+    <button class="active" data-col="pendiente"><span class="mi" style="font-size:16px">schedule</span>Pendientes<span class="badge" id="badge-pendiente">0</span></button>
+    <button data-col="preparando"><span class="mi" style="font-size:16px">whatshot</span>Preparando<span class="badge" id="badge-preparando">0</span></button>
+    <button data-col="listo"><span class="mi" style="font-size:16px">done_all</span>Listos<span class="badge" id="badge-listo">0</span></button>
+    <button data-col="entregado"><span class="mi" style="font-size:16px">check_circle</span>Entregados<span class="badge" id="badge-entregado">0</span></button>
+  </div>
+</header>
+
+<main class="board">
+  <section class="col col-pendiente active" data-col="pendiente">
+    <div class="col-head"><span class="pip"></span><h3>Pendientes</h3><span class="badge" id="cnt-pendiente">0</span></div>
+    <div class="col-body" id="col-pendiente"></div>
+  </section>
+  <section class="col col-preparando" data-col="preparando">
+    <div class="col-head"><span class="pip"></span><h3>Preparando</h3><span class="badge" id="cnt-preparando">0</span></div>
+    <div class="col-body" id="col-preparando"></div>
+  </section>
+  <section class="col col-listo" data-col="listo">
+    <div class="col-head"><span class="pip"></span><h3>Listos</h3><span class="badge" id="cnt-listo">0</span></div>
+    <div class="col-body" id="col-listo"></div>
+  </section>
+  <section class="col col-entregado" data-col="entregado">
+    <div class="col-head"><span class="pip"></span><h3>Entregados</h3><span class="badge" id="cnt-entregado">0</span></div>
+    <div class="col-body" id="col-entregado"></div>
+  </section>
+</main>
+
+<script src="data.js"></script>
+<script>
+const STATES = ['pendiente','preparando','listo','entregado'];
+let lastSeenIds = new Set();
+
+function $(s, el) { return (el||document).querySelector(s); }
+function $$(s, el) { return Array.from((el||document).querySelectorAll(s)); }
+
+// ---- Reloj ----
+function tickClock() {
+  const d = new Date();
+  $('#clock').textContent = d.toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+}
+setInterval(tickClock, 1000); tickClock();
+
+// ---- Tabs mobile ----
+$$('#tabs button').forEach(b => b.onclick = () => {
+  $$('#tabs button').forEach(x => x.classList.toggle('active', x===b));
+  $$('.col').forEach(c => c.classList.toggle('active', c.dataset.col === b.dataset.col));
+});
+
+// ---- Listeners de cambios ----
+window.addEventListener('storage', e => {
+  if (e.key === 'deotromundo_pedidos_v1') render();
+});
+window.addEventListener('deotromundo:orders', render);
+
+// ---- Demo ----
+const DEMO_NAMES = ['Lucía','Martín','Carla','Diego','Sofía','Tomás'];
+function demoOrder() {
+  const data = DOM_loadData();
+  const activos = data.productos.filter(p=>p.activo);
+  if (!activos.length) return alert('Cargá productos primero');
+  const n = 2 + Math.floor(Math.random()*4);
+  const items = [];
+  let subtotal = 0;
+  for (let i=0;i<n;i++) {
+    const p = activos[Math.floor(Math.random()*activos.length)];
+    const qty = 1 + Math.floor(Math.random()*3);
+    const existing = items.find(x=>x.id===p.id);
+    if (existing) { existing.qty += qty; }
+    else { items.push({ id:p.id, nombre:p.nombre, precio:p.precio, qty, obs:'' }); }
+    subtotal += p.precio*qty;
+  }
+  const modos = ['delivery','retiro','mesa'];
+  const modo = modos[Math.floor(Math.random()*modos.length)];
+  const envio = modo === 'delivery' ? (data.config.costoEnvio||0) : 0;
+  const order = {
+    id: Date.now(),
+    numero: DOM_nextOrderNumber(),
+    restaurantId: RESTAURANT_ID,
+    fecha: new Date().toISOString(),
+    estado: 'pendiente',
+    via: 'interno',
+    modo,
+    mesa: modo==='mesa' ? String(1+Math.floor(Math.random()*15)) : '',
+    cliente: {
+      nombre: DEMO_NAMES[Math.floor(Math.random()*DEMO_NAMES.length)],
+      direccion: modo==='delivery' ? 'Av. del Sol 123' : '',
+      telefono: '2664 ' + (100000+Math.floor(Math.random()*900000)),
+    },
+    obs: Math.random()>0.7 ? 'Tocar timbre, no llamar.' : '',
+    items, subtotal, envio, total: subtotal+envio,
+    impreso: false,
+  };
+  DOM_saveOrder(order);
+}
+
+// ---- Render ----
+function render() {
+  const all = DOM_loadOrders().filter(o => o.restaurantId === RESTAURANT_ID);
+  const now = Date.now();
+
+  // pendiente/preparando/listo: hoy y ayer (no acumular indefinidamente)
+  // entregado: hoy
+  const today = new Date(); today.setHours(0,0,0,0);
+  const yesterday = today.getTime() - 24*3600*1000;
+
+  STATES.forEach(state => {
+    let list = all.filter(o => o.estado === state);
+    if (state === 'entregado') list = list.filter(o => o.id >= today.getTime());
+    else list = list.filter(o => o.id >= yesterday);
+
+    list.sort((a,b) => a.id - b.id); // los más viejos primero (FIFO)
+
+    $('#col-'+state).innerHTML = list.length ? list.map(o => orderHtml(o, now)).join('')
+      : `<div class="empty-col"><span class="mi">${stateIcon(state)}</span><div>Sin pedidos</div></div>`;
+
+    $('#cnt-'+state).textContent = list.length;
+    $('#badge-'+state).textContent = list.length;
+  });
+
+  // detectar nuevos pedidos → animación + sonido
+  const allIds = new Set(all.map(o=>o.id));
+  for (const id of allIds) {
+    if (!lastSeenIds.has(id) && lastSeenIds.size > 0) {
+      const o = all.find(x=>x.id===id);
+      if (o && o.estado === 'pendiente') {
+        const el = $(`[data-order-id="${id}"]`);
+        if (el) el.classList.add('new');
+        beep();
+      }
+    }
+  }
+  lastSeenIds = allIds;
+}
+
+function stateIcon(s) {
+  return ({pendiente:'schedule', preparando:'whatshot', listo:'done_all', entregado:'check_circle'})[s];
+}
+
+function orderHtml(o, now) {
+  const time = new Date(o.fecha).toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'});
+  const mins = Math.floor((now - o.id)/60000);
+  const urgent = (o.estado === 'pendiente' || o.estado === 'preparando') && mins >= 15;
+  const modoIcon = { delivery:'pedal_bike', retiro:'storefront', mesa:'restaurant' }[o.modo] || 'help';
+  const modoLabel = { delivery:'Delivery', retiro:'Retiro', mesa:`Mesa ${o.mesa||''}` }[o.modo] || o.modo;
+
+  const itemsHtml = o.items.map(i => `
+    <div class="item-line ${i.esRecompensa?'is-reward':''}">
+      <span class="q">${i.qty}×</span>
+      <span class="n">${i.esRecompensa?'<strong>🎁 </strong>':''}${i.nombre}${i.obs?`<div class="obs">${i.obs}</div>`:''}</span>
+    </div>
+  `).join('');
+
+  const actions = orderActions(o);
+
+  return `
+    <div class="order ${urgent?'urgent':''}" data-order-id="${o.id}">
+      <div class="order-top">
+        <div>
+          <div class="order-num">#${o.numero}</div>
+          <div class="order-time">${time} · hace ${mins}m</div>
+        </div>
+        <span class="order-modo"><span class="mi">${modoIcon}</span>${modoLabel}</span>
+      </div>
+      <div class="order-client">${o.cliente?.nombre || 'Cliente'}</div>
+      ${o.cliente?.direccion || o.cliente?.telefono ? `<div class="order-meta">${o.cliente.direccion||''}${o.cliente.direccion&&o.cliente.telefono?' · ':''}${o.cliente.telefono||''}</div>` : ''}
+      <div class="order-items">${itemsHtml}</div>
+      ${o.recompensa ? `<div class="order-reward"><span class="mi mi-fill">stars</span><div><strong>Canje:</strong> ${o.recompensa.nombre} <span style="opacity:0.7">(−${o.puntosCanjeados||o.recompensa.puntos} pts)</span></div></div>` : ''}
+      ${o.obs ? `<div class="order-obs"><span class="mi">campaign</span><span>${o.obs}</span></div>` : ''}
+      <div class="order-actions">${actions}</div>
+    </div>
+  `;
+}
+
+function orderActions(o) {
+  const printBtn = `<button class="secondary" onclick="printOrder(${o.id})"><span class="mi">print</span>Comanda</button>`;
+  switch (o.estado) {
+    case 'pendiente':
+      return `
+        ${printBtn}
+        <button class="advance" onclick="advance(${o.id},'preparando')"><span class="mi">whatshot</span>Preparar</button>
+        <button class="secondary full" onclick="cancelOrder(${o.id})"><span class="mi">close</span>Cancelar</button>`;
+    case 'preparando':
+      return `
+        ${printBtn}
+        <button class="advance" onclick="advance(${o.id},'listo')"><span class="mi">done_all</span>Marcar listo</button>`;
+    case 'listo':
+      return `
+        ${printBtn}
+        <button class="advance" onclick="advance(${o.id},'entregado')"><span class="mi">check_circle</span>Entregar</button>`;
+    case 'entregado':
+      return `
+        ${printBtn}
+        <button class="secondary" onclick="advance(${o.id},'listo')"><span class="mi">undo</span>Devolver</button>`;
+  }
+  return '';
+}
+
+function advance(id, to) { DOM_updateOrder(id, { estado: to }); }
+function cancelOrder(id) {
+  if (!confirm('¿Cancelar este pedido?')) return;
+  DOM_updateOrder(id, { estado: 'cancelado' });
+}
+
+function printOrder(id) {
+  // Abre la comanda en nueva ventana para imprimir
+  window.open('comanda.html?id=' + id, 'comanda', 'width=420,height=720');
+  DOM_updateOrder(id, { impreso: true });
+}
+
+// Pequeño beep al llegar nuevo pedido
+function beep() {
+  try {
+    const ctx = new (window.AudioContext||window.webkitAudioContext)();
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.connect(g); g.connect(ctx.destination);
+    o.type = 'sine'; o.frequency.value = 880;
+    g.gain.value = 0.05;
+    o.start();
+    setTimeout(()=>{o.frequency.value=660;}, 110);
+    setTimeout(()=>{o.stop(); ctx.close();}, 240);
+  } catch (e) { /* fail silently */ }
+}
+
+// Refrescar tiempos cada 30s
+setInterval(render, 30000);
+render();
+</script>
+</body>
+</html>

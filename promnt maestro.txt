@@ -1,0 +1,256 @@
+# 🧠 PROMPT MAESTRO — CARTA DIGITAL INTERACTIVA
+
+> Listo para usar en VS Code + GitHub Copilot, Cursor, Windsurf o cualquier agente de IA
+
+-----
+
+## 📌 CONTEXTO DEL PROYECTO
+
+Estás trabajando en una **Carta Digital Interactiva** para restaurantes, bares y cafeterías.
+El archivo principal es `carta-app.html` — una Single Page Application (SPA) en HTML/CSS/JS puro.
+
+El producto ofrece:
+
+- Menú digital visual e interactivo (sin app, sin QR externo)
+- Panel de administración para editar platos, precios e imágenes
+- Modo demo gratuito de **15 días** antes de contratar
+
+-----
+
+## 🗂️ ESTRUCTURA DE ARCHIVOS DEL PROYECTO
+
+```
+carta-digital/
+├── carta-app.html          ← App principal (SPA todo en uno)
+├── assets/
+│   ├── images/             ← Fotos de platos
+│   └── icons/              ← Íconos SVG
+├── data/
+│   └── menu.json           ← Base de datos del menú (JSON)
+├── admin/
+│   └── panel.html          ← Panel de administración
+├── trial/
+│   └── trial-manager.js    ← Lógica del período de prueba
+└── README.md
+```
+
+-----
+
+## 🎯 TAREAS PRINCIPALES DEL AGENTE
+
+### TAREA 1 — Estructura base de `carta-app.html`
+
+```
+Crea carta-app.html como una SPA completa en HTML/CSS/JS puro.
+Debe incluir:
+
+1. Header con logo del restaurante, nombre y categorías navegables
+2. Grid de productos con: foto, nombre, descripción corta, precio y botón "Ver más"
+3. Modal de detalle al hacer clic en un producto
+4. Filtro por categorías (Entradas, Platos principales, Postres, Bebidas)
+5. Buscador en tiempo real
+6. Banner de prueba gratuita de 15 días (si el usuario está en modo demo)
+7. Footer con botón de contacto/WhatsApp
+
+Paleta de colores: elegante, oscura con acentos dorados (#D4AF37)
+Fuentes: Google Fonts — Playfair Display (títulos) + Lato (cuerpo)
+Sin frameworks externos excepto Google Fonts.
+```
+
+-----
+
+### TAREA 2 — Sistema de Prueba Gratuita de 15 Días
+
+```
+Crea el archivo trial/trial-manager.js con la siguiente lógica:
+
+FUNCIONES REQUERIDAS:
+- initTrial()         → Inicia el período de prueba y guarda fecha en localStorage
+- checkTrialStatus()  → Retorna { active: bool, daysLeft: number, expired: bool }
+- showTrialBanner()   → Muestra banner con días restantes en la interfaz
+- showExpiredModal()  → Modal al expirar con CTA para contratar
+- resetTrial()        → Solo para desarrollo/demo (borra localStorage)
+
+COMPORTAMIENTO:
+- Al primer acceso: guarda timestamp en localStorage['cartaDigital_trialStart']
+- Calcula días restantes = 15 - días transcurridos
+- Si daysLeft <= 3: banner se vuelve urgente (color rojo/naranja)
+- Si expired === true: bloquea la app y muestra modal de conversión
+- El modal de expiración tiene: mensaje de agradecimiento + botón WhatsApp + botón Email
+
+EJEMPLO DE USO:
+const trial = new TrialManager();
+trial.init();
+// → Muestra "✨ 13 días restantes de prueba gratuita"
+```
+
+-----
+
+### TAREA 3 — Panel de Administración
+
+```
+Crea admin/panel.html con:
+
+1. Login simple con contraseña (guardada en localStorage, hash básico)
+2. Listado de todos los platos del menú
+3. Formulario para AGREGAR nuevo plato:
+   - Nombre, descripción, precio, categoría, URL de imagen, disponible (toggle)
+4. Botón EDITAR por cada plato (carga el formulario con datos)
+5. Botón ELIMINAR con confirmación
+6. Vista previa en tiempo real de cómo se verá el plato en la carta
+7. Botón "Guardar cambios" → actualiza menu.json (o localStorage en modo demo)
+
+Los datos deben sincronizarse con carta-app.html mediante localStorage o un JSON editable.
+```
+
+-----
+
+### TAREA 4 — Datos de Ejemplo (menu.json)
+
+```
+Crea data/menu.json con esta estructura y al menos 12 platos de ejemplo:
+
+{
+  "restaurante": {
+    "nombre": "Restaurante El Ejemplo",
+    "logo": "assets/images/logo.png",
+    "whatsapp": "+34 600 000 000",
+    "email": "info@ejemplo.com"
+  },
+  "categorias": ["Entradas", "Principales", "Postres", "Bebidas"],
+  "platos": [
+    {
+      "id": 1,
+      "nombre": "Nombre del plato",
+      "descripcion": "Descripción breve apetitosa",
+      "precio": 12.50,
+      "categoria": "Entradas",
+      "imagen": "assets/images/plato1.jpg",
+      "disponible": true,
+      "destacado": false,
+      "alergenos": ["gluten", "lácteos"]
+    }
+  ]
+}
+```
+
+-----
+
+### TAREA 5 — Componente Banner de Prueba (UI)
+
+```
+Añade en carta-app.html un banner de prueba con este comportamiento visual:
+
+ESTADOS:
+1. días 1-12:  Fondo dorado sutil → "✨ Prueba tu carta digital GRATIS — X días restantes"
+2. días 13-14: Fondo naranja → "⏳ Solo X días restantes — ¡Contáctanos para continuar!"
+3. día 15:     Fondo rojo → "🔔 Último día de prueba — Activa tu carta hoy"
+4. expirado:   Modal de pantalla completa con CTA
+
+El banner debe tener:
+- Botón X para cerrarlo temporalmente (se vuelve a mostrar al recargar)
+- Enlace directo a WhatsApp con mensaje pre-escrito
+- Animación de entrada suave (slide-down)
+
+Mensaje WhatsApp pre-escrito:
+"Hola, estoy probando la carta digital y me interesa contratar el servicio. ¿Pueden darme información?"
+```
+
+-----
+
+## 🔧 INSTRUCCIONES PARA EL AGENTE (COPILOT / CURSOR)
+
+```
+Al trabajar en este proyecto, el agente debe:
+
+1. SIEMPRE mantener todo en archivos separados y modulares
+2. Usar localStorage para persistencia en modo demo (sin backend)
+3. Comentar cada función con JSDoc
+4. Hacer el código responsive (mobile-first, breakpoints: 768px, 1024px)
+5. NO usar jQuery ni frameworks pesados — solo Vanilla JS
+6. Probar que el trial-manager funciona correctamente simulando fechas
+7. El modal de expiración NO debe poder cerrarse sin acción del usuario
+
+COMANDOS ÚTILES PARA TESTING:
+// Simular que ya pasaron 14 días:
+localStorage.setItem('cartaDigital_trialStart', Date.now() - (14 * 24 * 60 * 60 * 1000));
+
+// Simular expiración total:
+localStorage.setItem('cartaDigital_trialStart', Date.now() - (16 * 24 * 60 * 60 * 1000));
+
+// Resetear prueba:
+localStorage.removeItem('cartaDigital_trialStart');
+```
+
+-----
+
+## 🚀 FLUJO DE EXPERIENCIA DEL USUARIO (UX)
+
+```
+1. El restaurante recibe el archivo carta-app.html
+2. Abre en navegador → ve su menú funcionando (datos de ejemplo)
+3. Ve el banner: "✨ 15 días de prueba gratuita — Sin tarjeta de crédito"
+4. Puede explorar todos los platos, filtrar, buscar
+5. Entra al panel admin (/admin/panel.html) y personaliza su menú
+6. Los cambios se ven en tiempo real en carta-app.html
+7. Al día 13 recibe aviso urgente de expiración
+8. Al expirar → modal con botón de WhatsApp para contratar
+9. Tras contratar → se elimina el TrialManager y la app queda limpia
+```
+
+-----
+
+## 📱 ESPECIFICACIONES TÉCNICAS
+
+|Elemento        |Especificación                                         |
+|----------------|-------------------------------------------------------|
+|Tecnología      |HTML5 + CSS3 + Vanilla JS (ES6+)                       |
+|Almacenamiento  |localStorage (modo demo)                               |
+|Compatibilidad  |Chrome, Firefox, Safari, Edge — móvil y escritorio     |
+|Fuentes         |Google Fonts CDN (Playfair Display + Lato)             |
+|Sin dependencias|No jQuery, no React, no Node.js requerido              |
+|Tiempo prueba   |15 días desde primer acceso                            |
+|Archivos clave  |carta-app.html, trial-manager.js, menu.json, panel.html|
+
+-----
+
+## 📞 CTA — CONTACTO POST-PRUEBA
+
+```
+Cuando el usuario quiera contratar, el modal/banner debe dirigir a:
+
+WhatsApp: Enlace con mensaje pre-escrito (personalizable en menu.json)
+Email:    Formulario simple o mailto:
+Web:      Página de precios (opcional, configurable)
+
+Texto del modal de conversión:
+---
+"🎉 ¡Esperamos que hayas disfrutado tu carta digital!"
+
+Tu período de prueba gratuita ha terminado.
+Para seguir usando tu carta digital y que tus clientes
+puedan verla, activa tu plan.
+
+[💬 Escribir por WhatsApp]  [✉️ Enviar Email]
+---
+```
+
+-----
+
+## ✅ CHECKLIST DE ENTREGA
+
+- [ ] `carta-app.html` funciona al abrir en navegador sin servidor
+- [ ] Banner de prueba muestra días restantes correctamente
+- [ ] Filtros por categoría funcionan
+- [ ] Buscador filtra en tiempo real
+- [ ] Modal de producto se abre y cierra
+- [ ] Panel admin permite agregar/editar/eliminar platos
+- [ ] Al expirar los 15 días aparece modal de conversión
+- [ ] Diseño responsive en móvil (375px) y escritorio (1280px)
+- [ ] WhatsApp con mensaje pre-escrito funciona en móvil
+- [ ] `menu.json` tiene mínimo 12 platos de ejemplo en 4 categorías
+
+-----
+
+*Prompt Maestro v1.0 — Carta Digital Interactiva*
+*Generado para uso con VS Code + Copilot / Cursor / Windsurf*

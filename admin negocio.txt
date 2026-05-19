@@ -1,0 +1,2 @@
+Fetch this design file, read its readme, and implement the relevant aspects of the design. https://api.anthropic.com/v1/design/h/1xmYmt1Zm_A72__pfvTwVQ?open_file=admin-v1.html
+Implement: admin-v1.html

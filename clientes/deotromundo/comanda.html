@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Comanda · De Otro Mundo</title>
+<script src="data.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Courier New', Courier, monospace;
+    background: #fff;
+    color: #000;
+    width: 80mm;
+    margin: 0 auto;
+    padding: 6mm 4mm 10mm;
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  .center  { text-align: center; }
+  .right   { text-align: right; }
+  .bold    { font-weight: bold; }
+  .big     { font-size: 18px; font-weight: bold; }
+  .huge    { font-size: 26px; font-weight: bold; letter-spacing: 1px; }
+
+  hr { border: none; border-top: 1px dashed #000; margin: 5px 0; }
+  hr.solid { border-top: 1px solid #000; }
+
+  .header { margin-bottom: 6px; }
+  .header .nombre { font-size: 20px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
+  .header .sub    { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #333; }
+
+  .tipo-badge {
+    display: inline-block;
+    border: 2px solid #000;
+    padding: 2px 10px;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 4px 0;
+  }
+
+  .meta-row { display: flex; justify-content: space-between; font-size: 11px; margin: 2px 0; }
+
+  .items-table { width: 100%; border-collapse: collapse; margin: 6px 0; }
+  .items-table th { font-size: 10px; text-transform: uppercase; border-bottom: 1px solid #000; padding: 2px 0; text-align: left; }
+  .items-table th.r { text-align: right; }
+  .items-table td { padding: 3px 0; vertical-align: top; }
+  .items-table td.qty  { font-size: 15px; font-weight: bold; width: 28px; }
+  .items-table td.name { padding-left: 4px; }
+  .items-table td.price { text-align: right; white-space: nowrap; }
+  .items-table .obs-row td { font-size: 10px; color: #444; padding: 0 0 4px 28px; }
+
+  .totals { width: 100%; border-collapse: collapse; margin-top: 4px; }
+  .totals td { padding: 2px 0; }
+  .totals td.r { text-align: right; }
+  .totals .total-row td { font-size: 15px; font-weight: bold; border-top: 1px solid #000; padding-top: 4px; }
+
+  .footer { margin-top: 8px; font-size: 10px; text-align: center; color: #555; }
+
+  .no-print { margin: 20px auto; width: 80mm; display: flex; gap: 8px; }
+  .no-print button {
+    flex: 1; padding: 10px; border: 2px solid #000; background: #000; color: #fff;
+    font-family: inherit; font-size: 14px; font-weight: bold; cursor: pointer;
+    text-transform: uppercase;
+  }
+  .no-print button.sec { background: #fff; color: #000; }
+
+  @media print {
+    .no-print { display: none !important; }
+    body { margin: 0; padding: 4mm; }
+    @page { size: 80mm auto; margin: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div id="content">
+  <div class="center" style="padding: 40px 0; color: #aaa; font-size: 13px;">Cargando…</div>
+</div>
+
+<div class="no-print">
+  <button onclick="window.print()">🖨 Imprimir</button>
+  <button class="sec" onclick="window.close()">Cerrar</button>
+</div>
+
+<script>
+const params = new URLSearchParams(location.search);
+const orderId = params.get('id');
+const mesaNum  = params.get('mesa');
+
+function fmt(n) { return '$' + (n || 0).toLocaleString('es-AR'); }
+function hora(iso) {
+  return iso ? new Date(iso).toLocaleTimeString('es-AR', { hour:'2-digit', minute:'2-digit' }) : '--:--';
+}
+function fecha(iso) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  return d.toLocaleDateString('es-AR', { day:'2-digit', month:'2-digit', year:'numeric' });
+}
+
+function modoLabel(modo, mesa) {
+  if (modo === 'mesa')     return '🍽 Mesa ' + mesa;
+  if (modo === 'delivery') return '🛵 Delivery';
+  if (modo === 'retiro')   return '🏪 Retiro';
+  return modo || '';
+}
+
+function itemsRows(items) {
+  return items.map(i => {
+    const price = i.precio > 0 ? fmt(i.precio * i.qty) : '';
+    const obsLine = i.obs ? `<tr class="obs-row"><td></td><td colspan="2">${i.obs}</td></tr>` : '';
+    return `
+      <tr>
+        <td class="qty">${i.qty}×</td>
+        <td class="name">${i.nombre}</td>
+        <td class="price">${price}</td>
+      </tr>${obsLine}`;
+  }).join('');
+}
+
+function renderOrder(o) {
+  const cfg = DOM_loadData().config;
+  const envio = o.envio || 0;
+  return `
+    <div class="header center">
+      <div class="nombre">${cfg.nombre || 'De Otro Mundo'}</div>
+      <div class="sub">${cfg.subtitulo || ''}</div>
+    </div>
+    <hr class="solid">
+
+    <div class="center">
+      <div class="huge">#${o.numero}</div>
+      <div class="tipo-badge">${modoLabel(o.modo, o.mesa)}</div>
+    </div>
+
+    <div class="meta-row"><span>Fecha</span><span>${fecha(o.fecha)} ${hora(o.fecha)}</span></div>
+    ${o.cliente && o.cliente.nombre ? `<div class="meta-row"><span>Cliente</span><span class="bold">${o.cliente.nombre}</span></div>` : ''}
+    ${o.cliente && o.cliente.telefono ? `<div class="meta-row"><span>Tel</span><span>${o.cliente.telefono}</span></div>` : ''}
+    ${o.cliente && o.cliente.direccion ? `<div class="meta-row"><span>Dirección</span><span>${o.cliente.direccion}</span></div>` : ''}
+    ${o.obs ? `<div class="meta-row"><span>Obs</span><span>${o.obs}</span></div>` : ''}
+    <hr>
+
+    <table class="items-table">
+      <thead><tr><th colspan="2">Ítem</th><th class="r">Total</th></tr></thead>
+      <tbody>${itemsRows(o.items || [])}</tbody>
+    </table>
+    <hr>
+
+    <table class="totals">
+      ${envio > 0 ? `<tr><td>Subtotal</td><td class="r">${fmt(o.subtotal)}</td></tr><tr><td>Envío</td><td class="r">${fmt(envio)}</td></tr>` : ''}
+      ${o.descuento > 0 ? `<tr><td>Descuento efectivo</td><td class="r">−${fmt(o.descuento)}</td></tr>` : ''}
+      <tr class="total-row"><td>TOTAL</td><td class="r">${fmt(o.total)}</td></tr>
+      ${o.formaPago ? `<tr><td colspan="2" style="font-size:11px;color:#555;padding-top:4px">Pago: ${o.formaPago === 'efectivo' ? '💵 Efectivo' : '📲 Transferencia'}</td></tr>` : ''}
+    </table>
+
+    <div class="footer">
+      <br>¡Gracias por elegirnos!<br>
+      ${cfg.whatsappVisible ? 'WhatsApp: ' + cfg.whatsappVisible : ''}
+    </div>`;
+}
+
+function renderMesa(num) {
+  const cfg = DOM_loadData().config;
+  // Usar fechaApertura de la mesa para no mezclar pedidos de sesiones anteriores
+  const tables = DOM_loadTables();
+  const table  = tables[String(num)] || {};
+  const apertura = table.fechaApertura || new Date(new Date().setHours(0,0,0,0)).toISOString();
+  const orders = DOM_loadOrders().filter(o =>
+    o.modo === 'mesa' &&
+    String(o.mesa) === String(num) &&
+    o.estado !== 'cancelado' &&
+    o.fecha >= apertura
+  );
+  if (!orders.length) {
+    return `<div class="center" style="padding:30px 0;color:#888">Sin pedidos abiertos para Mesa ${num}</div>`;
+  }
+
+  // Aplanar todos los ítems de todos los pedidos de la mesa
+  const allItems = [];
+  orders.forEach(o => {
+    (o.items || []).forEach(i => {
+      const idx = allItems.findIndex(x => x.nombre === i.nombre && x.obs === i.obs);
+      if (idx >= 0) { allItems[idx].qty += i.qty; allItems[idx].precio = i.precio; }
+      else allItems.push({ ...i });
+    });
+  });
+  const total = orders.reduce((s, o) => s + (o.total || 0), 0);
+
+  return `
+    <div class="header center">
+      <div class="nombre">${cfg.nombre || 'De Otro Mundo'}</div>
+      <div class="sub">${cfg.subtitulo || ''}</div>
+    </div>
+    <hr class="solid">
+
+    <div class="center">
+      <div style="font-size:13px;text-transform:uppercase;letter-spacing:1px;margin-bottom:2px">Cuenta</div>
+      <div class="huge">Mesa ${num}</div>
+    </div>
+
+    <div class="meta-row"><span>Fecha</span><span>${fecha(apertura)} ${hora(apertura)}</span></div>
+    <div class="meta-row"><span>Pedidos</span><span>${orders.length}</span></div>
+    <hr>
+
+    <table class="items-table">
+      <thead><tr><th colspan="2">Ítem</th><th class="r">Total</th></tr></thead>
+      <tbody>${itemsRows(allItems)}</tbody>
+    </table>
+    <hr>
+
+    <table class="totals">
+      <tr class="total-row"><td>TOTAL</td><td class="r">${fmt(total)}</td></tr>
+    </table>
+
+    <div class="footer">
+      <br>¡Gracias por elegirnos!<br>
+      ${cfg.whatsappVisible ? 'WhatsApp: ' + cfg.whatsappVisible : ''}
+    </div>`;
+}
+
+// ── Render ────────────────────────────────────────────────
+const el = document.getElementById('content');
+
+if (orderId) {
+  const o = DOM_loadOrders().find(x => String(x.id) === String(orderId));
+  if (o) {
+    el.innerHTML = renderOrder(o);
+    setTimeout(() => window.print(), 400);
+  } else {
+    el.innerHTML = `<div class="center" style="padding:40px 0;color:#c00">Pedido #${orderId} no encontrado.</div>`;
+  }
+} else if (mesaNum) {
+  el.innerHTML = renderMesa(mesaNum);
+  setTimeout(() => window.print(), 400);
+} else {
+  el.innerHTML = `<div class="center" style="padding:40px 0;color:#c00">Parámetro inválido. Usar ?id=X o ?mesa=X</div>`;
+}
+</script>
+</body>
+</html>
