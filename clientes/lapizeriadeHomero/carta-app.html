@@ -740,25 +740,32 @@ loadMenuFromStorage();
   if (!window._cartaDb) return;
 
   function applyData(d) {
-    if (d.products)   localStorage.setItem('lph_products',   JSON.stringify(d.products));
-    if (d.categories) localStorage.setItem('lph_categories', JSON.stringify(d.categories));
-    if (d.config)     localStorage.setItem('lph_config',     JSON.stringify(d.config));
-    if (d.rewards)    localStorage.setItem('lph_rewards',    JSON.stringify(d.rewards));
-    if (d.promos)     localStorage.setItem('lph_promos',     JSON.stringify(d.promos));
+    let changed = false;
+    function _set(key, val) {
+      const s = JSON.stringify(val);
+      if (localStorage.getItem(key) !== s) { localStorage.setItem(key, s); changed = true; }
+    }
+    if (d.products)   _set('lph_products',   d.products);
+    if (d.categories) _set('lph_categories', d.categories);
+    if (d.config)     _set('lph_config',     d.config);
+    if (d.rewards)    _set('lph_rewards',    d.rewards);
+    if (d.promos)     _set('lph_promos',     d.promos);
     if ('platoDia' in d) {
-      if (d.platoDia) localStorage.setItem('lph_plato_dia', JSON.stringify(d.platoDia));
-      else localStorage.removeItem('lph_plato_dia');
+      if (d.platoDia) _set('lph_plato_dia', d.platoDia);
+      else { if (localStorage.getItem('lph_plato_dia')) { localStorage.removeItem('lph_plato_dia'); changed = true; } }
     }
     if (d.pizzaBuilder) {
-      localStorage.setItem('lph_pizza_builder', JSON.stringify(d.pizzaBuilder));
+      _set('lph_pizza_builder', d.pizzaBuilder);
       applyPizzaBuilder(d.pizzaBuilder);
     }
     if (d.menuExtras) {
-      localStorage.setItem('lph_menu_extras', JSON.stringify(d.menuExtras));
+      _set('lph_menu_extras', d.menuExtras);
       Object.keys(d.menuExtras).forEach(k => { window.MENU_EXTRAS[k] = d.menuExtras[k]; });
     }
-    loadMenuFromStorage();
-    if (window.__refreshLPH) window.__refreshLPH();
+    if (changed) {
+      loadMenuFromStorage();
+      if (window.__refreshLPH) window.__refreshLPH();
+    }
   }
 
   function applyPizzaBuilder(pb) {

@@ -2093,7 +2093,8 @@ function persist() {
 
 function sincronizarMenuFirebase() {
   if (typeof _db === 'undefined' || !_db) return;
-  _db.collection('menuData').doc('lph').set({
+  const _extras = JSON.parse(localStorage.getItem('lph_menu_extras') || 'null');
+  const _data = {
     products:      JSON.parse(localStorage.getItem(LS_PRODUCTS) || '[]'),
     categories:    JSON.parse(localStorage.getItem(LS_CATS)     || '[]'),
     config:        JSON.parse(localStorage.getItem('lph_config')        || '{}'),
@@ -2101,8 +2102,10 @@ function sincronizarMenuFirebase() {
     rewards:       JSON.parse(localStorage.getItem('lph_rewards')       || '[]'),
     promos:        JSON.parse(localStorage.getItem('lph_promos')        || '[]'),
     pizzaBuilder:  JSON.parse(localStorage.getItem('lph_pizza_builder') || 'null') || null,
-    menuExtras:    JSON.parse(localStorage.getItem('lph_menu_extras')   || 'null') || null,
-  }).then(() => showToast('✅ Carta sincronizada', 'success'))
+  };
+  if (_extras !== null) _data.menuExtras = _extras;
+  _db.collection('menuData').doc('lph').set(_data, { merge: true })
+    .then(() => showToast('✅ Carta sincronizada', 'success'))
     .catch(e => { console.warn('Firebase menuData lph error', e); showToast('⚠️ Error al sincronizar', 'error'); });
 }
 function syncCarta() { sincronizarMenuFirebase(); }
