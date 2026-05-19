@@ -2061,16 +2061,21 @@ function persist() {
 
 function sincronizarMenuFirebase() {
   if (typeof _db === 'undefined' || !_db) return;
-  const prods = JSON.parse(localStorage.getItem(LS_PRODUCTS) || '[]');
-  const cfg   = JSON.parse(localStorage.getItem('pem_config') || '{}');
-  const pdd   = JSON.parse(localStorage.getItem(PDD_KEY) || 'null');
+  const prods      = JSON.parse(localStorage.getItem(LS_PRODUCTS) || '[]');
+  const cfg        = JSON.parse(localStorage.getItem('pem_config') || '{}');
+  const pdd        = JSON.parse(localStorage.getItem(PDD_KEY) || 'null');
+  const creds      = JSON.parse(localStorage.getItem('pem_admin_creds') || 'null');
   const prodsNoImg = prods.map(p => ({ ...p, img: null }));
-  _db.collection('menuData').doc('pem').set({
+  const data = {
     products:   prodsNoImg,
     categories: JSON.parse(localStorage.getItem(LS_CATS) || '[]'),
     config:     cfg,
     platoDia:   pdd || null,
-  }, { merge: true }).then(() => showToast('Carta actualizada ✓', 'success'))
+  };
+  if (creds) data.adminCreds = creds;
+  // set sin merge para eliminar imágenes viejas que inflaban el doc
+  _db.collection('menuData').doc('pem').set(data)
+    .then(() => showToast('Carta actualizada ✓', 'success'))
     .catch(e => { console.warn('Firebase menuData error', e); showToast('Error al sincronizar', 'error'); });
   prods.forEach(p => {
     if (p.img) _db.collection('menuData').doc('pem_img_' + p.id).set({ img: p.img }).catch(() => {});
