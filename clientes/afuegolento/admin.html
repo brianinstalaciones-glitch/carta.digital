@@ -2106,6 +2106,14 @@ function syncCarta() {
 function _doLoginSuccess() {
   document.getElementById('screen-login').classList.remove('active');
   document.getElementById('screen-dashboard').classList.add('active');
+  if (typeof _db !== 'undefined') {
+    _db.collection('superadmin').doc('data').get().then(saDoc => {
+      if (saDoc.exists) {
+        localStorage.setItem('sa_clients', JSON.stringify(saDoc.data().clients || []));
+        checkPlan();
+      }
+    }).catch(() => {});
+  }
   // Cargar desde Firebase primero para tener datos completos (fotos, categorías)
   if (typeof _db !== 'undefined') {
     _db.collection('menuData').doc('afl').get().then(async doc => {

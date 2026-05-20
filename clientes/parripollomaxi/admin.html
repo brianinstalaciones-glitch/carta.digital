@@ -2123,6 +2123,14 @@ function _doLoginSuccess() {
   document.getElementById('screen-login').classList.remove('active');
   document.getElementById('screen-dashboard').classList.add('active');
   if (typeof _db !== 'undefined') {
+    _db.collection('superadmin').doc('data').get().then(saDoc => {
+      if (saDoc.exists) {
+        localStorage.setItem('sa_clients', JSON.stringify(saDoc.data().clients || []));
+        checkPlan();
+      }
+    }).catch(() => {});
+  }
+  if (typeof _db !== 'undefined') {
     _db.collection('menuData').doc('pem').get().then(async doc => {
       if (doc.exists) {
         const d = doc.data();
