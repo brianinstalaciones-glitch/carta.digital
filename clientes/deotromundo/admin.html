@@ -2310,6 +2310,7 @@ function getDOMCreds() {
 }
 
 function _domLoginSuccess() {
+  sessionStorage.setItem('dom_session', '1');
   document.getElementById('screen-login').style.display = 'none';
   document.getElementById('screen-main').style.display  = 'block';
   initKnownOrders();
