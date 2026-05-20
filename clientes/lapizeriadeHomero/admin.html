@@ -2132,6 +2132,14 @@ function syncCarta() { sincronizarMenuFirebase(); }
 function _doLoginSuccess() {
   document.getElementById('screen-login').classList.remove('active');
   document.getElementById('screen-dashboard').classList.add('active');
+  if (typeof _db !== 'undefined') {
+    _db.collection('superadmin').doc('data').get().then(saDoc => {
+      if (saDoc.exists) {
+        localStorage.setItem('sa_clients', JSON.stringify(saDoc.data().clients || []));
+        checkPlan();
+      }
+    }).catch(() => {});
+  }
   renderTable(); renderCats(); updateStats(); loadPddPreview();
   checkPlan();
   setTimeout(sincronizarMenuFirebase, 1500);
