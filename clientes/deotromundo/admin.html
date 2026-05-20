@@ -385,6 +385,7 @@
     <button class="side-item" data-page="caja"><span class="mi">point_of_sale</span>Caja<span class="prem-badge gold" id="pbadge-caja">★ PRO</span></button>
     <div class="side-foot">
       <a class="side-item" href="carta-app.html" target="_blank"><span class="mi">open_in_new</span>Ver carta</a>
+      <button class="side-item" onclick="doLogout()" style="color:#ef4444;width:100%;text-align:left"><span class="mi">logout</span>Cerrar sesión</button>
     </div>
   </aside>
 
@@ -2307,6 +2308,14 @@ const DOM_DEFAULT_PASS  = 'demo1234';
 
 function getDOMCreds() {
   return JSON.parse(localStorage.getItem(DOM_RID + '_admin_creds') || JSON.stringify({ email: DOM_DEFAULT_EMAIL, password: DOM_DEFAULT_PASS }));
+}
+
+function doLogout() {
+  sessionStorage.removeItem('dom_session');
+  document.getElementById('screen-main').style.display = 'none';
+  document.getElementById('screen-login').style.display = 'flex';
+  document.getElementById('l-email').value = '';
+  document.getElementById('l-pass').value = '';
 }
 
 function _domLoginSuccess() {
