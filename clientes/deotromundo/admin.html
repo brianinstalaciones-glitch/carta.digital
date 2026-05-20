@@ -935,6 +935,12 @@ function orderStateActions(o) {
 
 function orderAdv(id, estado) {
   DOM_updateOrder(id, { estado });
+  if (estado === 'entregado') {
+    const order = DOM_loadOrders().find(o => String(o.id) === String(id));
+    if (order && order.modo === 'mesa' && order.mesa) {
+      if (DOM_getTableOpenOrders(order.mesa).length === 0) DOM_closeTable(order.mesa);
+    }
+  }
   renderAll();
 }
 
@@ -1755,10 +1761,20 @@ function renderSalonDrawer(num) {
       <span class="pill pill-${t.estado==='cuenta'?'red':'orange'}">${t.estado==='cuenta'?'Cuenta solicitada':'Ocupada'}</span>
     </div>
     ${ordersHtml}
-    <div style="margin-top:14px;padding:13px 16px;background:rgba(255,80,0,.07);border:1px solid rgba(255,80,0,.25);border-radius:14px;display:flex;justify-content:space-between;align-items:center">
-      <span style="color:var(--text-2);font-size:12px;text-transform:uppercase;letter-spacing:.08em;font-weight:700">Total mesa</span>
-      <span style="font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:800;color:var(--orange)">${DOM_fmtPrice(total)}</span>
-    </div>`;
+    ${(() => {
+      const descActivo = DATA.config.descuentoEfectivoActivo && DATA.config.descuentoEfectivo > 0;
+      const totalEf = descActivo ? Math.round(total * (1 - DATA.config.descuentoEfectivo / 100)) : null;
+      return `<div style="margin-top:14px;padding:13px 16px;background:rgba(255,80,0,.07);border:1px solid rgba(255,80,0,.25);border-radius:14px">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span style="color:var(--text-2);font-size:12px;text-transform:uppercase;letter-spacing:.08em;font-weight:700">Total mesa</span>
+          <span style="font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:800;color:var(--orange)">${DOM_fmtPrice(total)}</span>
+        </div>
+        ${descActivo ? `<div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;padding-top:6px;border-top:1px dashed rgba(255,80,0,.25)">
+          <span style="color:#22c55e;font-size:12px;font-weight:700">💵 Con efectivo (−${DATA.config.descuentoEfectivo}%)</span>
+          <span style="font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:800;color:#22c55e">${DOM_fmtPrice(totalEf)}</span>
+        </div>` : ''}
+      </div>`;
+    })()}`;
 
   const isCuenta = t.estado==='cuenta';
   $('#salonDrawerFoot').innerHTML = `
