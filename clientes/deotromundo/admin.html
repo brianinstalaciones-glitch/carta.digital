@@ -2321,7 +2321,6 @@ function doLogin() {
   const e = document.getElementById('l-email').value.trim();
   const p = document.getElementById('l-pass').value;
   const stored = getDOMCreds();
-  console.log('[DOM] doLogin llamado | _db:', !!window._db, '| stored email:', stored.email);
   if (e === stored.email && p === stored.password) { _domLoginSuccess(); return; }
   if (window._db) {
     window._db.collection('superadmin').doc('data').get().then(saDoc => {
