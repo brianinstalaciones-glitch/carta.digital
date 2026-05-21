@@ -3744,6 +3744,8 @@ async function confirmarPedidoWA() {
     ts: Date.now(),
     fecha: new Date().toISOString(),
     modo: "delivery",
+    tipo: "delivery",
+    mesa: "WA",
     nombre: cliente + (tel ? " · " + tel : ""),
     estado: "pendiente",
     items,
