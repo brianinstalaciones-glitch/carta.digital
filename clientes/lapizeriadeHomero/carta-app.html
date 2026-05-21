@@ -884,6 +884,7 @@ function AppProvider({ children }) {
   const [clienteNombre, setClienteNombre] = useState(() => { try { return localStorage.getItem('lph_cliente_nombre') || ''; } catch(e) { return ''; } });
   const clienteIdRef = useRef(() => { try { return localStorage.getItem('lph_cliente_id') || ''; } catch(e) { return ''; } });
   const fbSyncReady = useRef(false);
+  const cartRef = useRef([]);
   const [theme, setTheme] = useState(() => { try { return localStorage.getItem('homero-theme')||'dark'; } catch(e) { return 'dark'; } });
   const [homeStyle, setHomeStyle] = useState('A');
   const [toast, setToast] = useState(null);
@@ -962,10 +963,12 @@ function AppProvider({ children }) {
     });
   };
 
+  useEffect(() => { cartRef.current = cart; }, [cart]);
+
   useEffect(() => {
     const handler = (e) => {
       if (e.key === 'lph_products' || e.key === 'lph_categories' || e.key === 'lph_promos' || e.key === 'lph_config' || e.key === 'lph_rewards') {
-        window.location.reload();
+        if (cartRef.current.length === 0) window.location.reload();
       }
     };
     window.addEventListener('storage', handler);
