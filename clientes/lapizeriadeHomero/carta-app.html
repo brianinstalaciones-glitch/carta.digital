@@ -968,7 +968,8 @@ function AppProvider({ children }) {
   useEffect(() => {
     const handler = (e) => {
       if (e.key === 'lph_products' || e.key === 'lph_categories' || e.key === 'lph_promos' || e.key === 'lph_config' || e.key === 'lph_rewards') {
-        if (cartRef.current.length === 0) window.location.reload();
+        if (typeof loadMenuFromStorage === 'function') loadMenuFromStorage();
+        if (window.__refreshLPH) window.__refreshLPH();
       }
     };
     window.addEventListener('storage', handler);
