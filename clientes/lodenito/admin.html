@@ -3584,7 +3584,7 @@ function renderOrdersFirebase(orders) {
     const icon  = tipoIcon[tipo] || '🍽';
     const lbl   = tipoLabel[tipo] || tipo;
     const items = o.items.map(i =>
-      `<div class="order-item-row"><strong>${i.nombre}</strong> x${i.cantidad} — $${i.subtotal.toLocaleString('es-AR')}${i.nota ? `<br><span style="color:var(--amber);font-size:12px">📝 ${i.nota}</span>` : ''}</div>`
+      `<div class="order-item-row"><strong>${i.nombre}</strong> x${i.cantidad||i.qty||1} — ${(i.subtotal||(i.precio||0)*(i.cantidad||i.qty||1)).toLocaleString('es-AR')}${i.nota ? `<br><span style="color:var(--amber);font-size:12px">📝 ${i.nota}</span>` : ''}</div>`
     ).join('');
     const pagoIcon = { efectivo:'💵', tarjeta:'💳', transferencia:'📲' }[o.formaPago] || '';
     const pagoStr  = o.formaPago ? `<div style="font-size:11px;color:var(--ink3);margin-top:3px">${pagoIcon} ${o.formaPago.charAt(0).toUpperCase()+o.formaPago.slice(1)}</div>` : '';
