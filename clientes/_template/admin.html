@@ -2060,9 +2060,7 @@ function sincronizarMenuFirebase() {
   }).then(() => showToast('✅ Carta sincronizada', 'success'))
     .catch(e => { console.warn('Firebase menuData error', e); showToast('⚠️ Error al sincronizar', 'error'); });
   prods.forEach(p => {
-    const ref = _db.collection('menuData').doc('%%RID%%_img_' + p.id);
-    if (p.img) ref.set({ img: p.img }).catch(() => {});
-    else       ref.delete().catch(() => {});
+    if (p.img) _db.collection('menuData').doc('%%RID%%_img_' + p.id).set({ img: p.img }).catch(() => {});
   });
 }
 function syncCarta() {
@@ -2094,6 +2092,14 @@ function syncCarta() {
 function _doLoginSuccess() {
   document.getElementById('screen-login').classList.remove('active');
   document.getElementById('screen-dashboard').classList.add('active');
+  if (typeof _db !== 'undefined') {
+    _db.collection('superadmin').doc('data').get().then(saDoc => {
+      if (saDoc.exists) {
+        localStorage.setItem('sa_clients', JSON.stringify(saDoc.data().clients || []));
+        checkPlan();
+      }
+    }).catch(() => {});
+  }
   if (typeof _db !== 'undefined') {
     _db.collection('menuData').doc('%%RID%%').get().then(async doc => {
       if (doc.exists) {
