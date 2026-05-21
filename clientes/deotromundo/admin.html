@@ -463,6 +463,7 @@
           <div class="sub">Historial completo</div>
         </div>
         <button class="btn btn-outline" onclick="goPage('cocina')"><span class="mi">whatshot</span>Vista cocina</button>
+        <button class="btn btn-primary" onclick="abrirPedidoWA()" style="gap:6px">&#x1F4AC; Pedido por WA</button>
       </div>
       <div id="allOrders"></div>
     </div>
@@ -2545,6 +2546,85 @@ window.doLogin = function() {
 };
 if (sessionStorage.getItem('dom_session') === '1') {
   setTimeout(cargarClientesFirebase, 900);
+}
+
+// ── PEDIDO MANUAL POR WA ─────────────────────────────────────
+let _waCart = {};
+
+function abrirPedidoWA() {
+  _waCart = {};
+  const prods = (DOM_loadData().productos || []).filter(p => p.disp !== false && p.activo !== false);
+  const list = document.getElementById("wa-products-list");
+  list.innerHTML = prods.map(p => {
+    const precio = (p.precio||0).toLocaleString("es-AR");
+    return "<div style='display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--bg,#f5f5f5);border-radius:10px'>" +
+      "<div style='flex:1'><div style='font-size:13px;font-weight:700'>" + p.nombre + "</div>" +
+      "<div style='font-size:12px;color:#888'>$" + precio + "</div></div>" +
+      "<div style='display:flex;align-items:center;gap:6px'>" +
+      "<button onclick=\"waQty(" + p.id + ",-1)\" style='width:28px;height:28px;border-radius:50%;border:2px solid #ddd;background:#fff;font-size:16px;cursor:pointer;font-weight:800'>&#8722;</button>" +
+      "<span id='wa-qty-" + p.id + "' style='min-width:18px;text-align:center;font-weight:800;font-size:14px'>0</span>" +
+      "<button onclick=\"waQty(" + p.id + ",1)\" style='width:28px;height:28px;border-radius:50%;border:2px solid var(--accent,#e8890a);background:var(--accent,#e8890a);font-size:16px;cursor:pointer;font-weight:800;color:#fff'>+</button>" +
+      "</div></div>";
+  }).join("");
+  document.getElementById("wa-notas").value = "";
+  document.getElementById("wa-cliente").value = "";
+  document.getElementById("wa-tel").value = "";
+  document.getElementById("wa-total-label").textContent = "Total: $0";
+  document.getElementById("wa-order-overlay").style.display = "flex";
+}
+
+function waQty(id, delta) {
+  const prods = DOM_loadData().productos || [];
+  const p = prods.find(x => String(x.id) === String(id));
+  if (!p) return;
+  _waCart[id] = Math.max(0, (_waCart[id] || 0) + delta);
+  const el = document.getElementById("wa-qty-" + id);
+  if (el) el.textContent = _waCart[id] || 0;
+  const total = Object.entries(_waCart).reduce((s, [k, q]) => {
+    const pr = prods.find(x => String(x.id) === String(k));
+    return s + (pr ? (pr.precio || 0) * q : 0);
+  }, 0);
+  document.getElementById("wa-total-label").textContent = "Total: $" + total.toLocaleString("es-AR");
+}
+
+function confirmarPedidoWA() {
+  const prods = DOM_loadData().productos || [];
+  const items = Object.entries(_waCart)
+    .filter(function(e){ return e[1] > 0; })
+    .map(function(e) {
+      var id = e[0], qty = e[1];
+      var p = prods.find(x => String(x.id) === String(id));
+      return p ? { nombre: p.nombre, qty: qty, precio: p.precio||0, obs: "", subtotal: (p.precio||0)*qty } : null;
+    }).filter(Boolean);
+  if (!items.length) { alert("Agregá al menos un producto"); return; }
+  var cliente = document.getElementById("wa-cliente").value.trim() || "WA";
+  var tel     = document.getElementById("wa-tel").value.trim();
+  var notas   = document.getElementById("wa-notas").value.trim();
+  var pago    = document.getElementById("wa-pago").value;
+  var subtotal = items.reduce(function(s,i){ return s + i.subtotal; }, 0);
+  var order = {
+    id: Date.now(),
+    numero: DOM_nextOrderNumber(),
+    restaurantId: RESTAURANT_ID,
+    fecha: new Date().toISOString(),
+    modo: "delivery",
+    mesa: "",
+    estado: "pendiente",
+    items: items,
+    subtotal: subtotal,
+    envio: 0,
+    descuento: 0,
+    total: subtotal,
+    formaPago: pago,
+    cliente: { nombre: cliente, direccion: "", telefono: tel },
+    obs: notas,
+    origen: "whatsapp",
+    impreso: false,
+  };
+  DOM_saveOrder(order);
+  renderAll();
+  document.getElementById("wa-order-overlay").style.display = "none";
+  if (typeof showToast === "function") showToast("Pedido WA ingresado", "success");
 }
 </script>
 
