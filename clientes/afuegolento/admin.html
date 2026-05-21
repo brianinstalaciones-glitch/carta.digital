@@ -3742,6 +3742,7 @@ async function confirmarPedidoWA() {
   const order = {
     id: String(Date.now()),
     ts: Date.now(),
+    fecha: new Date().toISOString(),
     modo: "delivery",
     nombre: cliente + (tel ? " · " + tel : ""),
     estado: "pendiente",
