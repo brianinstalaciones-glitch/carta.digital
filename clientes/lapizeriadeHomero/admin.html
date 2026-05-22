@@ -535,6 +535,10 @@
     .btn-print { background:var(--ink); color:var(--amber); border:none; border-radius:10px; padding:7px 14px; font-size:12px; font-family:var(--font-display); letter-spacing:.04em; cursor:pointer; white-space:nowrap; display:flex; align-items:center; gap:5px; transition:opacity .15s; }
     .btn-print:hover { opacity:.85; }
     .btn-print:active { transform:scale(.97); }
+    .btn-reset-sistema { background:transparent; color:var(--red,#ef4444); border:1.5px solid var(--red,#ef4444); border-radius:10px; padding:6px 13px; font-size:12px; font-family:var(--font-display); letter-spacing:.04em; cursor:pointer; white-space:nowrap; transition:all .15s; }
+    .btn-reset-sistema:hover { background:var(--red,#ef4444); color:#fff; }
+    .reset-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:800; align-items:center; justify-content:center; padding:16px; }
+    .reset-panel { background:var(--surface); border:2px solid var(--red,#ef4444); border-radius:18px; padding:28px 24px; width:100%; max-width:400px; display:flex; flex-direction:column; gap:14px; }
     .btn-wa-notify { background:#25D366; color:#fff; border:none; border-radius:10px; padding:7px 14px; font-size:12px; font-family:var(--font-display); letter-spacing:.04em; cursor:pointer; white-space:nowrap; display:flex; align-items:center; gap:5px; margin-top:5px; transition:opacity .15s; }
     .btn-wa-notify:hover { opacity:.85; }
     .wa-msg-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:700; align-items:center; justify-content:center; padding:16px; }
@@ -1181,6 +1185,7 @@
             <div style="display:flex;gap:8px;align-items:center">
               <div class="live-badge"><span class="live-dot"></span> En vivo</div>
               <button class="btn btn-secondary btn-sm" onclick="limpiarPedidosFirebase()">Limpiar todo</button>
+              <button class="btn-reset-sistema btn-sm" onclick="document.getElementById('reset-sistema-overlay').style.display='flex'">🔄 Reiniciar sistema</button>
               <button class="btn btn-primary btn-sm" onclick="abrirPedidoWA()">💬 Pedido por WA</button>
             </div>
           </div>
@@ -3619,6 +3624,33 @@ function limpiarPedidosFirebase() {
 
 
 
+
+// ── REINICIO DE SISTEMA ───────────────────────────────────────
+async function reiniciarSistema() {
+  document.getElementById('reset-sistema-overlay').style.display = 'none';
+  if (!_db) { showToast('Firebase no disponible', 'error'); return; }
+  try {
+    showToast('Reiniciando...', '');
+    // Borrar pedidos de este restaurante
+    const pedidosSnap = await _db.collection('pedidos').get();
+    const b1 = _db.batch();
+    pedidosSnap.docs
+      .filter(d => d.data().restaurantId === RESTAURANT_ID)
+      .forEach(d => b1.delete(d.ref));
+    await b1.commit();
+
+    // Borrar cierres de caja de este restaurante
+    const cierresSnap = await _db.collection('cierres').get();
+    const b2 = _db.batch();
+    cierresSnap.docs
+      .filter(d => d.data().restaurantId === (typeof CAJA_RID !== 'undefined' ? CAJA_RID : RESTAURANT_ID))
+      .forEach(d => b2.delete(d.ref));
+    await b2.commit();
+
+    showToast('✅ Sistema reiniciado — listo para usar', 'success');
+  } catch(e) { showToast('Error al reiniciar: ' + e.message, 'error'); }
+}
+
 // ── AVISO WA AL CLIENTE ───────────────────────────────────────
 function notificarClienteWA(tel, nombre) {
   let t = tel.replace(/[\s\-\(\)\+]/g, '');
@@ -5124,6 +5156,27 @@ async function avanzarEstadoCocina(id, nuevoEstado) {
     </div>
     <div style="font-size:12px;color:var(--ink3);margin-bottom:6px">Elegí el mensaje a enviar por WhatsApp</div>
     <div id="wa-notify-panel" style="display:flex;flex-direction:column;gap:8px"></div>
+  </div>
+</div>
+
+<!-- MODAL REINICIO DE SISTEMA -->
+<div id="reset-sistema-overlay" class="reset-overlay" onclick="if(event.target===this)this.style.display='none'">
+  <div class="reset-panel" onclick="event.stopPropagation()">
+    <div style="display:flex;align-items:center;gap:10px">
+      <span style="font-size:28px">⚠️</span>
+      <div style="font-size:18px;font-weight:800;color:var(--red,#ef4444)">Reinicio del sistema</div>
+    </div>
+    <div style="font-size:14px;color:var(--ink,#111);line-height:1.6">
+      Se eliminarán <strong>todos los pedidos</strong> y los <strong>registros de caja</strong>.<br/>
+      Los <strong style="color:green">precios, productos y fotos NO se tocan</strong>.
+    </div>
+    <div style="font-size:13px;color:var(--ink3);background:rgba(239,68,68,0.08);border-radius:10px;padding:10px 14px">
+      Hacé esto solo antes de empezar a usar el sistema en producción o para cerrar el período.
+    </div>
+    <div style="display:flex;gap:10px;margin-top:4px">
+      <button onclick="document.getElementById('reset-sistema-overlay').style.display='none'" class="btn btn-secondary" style="flex:1">Cancelar</button>
+      <button onclick="reiniciarSistema()" class="btn" style="flex:1;background:var(--red,#ef4444);color:#fff;font-weight:800">Sí, reiniciar</button>
+    </div>
   </div>
 </div>
 </body>
