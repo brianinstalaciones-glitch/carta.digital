@@ -3527,11 +3527,9 @@ function saveConfig() {
   }
   const elapsed   = Math.floor((Date.now() - new Date(start)) / 86400000);
   const remaining = Math.max(0, DAYS - elapsed);
-
   const badge = document.getElementById('trial-badge');
 
-  if (remaining === 0) {
-    // Cargar config del superadmin si existe
+  function showOverlay() {
     const cfg = JSON.parse(localStorage.getItem('sa_config') || '{}');
     if (cfg.mpLink) document.getElementById('trial-btn-mp').href = cfg.mpLink;
     if (cfg.waNumber) document.getElementById('trial-btn-wa').href = `https://wa.me/${cfg.waNumber}?text=Hola!%20Quiero%20contratar%20la%20carta%20digital.`;
@@ -3542,6 +3540,39 @@ function saveConfig() {
     }
     document.getElementById('trial-overlay').classList.add('show');
     badge.style.display = 'none';
+  }
+
+  function findMe(clients) {
+    const myEmail = (JSON.parse(localStorage.getItem('lph_admin_creds') || '{}').email || '').toLowerCase();
+    return clients.find(c => c.rid === 'lph') || clients.find(c => (c.email||'').toLowerCase() === myEmail);
+  }
+
+  if (remaining === 0) {
+    // 1) Chequear localStorage (mismo browser que superadmin)
+    try {
+      const me = findMe(JSON.parse(localStorage.getItem('sa_clients') || '[]'));
+      if (me && me.estado === 'activo') { badge.style.display = 'none'; return; }
+    } catch(e) {}
+
+    // 2) Chequear Firebase (cross-device)
+    if (typeof firebase !== 'undefined') {
+      firebase.firestore().collection('superadmin').doc('data').get().then(doc => {
+        if (!doc.exists) return;
+        const me = findMe(doc.data().clients || []);
+        if (me && me.estado === 'activo') {
+          document.getElementById('trial-overlay').classList.remove('show');
+          badge.style.display = 'none';
+          // Guardar en localStorage para próxima carga
+          try {
+            const cached = JSON.parse(localStorage.getItem('sa_clients') || '[]');
+            const idx = cached.findIndex(c => c.rid === 'lph');
+            if (idx >= 0) cached[idx] = me; else cached.push(me);
+            localStorage.setItem('sa_clients', JSON.stringify(cached));
+          } catch(e) {}
+        }
+      }).catch(() => {});
+    }
+    showOverlay();
   } else {
     badge.textContent = `⏳ ${remaining} día${remaining !== 1 ? 's' : ''} de prueba`;
     if (remaining <= 3) badge.classList.add('urgent');
