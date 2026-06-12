@@ -2163,8 +2163,14 @@ function persist() {
 function sincronizarMenuFirebase() {
   if (typeof _db === 'undefined' || !_db) return;
   const _extras = JSON.parse(localStorage.getItem('lph_menu_extras') || 'null');
+  // Strip base64 images antes de enviar a Firestore (límite 1MB por documento)
+  const _rawProds = JSON.parse(localStorage.getItem(LS_PRODUCTS) || '[]');
+  const _products = _rawProds.map(p => {
+    if (p.img && p.img.startsWith('data:')) { const { img, ...rest } = p; return rest; }
+    return p;
+  });
   const _data = {
-    products:      JSON.parse(localStorage.getItem(LS_PRODUCTS) || '[]'),
+    products:      _products,
     categories:    JSON.parse(localStorage.getItem(LS_CATS)     || '[]'),
     config:        JSON.parse(localStorage.getItem('lph_config')        || '{}'),
     platoDia:      JSON.parse(localStorage.getItem('lph_plato_dia')     || 'null') || null,
